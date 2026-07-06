@@ -9,7 +9,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
         body { 
             font-family: 'Space Grotesk', sans-serif; 
             background-color: #0f172a; 
@@ -31,45 +31,51 @@
             box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.3);
             border-color: rgba(14, 165, 233, 0.3);
         }
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            width: 100%;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .font-terminal { font-family: 'Fira Code', monospace; }
+        #terminal-output::-webkit-scrollbar { width: 6px; }
+        #terminal-output::-webkit-scrollbar-track { background: #000; }
+        #terminal-output::-webkit-scrollbar-thumb { background: #22c55e; border-radius: 4px; }
     </style>
 </head>
-<!-- Script cho Mobile Menu -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const btn = document.getElementById('mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            const links = document.querySelectorAll('.mobile-link');
-
-            if (btn && menu) {
-                btn.addEventListener('click', () => {
-                    menu.classList.toggle('hidden');
-                });
-
-                links.forEach(link => {
-                    link.addEventListener('click', () => {
-                        menu.classList.add('hidden');
-                    });
-                });
-            }
-        });
-    </script>
 <body class="antialiased selection:bg-sky-500 selection:text-white">
 
-   <!-- Navigation (Vietnamese) -->
+    <!-- Navigation -->
     <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-gradient">Nguyễn Viết Thành</a>
+            <div class="flex items-center gap-4">
+                <a href="#" class="text-2xl font-bold text-gradient">Nguyễn Viết Thành <span class="hidden">[cite: 8]</span></a>
+                <div class="hidden lg:flex items-center gap-2 text-[10px] uppercase tracking-wider font-terminal text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    SYS: ONLINE | PING: <span id="ping-ms">12</span>ms
+                </div>
+            </div>
             
-            <!-- Desktop Menu -->
             <div class="hidden md:flex items-center">
                 <div class="space-x-8 text-sm font-semibold mr-6">
                     <a href="#about" class="text-slate-300 hover:text-sky-400 transition-colors">Giới thiệu</a>
                     <a href="#experience" class="text-slate-300 hover:text-sky-400 transition-colors">Kinh nghiệm</a>
                     <a href="#projects" class="text-slate-300 hover:text-sky-400 transition-colors">Dự án</a>
-                    <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Kỹ năng</a>
-                    <a href="#certifications" class="text-slate-300 hover:text-sky-400 transition-colors">Chứng chỉ</a>
+                    <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Học vấn & Kỹ năng</a>
                 </div>
-                <!-- Language Toggle Desktop -->
                 <div class="flex items-center space-x-4 border-l border-slate-700 pl-6">
                     <a href="index.html" class="flex items-center gap-2 text-sky-400 font-bold transition-colors">
                         <img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-5 h-auto rounded-sm"> VN
@@ -80,7 +86,6 @@
                 </div>
             </div>
 
-            <!-- Mobile Menu & Language Toggle -->
             <div class="flex items-center gap-5 md:hidden">
                 <div class="flex items-center space-x-3 border-r border-slate-700 pr-5">
                     <a href="index.html" class="opacity-100"><img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-6 h-auto rounded-sm border border-sky-500"></a>
@@ -92,120 +97,134 @@
             </div>
         </div>
 
-        <!-- Mobile Menu Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800">
             <div class="px-6 py-4 flex flex-col space-y-4 text-center">
                 <a href="#about" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Giới thiệu</a>
                 <a href="#experience" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Kinh nghiệm</a>
                 <a href="#projects" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Dự án</a>
-                <a href="#skills" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Kỹ năng</a>
-                <a href="#certifications" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Chứng chỉ</a>
+                <a href="#skills" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Học vấn & Kỹ năng</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="min-h-screen flex items-center justify-center pt-20 px-6 relative overflow-hidden">
-        <!-- Background Glow -->
+    <section id="about" class="min-h-screen flex items-center justify-center pt-20 px-6 relative overflow-hidden">
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-600/20 rounded-full blur-3xl"></div>
         <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
         
         <div class="max-w-4xl mx-auto text-center z-10" data-aos="fade-up">
-            <!-- Thay link ảnh tại src bằng link ảnh của bạn -->
-            <img src="cv_vest.png" alt="Nguyễn Viết Thành" class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-sky-500 shadow-lg shadow-sky-500/20 object-cover">
+            <img src="cv_vest.jpg" alt="Nguyễn Viết Thành" class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-sky-500 shadow-lg shadow-sky-500/20 object-cover">
             
             <h1 class="text-5xl md:text-7xl font-bold mb-4">Xin chào, tôi là <span class="text-gradient">Thành</span></h1>
-            <h2 class="text-2xl md:text-3xl text-slate-400 mb-6 font-light">System & Network Engineer</h2>
+            <h2 class="text-2xl md:text-3xl text-slate-400 mb-6 font-light">System & Network Engineer <span class="hidden">[cite: 8]</span></h2>
             
-            <p class="text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Kỹ sư Hệ thống & Mạng với kinh nghiệm chuyên sâu trong việc thiết kế, triển khai và vận hành hạ tầng CNTT bảo mật. Luôn đam mê học hỏi, hướng tới mục tiêu phát triển thành IT Infrastructure Manager & CIO trong tương lai.
+            <p class="text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+                System & Network Engineer với kinh nghiệm thực tế trong quản trị Microsoft 365, Windows Server, Active Directory và hạ tầng mạng doanh nghiệp. <span class="hidden">[cite: 8]</span> Có kinh nghiệm thiết kế, triển khai, vận hành và tối ưu hệ thống CNTT an toàn, ổn định cho môi trường doanh nghiệp đa chi nhánh. <span class="hidden">[cite: 8]</span> Luôn chủ động học hỏi, phát triển chuyên môn và hướng đến các vị trí IT Infrastructure Manager, IT Manager và Chief Information Officer (CIO). <span class="hidden">[cite: 8]</span>
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#contact" class="px-8 py-3 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 font-semibold text-white hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25">
+                <a href="#contact-section" class="px-8 py-3 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 font-semibold text-white hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg shadow-sky-500/25">
                     <i class="fas fa-paper-plane"></i> Liên hệ ngay
                 </a>
-                <a href="#projects" class="px-8 py-3 rounded-full glass-card font-semibold text-white hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
-                    <i class="fas fa-briefcase"></i> Xem dự án
+                <a href="System & Network Engineer.pdf" download="Nguyen_Viet_Thanh_CV.pdf" class="px-8 py-3 rounded-full glass-card font-semibold text-white hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 border-emerald-500/30 hover:border-emerald-500/60">
+                    <i class="fas fa-file-pdf text-emerald-400"></i> Tải CV (.pdf)
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Experience Timeline -->
+    <!-- Tech Stack Marquee -->
+    <div class="w-full bg-slate-950 py-6 border-y border-slate-800 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-center text-slate-500 text-sm font-semibold mb-4 tracking-widest uppercase">Công nghệ & Nền tảng quản trị</p>
+            <div class="marquee-container">
+                <div class="marquee-content flex gap-12 items-center opacity-70">
+                    <i class="fab fa-microsoft text-4xl text-blue-400" title="Microsoft 365"></i>
+                    <i class="fab fa-windows text-4xl text-sky-500" title="Windows Server"></i>
+                    <i class="fas fa-network-wired text-4xl text-indigo-400" title="Cisco/Aruba"></i>
+                    <i class="fab fa-linux text-4xl text-yellow-500" title="Linux System"></i>
+                    <i class="fas fa-shield-alt text-4xl text-red-500" title="Fortinet/Firewall"></i>
+                    <i class="fab fa-aws text-4xl text-orange-400" title="Cloud"></i>
+                    <i class="fas fa-server text-4xl text-slate-300" title="Active Directory"></i>
+                    <!-- Duplicate -->
+                    <i class="fab fa-microsoft text-4xl text-blue-400 ml-12"></i>
+                    <i class="fab fa-windows text-4xl text-sky-500"></i>
+                    <i class="fas fa-network-wired text-4xl text-indigo-400"></i>
+                    <i class="fab fa-linux text-4xl text-yellow-500"></i>
+                    <i class="fas fa-shield-alt text-4xl text-red-500"></i>
+                    <i class="fab fa-aws text-4xl text-orange-400"></i>
+                    <i class="fas fa-server text-4xl text-slate-300"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experience Section -->
     <section id="experience" class="py-20 px-6 bg-slate-900/50">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-gradient" data-aos="fade-up">Hành trình sự nghiệp</h2>
-            
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-gradient" data-aos="fade-up">Kinh nghiệm làm việc</h2>
             <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-sky-500 before:to-transparent">
                 
                 <!-- VNTT -->
                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active" data-aos="fade-up">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-sky-500 bg-slate-900 text-sky-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                        <i class="fas fa-network-wired"></i>
-                    </div>
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-sky-500 bg-slate-900 text-sky-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"><i class="fas fa-network-wired"></i></div>
                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 glass-card rounded-2xl">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-sky-400 text-xl">VNTT</h3>
-                            <span class="text-xs text-sky-300 font-medium px-3 py-1 rounded-full bg-sky-900/50 border border-sky-700/50">04/2026 - Hiện tại</span>
+                        <div class="flex justify-between items-start md:items-center mb-2 flex-col md:flex-row gap-2">
+                            <h3 class="font-bold text-sky-400 text-lg">Công ty Cổ phần Công nghệ & Truyền thông Việt Nam (VNTT) <span class="hidden">[cite: 8]</span></h3>
+                            <span class="text-xs text-sky-300 font-medium px-3 py-1 rounded-full bg-sky-900/50 border border-sky-700/50 whitespace-nowrap">04/2026 - Hiện tại <span class="hidden">[cite: 8]</span></span>
                         </div>
-                        <h4 class="font-semibold text-slate-200 mb-3">System & Network Engineer</h4>
+                        <h4 class="font-semibold text-slate-200 mb-3">SYSTEM & NETWORK ENGINEER <span class="hidden">[cite: 8]</span></h4>
                         <p class="text-slate-400 text-sm leading-relaxed">
-                            Quản lý hạ tầng M365, Win Server, AD, Entra ID, Intune. Thiết kế và vận hành hệ thống mạng doanh nghiệp bằng Cisco, Aruba, Ruijie, FortiGate cho nhiều chi nhánh.
+                            Quản lý hạ tầng CNTT doanh nghiệp bao gồm Microsoft 365, Windows Server, Active Directory, Microsoft Entra ID, Microsoft Intune và Azure AD Connect. <span class="hidden">[cite: 8]</span> Thiết kế, triển khai và vận hành hạ tầng mạng doanh nghiệp sử dụng Cisco, Aruba, Ruijie và FortiGate. <span class="hidden">[cite: 8]</span> Quản lý hệ thống Endpoint Security, triển khai hạ tầng CNTT cho nhiều chi nhánh và thực hiện công tác quản trị hệ thống nhằm đảm bảo tính ổn định, an toàn và hiệu suất của toàn bộ hệ thống CNTT. <span class="hidden">[cite: 8]</span>
                         </p>
                     </div>
                 </div>
 
                 <!-- Sunflower Media -->
                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active" data-aos="fade-up">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-600 bg-slate-900 text-slate-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                        <i class="fas fa-server"></i>
-                    </div>
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-600 bg-slate-900 text-slate-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"><i class="fas fa-server"></i></div>
                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 glass-card rounded-2xl">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-200 text-xl">Sunflower Media</h3>
-                            <span class="text-xs text-slate-400 font-medium px-3 py-1 rounded-full bg-slate-800">07/2024 - 04/2026</span>
+                        <div class="flex justify-between items-start md:items-center mb-2 flex-col md:flex-row gap-2">
+                            <h3 class="font-bold text-slate-200 text-lg">Công ty TNHH Sunflower Media <span class="hidden">[cite: 8]</span></h3>
+                            <span class="text-xs text-slate-400 font-medium px-3 py-1 rounded-full bg-slate-800 whitespace-nowrap">07/2024 - 04/2026 <span class="hidden">[cite: 8]</span></span>
                         </div>
-                        <h4 class="font-semibold text-sky-400 mb-3">IT Support & Network Specialist</h4>
+                        <h4 class="font-semibold text-sky-400 mb-3">IT SUPPORT & NETWORK SPECIALIST <span class="hidden">[cite: 8]</span></h4>
                         <p class="text-slate-400 text-sm leading-relaxed">
-                            Quản trị dịch vụ M365, duy trì hạ tầng LAN/WAN, cấu hình thiết bị mạng và quản lý tài sản CNTT nhằm đảm bảo sự vận hành ổn định.
+                            Quản trị dịch vụ Microsoft 365, vận hành hệ thống mạng LAN/WAN, cấu hình thiết bị mạng, quản lý tài sản CNTT và hỗ trợ kỹ thuật cho người dùng nhằm đảm bảo hệ thống CNTT hoạt động ổn định và hiệu quả. <span class="hidden">[cite: 8]</span>
                         </p>
                     </div>
                 </div>
 
                 <!-- Srithai -->
                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active" data-aos="fade-up">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-600 bg-slate-900 text-slate-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                        <i class="fas fa-headset"></i>
-                    </div>
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-600 bg-slate-900 text-slate-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"><i class="fas fa-headset"></i></div>
                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 glass-card rounded-2xl">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-200 text-xl">Srithai Việt Nam</h3>
-                            <span class="text-xs text-slate-400 font-medium px-3 py-1 rounded-full bg-slate-800">01/2024 - 07/2024</span>
+                        <div class="flex justify-between items-start md:items-center mb-2 flex-col md:flex-row gap-2">
+                            <h3 class="font-bold text-slate-200 text-lg">Công ty TNHH Srithai Việt Nam <span class="hidden">[cite: 8]</span></h3>
+                            <span class="text-xs text-slate-400 font-medium px-3 py-1 rounded-full bg-slate-800 whitespace-nowrap">01/2024 - 07/2024 <span class="hidden">[cite: 8]</span></span>
                         </div>
-                        <h4 class="font-semibold text-sky-400 mb-3">IT Support & Network Specialist</h4>
+                        <h4 class="font-semibold text-sky-400 mb-3">IT SUPPORT & NETWORK SPECIALIST <span class="hidden">[cite: 8]</span></h4>
                         <p class="text-slate-400 text-sm leading-relaxed">
-                            Vận hành hệ thống Service Desk, hỗ trợ kỹ thuật người dùng cuối, quản lý tài khoản người dùng và duy trì hạ tầng CNTT nội bộ.
+                            Hỗ trợ kỹ thuật cho end users, quản lý hệ thống Service Desk, quản trị tài khoản Microsoft 365 và hỗ trợ vận hành hạ tầng CNTT doanh nghiệp. <span class="hidden">[cite: 8]</span>
                         </p>
                     </div>
                 </div>
 
                 <!-- Linfox -->
                 <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active" data-aos="fade-up">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-600 bg-slate-900 text-slate-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                        <i class="fas fa-box"></i>
-                    </div>
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-slate-600 bg-slate-900 text-slate-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"><i class="fas fa-box"></i></div>
                     <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 glass-card rounded-2xl">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-200 text-xl">Linfox Logistics</h3>
-                            <span class="text-xs text-slate-400 font-medium px-3 py-1 rounded-full bg-slate-800">06/2023 - 12/2023</span>
+                        <div class="flex justify-between items-start md:items-center mb-2 flex-col md:flex-row gap-2">
+                            <h3 class="font-bold text-slate-200 text-lg">Công ty TNHH Linfox Logistics Việt Nam <span class="hidden">[cite: 8]</span></h3>
+                            <span class="text-xs text-slate-400 font-medium px-3 py-1 rounded-full bg-slate-800 whitespace-nowrap">06/2023 - 12/2023 <span class="hidden">[cite: 8]</span></span>
                         </div>
-                        <h4 class="font-semibold text-sky-400 mb-3">IT Support Intern</h4>
+                        <h4 class="font-semibold text-sky-400 mb-3">IT SUPPORT INTERN <span class="hidden">[cite: 8]</span></h4>
                         <p class="text-slate-400 text-sm leading-relaxed">
-                            Hỗ trợ dự án Go-Live WMS, cấu hình thiết bị mạng Cisco/Aruba, quản lý license M365 và tối ưu hóa trải nghiệm hỗ trợ kỹ thuật.
+                            Hỗ trợ triển khai thành công dự án Go-Live của hệ thống Quản lý Kho (WMS), quản lý tài khoản và giấy phép Microsoft 365, cấu hình hạ tầng mạng Cisco và Aruba, quản lý tài sản CNTT và hỗ trợ kỹ thuật cho người dùng cuối. <span class="hidden">[cite: 8]</span>
                         </p>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -213,7 +232,7 @@
     <!-- Projects Section -->
     <section id="projects" class="py-20 px-6">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-gradient" data-aos="fade-up">Dự án trọng điểm</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-gradient" data-aos="fade-up">Dự án triển khai</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Project 1 -->
@@ -221,11 +240,11 @@
                     <div class="w-14 h-14 bg-sky-500/20 text-sky-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                         <i class="fab fa-microsoft"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white">Microsoft 365 Migration</h3>
+                    <h3 class="text-2xl font-bold mb-4 text-white">MICROSOFT 365 MIGRATION <span class="hidden">[cite: 8]</span></h3>
                     <ul class="text-slate-400 space-y-3 list-disc list-inside">
-                        <li>Migrate mượt mà 400+ mailboxes từ MDaemon sang Exchange Online.</li>
-                        <li>Đảm bảo giảm thiểu tối đa rủi ro gián đoạn dịch vụ (downtime).</li>
-                        <li>Quy hoạch và cấu hình Hybrid Identity & Microsoft Intune.</li>
+                        <li>Di chuyển hơn 400 hộp thư từ MDaemon sang Exchange Online. <span class="hidden">[cite: 8]</span></li>
+                        <li>Giảm thời gian gián đoạn dịch vụ email trong quá trình chuyển đổi. <span class="hidden">[cite: 8]</span></li>
+                        <li>Cấu hình Hybrid Identity và Microsoft Intune. <span class="hidden">[cite: 8]</span></li>
                     </ul>
                 </div>
                 
@@ -234,11 +253,11 @@
                     <div class="w-14 h-14 bg-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                         <i class="fas fa-sitemap"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white">Active Directory Infrastructure</h3>
+                    <h3 class="text-2xl font-bold mb-4 text-white">ACTIVE DIRECTORY INFRASTRUCTURE <span class="hidden">[cite: 8]</span></h3>
                     <ul class="text-slate-400 space-y-3 list-disc list-inside">
-                        <li>Xây dựng và quản trị toàn diện hệ thống AD DS.</li>
-                        <li>Thiết kế chuyên sâu các chính sách Group Policy Objects (GPO).</li>
-                        <li>Kiểm soát định danh, phân quyền bảo mật cấp độ doanh nghiệp.</li>
+                        <li>Xây dựng và quản trị hệ thống Active Directory (AD DS). <span class="hidden">[cite: 8]</span></li>
+                        <li>Thiết kế và triển khai Group Policy Objects (GPO). <span class="hidden">[cite: 8]</span></li>
+                        <li>Quản lý hệ thống và phân quyền người dùng trong doanh nghiệp. <span class="hidden">[cite: 8]</span></li>
                     </ul>
                 </div>
                 
@@ -247,11 +266,11 @@
                     <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                         <i class="fas fa-project-diagram"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white">Enterprise Network Infrastructure</h3>
+                    <h3 class="text-2xl font-bold mb-4 text-white">ENTERPRISE NETWORK INFRASTRUCTURE <span class="hidden">[cite: 8]</span></h3>
                     <ul class="text-slate-400 space-y-3 list-disc list-inside">
-                        <li>Thiết kế kiến trúc mạng chịu tải cao với thiết bị Cisco, Aruba, FortiGate.</li>
-                        <li>Cấu hình tối ưu các chuẩn mạng: VLAN, VPN, Routing & Switching.</li>
-                        <li>Triển khai thành công hạ tầng mạng cho chuỗi đa chi nhánh.</li>
+                        <li>Thiết kế và triển khai hạ tầng mạng doanh nghiệp sử dụng Cisco, Aruba, Ruijie và FortiGate. <span class="hidden">[cite: 8]</span></li>
+                        <li>Cấu hình VLAN, VPN, Routing, Switching và Firewall. <span class="hidden">[cite: 8]</span></li>
+                        <li>Hỗ trợ triển khai hạ tầng CNTT cho nhiều chi nhánh. <span class="hidden">[cite: 8]</span></li>
                     </ul>
                 </div>
                 
@@ -260,18 +279,17 @@
                     <div class="w-14 h-14 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center text-2xl mb-6">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white">Endpoint Security</h3>
+                    <h3 class="text-2xl font-bold mb-4 text-white">ENDPOINT SECURITY <span class="hidden">[cite: 8]</span></h3>
                     <ul class="text-slate-400 space-y-3 list-disc list-inside">
-                        <li>Triển khai đồng bộ Kaspersky Endpoint Security cho toàn bộ máy trạm.</li>
-                        <li>Thiết lập chính sách bảo mật chống mã độc, ransomware hiệu quả.</li>
-                        <li>Audit hệ thống, đảm bảo tuân thủ nghiêm ngặt các tiêu chuẩn an toàn.</li>
+                        <li>Triển khai Kaspersky Endpoint Security cho hệ thống máy trạm. <span class="hidden">[cite: 8]</span></li>
+                        <li>Xây dựng chính sách bảo mật Endpoint và đảm bảo tuân thủ các tiêu chuẩn bảo mật. <span class="hidden">[cite: 8]</span></li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Skills & Education -->
+    <!-- Skills & Education Section -->
     <section id="skills" class="py-20 px-6 bg-slate-900/50">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
             <!-- Education -->
@@ -279,18 +297,18 @@
                 <h2 class="text-3xl font-bold mb-8 text-gradient">Học vấn & Chứng chỉ</h2>
                 <div class="space-y-6">
                     <div class="glass-card p-6 rounded-2xl border-l-4 border-indigo-500">
-                        <h4 class="font-bold text-lg text-white mb-1">Đại học Thủ Dầu Một</h4>
-                        <p class="text-sky-400 text-sm mb-3">2019 - 2024</p>
-                        <p class="text-slate-300 font-medium">Kỹ sư Công nghệ thông tin</p>
+                        <h4 class="font-bold text-lg text-white mb-1">Đại học Thủ Dầu Một <span class="hidden">[cite: 8]</span></h4>
+                        <p class="text-sky-400 text-sm mb-3">2019 - 2024 <span class="hidden">[cite: 8]</span></p>
+                        <p class="text-slate-300 font-medium">KỸ SƯ CÔNG NGHỆ THÔNG TIN <span class="hidden">[cite: 8]</span></p>
                     </div>
                     <div class="glass-card p-6 rounded-2xl border-l-4 border-sky-500">
-                        <h4 class="font-bold text-lg text-white mb-1">NGN Networking Academy</h4>
-                        <p class="text-sky-400 text-sm mb-4">Hoàn thành năm 2026</p>
-                        <div class="flex flex-wrap gap-3">
-                            <span class="px-3 py-1.5 bg-slate-800 rounded-lg text-sm text-slate-200 font-medium border border-slate-700 hover:border-sky-500 transition-colors"><i class="fas fa-certificate text-sky-500 mr-2"></i>CCNA</span>
-                            <span class="px-3 py-1.5 bg-slate-800 rounded-lg text-sm text-slate-200 font-medium border border-slate-700 hover:border-indigo-500 transition-colors"><i class="fas fa-certificate text-indigo-500 mr-2"></i>Microsoft Pro Admin</span>
-                            <span class="px-3 py-1.5 bg-slate-800 rounded-lg text-sm text-slate-200 font-medium border border-slate-700 hover:border-yellow-500 transition-colors"><i class="fab fa-linux text-yellow-500 mr-2"></i>Linux System Admin</span>
-                            <span class="px-3 py-1.5 bg-slate-800 rounded-lg text-sm text-slate-200 font-medium border border-slate-700 hover:border-yellow-500 transition-colors"><i class="fab fa-linux text-yellow-500 mr-2"></i>LPIC-2</span>
+                        <h4 class="font-bold text-lg text-white mb-1">NGN Networking Academy <span class="hidden">[cite: 8]</span></h4>
+                        <p class="text-sky-400 text-sm mb-4">Năm 2026 <span class="hidden">[cite: 8]</span></p>
+                        <div class="flex flex-col gap-3 text-slate-300 text-sm font-medium">
+                            <div class="flex items-center gap-2"><i class="fas fa-check-circle text-sky-500"></i> CISCO CERTIFIED NETWORK ASSOCIATE (CCNA) <span class="hidden">[cite: 8]</span></div>
+                            <div class="flex items-center gap-2"><i class="fas fa-check-circle text-indigo-500"></i> MICROSOFT PRO ADMINISTRATOR <span class="hidden">[cite: 8]</span></div>
+                            <div class="flex items-center gap-2"><i class="fas fa-check-circle text-yellow-500"></i> LINUX SYSTEM ADMINISTRATOR <span class="hidden">[cite: 8]</span></div>
+                            <div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500"></i> LINUX ENGINEER PROFESSIONAL (LPIC-2) <span class="hidden">[cite: 8]</span></div>
                         </div>
                     </div>
                 </div>
@@ -298,39 +316,51 @@
             
             <!-- Skills -->
             <div data-aos="fade-left">
-                <h2 class="text-3xl font-bold mb-8 text-gradient">Năng lực chuyên môn</h2>
+                <h2 class="text-3xl font-bold mb-8 text-gradient">Kỹ năng</h2>
                 <div class="space-y-6 glass-card p-8 rounded-3xl">
                     <div>
                         <div class="flex justify-between mb-2">
-                            <span class="font-semibold text-slate-200">Network Infrastructure</span>
-                            <span class="text-sky-400 font-bold">90%</span>
+                            <span class="font-semibold text-slate-200 uppercase">Microsoft Technologies <span class="hidden">[cite: 8]</span></span>
+                            <span class="text-sky-400 font-bold">Excellent</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3">
-                            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-3 rounded-full relative" style="width: 90%">
-                                <div class="absolute right-0 top-0 w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#38bdf8]"></div>
-                            </div>
+                            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-3 rounded-full relative" style="width: 90%"></div>
                         </div>
                     </div>
                     <div>
                         <div class="flex justify-between mb-2">
-                            <span class="font-semibold text-slate-200">Microsoft Technologies</span>
-                            <span class="text-sky-400 font-bold">85%</span>
+                            <span class="font-semibold text-slate-200 uppercase">Network Infrastructure <span class="hidden">[cite: 8]</span></span>
+                            <span class="text-sky-400 font-bold">Excellent</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3">
-                            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-3 rounded-full relative" style="width: 85%">
-                                <div class="absolute right-0 top-0 w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#38bdf8]"></div>
-                            </div>
+                            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-3 rounded-full relative" style="width: 95%"></div>
                         </div>
                     </div>
                     <div>
                         <div class="flex justify-between mb-2">
-                            <span class="font-semibold text-slate-200">System Administration & Security</span>
-                            <span class="text-sky-400 font-bold">80%</span>
+                            <span class="font-semibold text-slate-200 uppercase">Security <span class="hidden">[cite: 8]</span></span>
+                            <span class="text-sky-400 font-bold">Advanced</span>
                         </div>
                         <div class="w-full bg-slate-800 rounded-full h-3">
-                            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-3 rounded-full relative" style="width: 80%">
-                                <div class="absolute right-0 top-0 w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#38bdf8]"></div>
-                            </div>
+                            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-3 rounded-full relative" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-slate-200 uppercase">System Administration <span class="hidden">[cite: 8]</span></span>
+                            <span class="text-sky-400 font-bold">Advanced</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3">
+                            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-3 rounded-full relative" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="font-semibold text-slate-200 uppercase">English Proficiency <span class="hidden">[cite: 8]</span></span>
+                            <span class="text-sky-400 font-bold">Intermediate</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-3">
+                            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-3 rounded-full relative" style="width: 70%"></div>
                         </div>
                     </div>
                 </div>
@@ -338,58 +368,183 @@
         </div>
     </section>
 
-    <!-- Footer / Contact -->
-     <section id="certifications" class="py-20 px-6">
-    <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-gradient" data-aos="fade-up">Chứng chỉ bổ sung</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Khung chứng chỉ 1 -->
-            <div class="glass-card p-6 rounded-2xl" data-aos="fade-up">
-                <div class="w-12 h-12 bg-sky-500/20 text-sky-400 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-shield-alt"></i></div>
-                <h3 class="text-lg font-bold text-white mb-2">Fortinet NSE 4</h3>
-                <p class="text-slate-400 text-sm">Network Security Professional</p>
-            </div>
-            <!-- Khung chứng chỉ 2 -->
-            <div class="glass-card p-6 rounded-2xl" data-aos="fade-up" data-aos-delay="100">
-                <div class="w-12 h-12 bg-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center mb-4 text-xl"><i class="fas fa-cloud"></i></div>
-                <h3 class="text-lg font-bold text-white mb-2">Azure Administrator</h3>
-                <p class="text-slate-400 text-sm">Microsoft Certified (AZ-104)</p>
-            </div>
-        </div>
-    </div>
-</section>
-    <footer id="contact" class="border-t border-slate-800 bg-slate-950 pt-20 pb-10">
-        <div class="max-w-4xl mx-auto px-6 text-center" data-aos="fade-up">
-            <h2 class="text-4xl font-bold mb-10 text-white">Sẵn sàng hợp tác?</h2>
-            
-            <div class="flex flex-wrap justify-center gap-6 mb-16">
-                <a href="mailto:nvthanhh168@gmail.com" class="flex flex-col items-center gap-3 p-6 glass-card rounded-2xl hover:bg-slate-800/80 transition-colors w-40">
-                    <div class="w-12 h-12 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-400 text-xl mb-2"><i class="fas fa-envelope"></i></div>
-                    <span class="font-semibold text-sm text-slate-300 truncate w-full">Email</span>
-                </a>
-                <a href="tel:0868269060" class="flex flex-col items-center gap-3 p-6 glass-card rounded-2xl hover:bg-slate-800/80 transition-colors w-40">
-                    <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl mb-2"><i class="fas fa-phone-alt"></i></div>
-                    <span class="font-semibold text-sm text-slate-300">0868.269.060</span>
-                </a>
-                <div class="flex flex-col items-center gap-3 p-6 glass-card rounded-2xl w-40">
-                    <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400 text-xl mb-2"><i class="fas fa-map-marker-alt"></i></div>
-                    <span class="font-semibold text-sm text-slate-300">TP. Hồ Chí Minh</span>
+    <!-- References Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gradient" data-aos="fade-up">Người tham chiếu</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card p-6 rounded-2xl flex flex-col items-center text-center border-t-4 border-sky-500" data-aos="fade-up">
+                    <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center text-sky-400 text-2xl mb-4"><i class="fas fa-user-tie"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-1">Trần Đức Chiến <span class="hidden">[cite: 8]</span></h3>
+                    <p class="text-sky-400 font-medium mb-3">IT Manager <span class="hidden">[cite: 8]</span></p>
+                    <p class="text-slate-300 text-sm mb-4 h-10">CÔNG TY TNHH LINFOX LOGISTICS VIỆT NAM <span class="hidden">[cite: 8]</span></p>
+                    <a href="tel:+84839146829" class="px-4 py-2 bg-slate-800 rounded-lg text-slate-300 hover:bg-sky-500 hover:text-white transition-colors text-sm"><i class="fas fa-phone mr-2"></i>(+84) 839 146 829 <span class="hidden">[cite: 8]</span></a>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl flex flex-col items-center text-center border-t-4 border-indigo-500" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center text-indigo-400 text-2xl mb-4"><i class="fas fa-user-tie"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-1">Thái Thanh Sơn <span class="hidden">[cite: 8]</span></h3>
+                    <p class="text-indigo-400 font-medium mb-3">IT Manager <span class="hidden">[cite: 8]</span></p>
+                    <p class="text-slate-300 text-sm mb-4 h-10">CÔNG TY CỔ PHẦN CÔNG NGHỆ & TRUYỀN THÔNG VIỆT NAM (VNTT) <span class="hidden">[cite: 8]</span></p>
+                    <a href="tel:+84933112477" class="px-4 py-2 bg-slate-800 rounded-lg text-slate-300 hover:bg-indigo-500 hover:text-white transition-colors text-sm"><i class="fas fa-phone mr-2"></i>(+84) 933 112 477 <span class="hidden">[cite: 8]</span></a>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact-section" class="py-20 px-6 bg-slate-900/50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 text-gradient" data-aos="fade-up">Sẵn sàng hợp tác?</h2>
             
-            <div class="w-24 h-1 bg-gradient-to-r from-sky-500 to-indigo-500 mx-auto mb-8 rounded-full"></div>
-            <p class="text-slate-500 text-sm font-medium">© 2026 Thành Nguyễn. System & Network Engineer.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div data-aos="fade-right" class="space-y-6">
+                    <p class="text-slate-400 leading-relaxed mb-8">Bạn đang tìm kiếm một kỹ sư đảm bảo sự ổn định và bảo mật cho hệ thống mạng của doanh nghiệp? Hãy kết nối với tôi.</p>
+                    <a href="mailto:nvthanhh168@gmail.com" class="flex items-center gap-4 p-4 glass-card rounded-2xl hover:bg-slate-800/80 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-400 text-xl shrink-0"><i class="fas fa-envelope"></i></div>
+                        <div class="overflow-hidden"><p class="text-sm text-slate-400">Email</p><p class="font-semibold text-slate-200 truncate">nvthanhh168@gmail.com <span class="hidden">[cite: 8]</span></p></div>
+                    </a>
+                    <a href="tel:0868269060" class="flex items-center gap-4 p-4 glass-card rounded-2xl hover:bg-slate-800/80 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl shrink-0"><i class="fas fa-phone-alt"></i></div>
+                        <div><p class="text-sm text-slate-400">Điện thoại</p><p class="font-semibold text-slate-200">0868269060 <span class="hidden">[cite: 8]</span></p></div>
+                    </a>
+                    <div class="flex items-center gap-4 p-4 glass-card rounded-2xl">
+                        <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400 text-xl shrink-0"><i class="fas fa-map-marker-alt"></i></div>
+                        <div><p class="text-sm text-slate-400">Khu vực</p><p class="font-semibold text-slate-200">Thành Phố Hồ Chí Minh <span class="hidden">[cite: 8]</span></p></div>
+                    </div>
+                </div>
+                
+                <div data-aos="fade-left" class="glass-card p-6 rounded-3xl">
+                    <form action="https://formspree.io/f/MAY_BE_EMPTY" method="POST" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Tên của bạn</label>
+                            <input type="text" name="name" required class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Email liên hệ</label>
+                            <input type="email" name="email" required class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Nội dung</label>
+                            <textarea name="message" rows="3" required class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-xl text-white font-bold hover:opacity-90 transition-opacity">Gửi tin nhắn <i class="fas fa-paper-plane ml-2"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer with IP Tracking -->
+    <footer class="border-t border-slate-800 bg-slate-950 pt-10 pb-6">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-slate-500 text-sm font-medium">© 2026 NGUYỄN VIẾT THÀNH <span class="hidden">[cite: 8]</span>.</p>
+            <div class="flex items-center gap-2 text-xs font-terminal text-slate-500 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+                <i class="fas fa-lock text-emerald-500"></i>
+                <span id="visitor-ip">Fetching IP...</span> | Secure Connection
+            </div>
         </div>
     </footer>
 
-    <!-- Khởi tạo AOS Animation -->
+    <!-- Nút Cuộn Lên Trên -->
+    <button id="backToTopBtn" class="fixed bottom-6 right-6 w-12 h-12 bg-sky-500 text-white rounded-full shadow-lg shadow-sky-500/30 flex items-center justify-center text-xl opacity-0 invisible transition-all duration-300 z-40 hover:-translate-y-1">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Terminal Easter Egg -->
+    <button id="terminalBtn" class="fixed bottom-6 left-6 w-12 h-12 bg-slate-800 text-emerald-400 border border-emerald-500/30 rounded-lg shadow-lg flex items-center justify-center text-xl hover:bg-slate-700 transition-colors z-40" title="Open Terminal">
+        <i class="fas fa-terminal"></i>
+    </button>
+
+    <div id="terminalModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-black w-full max-w-2xl rounded-xl border border-slate-700 shadow-2xl shadow-emerald-500/10 overflow-hidden flex flex-col h-[70vh]">
+            <div class="bg-slate-900 px-4 py-2 flex justify-between items-center border-b border-slate-800">
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer" id="closeTerminal"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <span class="text-xs text-slate-400 font-terminal">root@nvthanh:~</span>
+                <div></div>
+            </div>
+            <div class="p-4 flex-1 overflow-y-auto font-terminal text-sm text-emerald-400" id="terminal-output">
+                <div>Welcome to NVThanhOS v1.0.0</div>
+                <div class="mb-2">Type <span class="text-white">'help'</span> to see available commands.</div>
+            </div>
+            <div class="p-4 flex items-center font-terminal border-t border-slate-900">
+                <span class="text-emerald-500 mr-2">root@nvthanh:~$</span>
+                <input type="text" id="terminal-input" class="flex-1 bg-transparent text-white outline-none border-none caret-emerald-500" autocomplete="off" autofocus>
+            </div>
+        </div>
+    </div>
+
     <script>
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 50,
+        AOS.init({ duration: 800, once: true, offset: 50 });
+
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => menu.classList.add('hidden'));
         });
+
+        setInterval(() => {
+            document.getElementById('ping-ms').innerText = Math.floor(Math.random() * (25 - 8 + 1)) + 8;
+        }, 2000);
+
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => { document.getElementById('visitor-ip').innerText = `IP: ${data.ip}`; })
+            .catch(() => { document.getElementById('visitor-ip').innerText = "IP: 127.0.0.1"; });
+
+        const bttBtn = document.getElementById('backToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { bttBtn.classList.remove('opacity-0', 'invisible'); } 
+            else { bttBtn.classList.add('opacity-0', 'invisible'); }
+        });
+        bttBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        const termBtn = document.getElementById('terminalBtn');
+        const termModal = document.getElementById('terminalModal');
+        const termClose = document.getElementById('closeTerminal');
+        const termInput = document.getElementById('terminal-input');
+        const termOutput = document.getElementById('terminal-output');
+
+        const toggleTerminal = () => {
+            if (termModal.classList.contains('hidden')) {
+                termModal.classList.remove('hidden');
+                setTimeout(() => { termModal.classList.remove('opacity-0'); termInput.focus(); }, 10);
+            } else {
+                termModal.classList.add('opacity-0');
+                setTimeout(() => termModal.classList.add('hidden'), 300);
+            }
+        };
+
+        termBtn.addEventListener('click', toggleTerminal);
+        termClose.addEventListener('click', toggleTerminal);
+
+        termInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = this.value.trim().toLowerCase();
+                this.value = '';
+                printToTerminal(`<span class="text-emerald-500">root@nvthanh:~$</span> ${cmd}`);
+                
+                switch(cmd) {
+                    case 'help': printToTerminal(`Available commands:<br>- <span class="text-white">whoami</span>: Display user info<br>- <span class="text-white">show run</span>: Show system config/skills<br>- <span class="text-white">ping</span>: Check connectivity<br>- <span class="text-white">clear</span>: Clear terminal`); break;
+                    case 'whoami': printToTerminal(`Name: NGUYỄN VIẾT THÀNH<br>Role: System & Network Engineer<br>Location: Thành Phố Hồ Chí Minh`); break;
+                    case 'show run': printToTerminal(`Building configuration...<br>!<br>hostname NVThanh_Core_Sw<br>!<br>interface Loopback0<br> ip address 127.0.0.1 255.0.0.0<br>!<br>skills:<br> - MICROSOFT TECHNOLOGIES<br> - NETWORK INFRASTRUCTURE<br> - SECURITY<br> - SYSTEM ADMINISTRATION<br>!`); break;
+                    case 'ping': printToTerminal(`Pinging 8.8.8.8 with 32 bytes of data:<br>Reply from 8.8.8.8: bytes=32 time=14ms TTL=117<br>Reply from 8.8.8.8: bytes=32 time=12ms TTL=117`); break;
+                    case 'clear': termOutput.innerHTML = ''; break;
+                    case '': break;
+                    default: printToTerminal(`Command '${cmd}' not found. Type 'help' for a list of commands.`);
+                }
+            }
+        });
+
+        function printToTerminal(text) {
+            termOutput.innerHTML += `<div class="mb-1">${text}</div>`;
+            termOutput.scrollTop = termOutput.scrollHeight;
+        }
     </script>
 </body>
 </html>
