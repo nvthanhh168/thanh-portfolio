@@ -33,12 +33,34 @@
         }
     </style>
 </head>
+<!-- Script cho Mobile Menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const links = document.querySelectorAll('.mobile-link');
+
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                });
+
+                links.forEach(link => {
+                    link.addEventListener('click', () => {
+                        menu.classList.add('hidden');
+                    });
+                });
+            }
+        });
+    </script>
 <body class="antialiased selection:bg-sky-500 selection:text-white">
 
-    <!-- Navigation (English) -->
+<!-- Navigation (English) -->
     <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#" class="text-2xl font-bold text-gradient">Thanh Nguyen</a>
+            
+            <!-- Desktop Menu -->
             <div class="hidden md:flex items-center">
                 <div class="space-x-8 text-sm font-semibold mr-6">
                     <a href="#about" class="text-slate-300 hover:text-sky-400 transition-colors">About</a>
@@ -47,7 +69,7 @@
                     <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Skills</a>
                     <a href="#certifications" class="text-slate-300 hover:text-sky-400 transition-colors">Certifications</a>
                 </div>
-                <!-- Language Toggle -->
+                <!-- Language Toggle Desktop -->
                 <div class="flex items-center space-x-4 border-l border-slate-700 pl-6">
                     <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
                         <img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-5 h-auto rounded-sm"> VN
@@ -56,6 +78,28 @@
                         <img src="https://flagcdn.com/w20/us.png" alt="EN" class="w-5 h-auto rounded-sm"> EN
                     </a>
                 </div>
+            </div>
+
+            <!-- Mobile Menu & Language Toggle -->
+            <div class="flex items-center gap-5 md:hidden">
+                <div class="flex items-center space-x-3 border-r border-slate-700 pr-5">
+                    <a href="index.html" class="opacity-50 hover:opacity-100"><img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-6 h-auto rounded-sm"></a>
+                    <a href="index-en.html" class="opacity-100"><img src="https://flagcdn.com/w20/us.png" alt="EN" class="w-6 h-auto rounded-sm border border-sky-500"></a>
+                </div>
+                <button id="mobile-menu-btn" class="text-slate-300 hover:text-white focus:outline-none text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800">
+            <div class="px-6 py-4 flex flex-col space-y-4 text-center">
+                <a href="#about" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">About</a>
+                <a href="#experience" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Experience</a>
+                <a href="#projects" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Projects</a>
+                <a href="#skills" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Skills</a>
+                <a href="#certifications" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Certifications</a>
             </div>
         </div>
     </nav>
@@ -66,7 +110,7 @@
         <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
         
         <div class="max-w-4xl mx-auto text-center z-10" data-aos="fade-up">
-            <img src="cv_vest.jpg" alt="Thanh Nguyen" class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-sky-500 shadow-lg shadow-sky-500/20 object-cover">
+            <img src="cv_vest.png" alt="Thanh Nguyen" class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-sky-500 shadow-lg shadow-sky-500/20 object-cover">
             
             <h1 class="text-5xl md:text-7xl font-bold mb-4">Hello, I am <span class="text-gradient">Thanh</span></h1>
             <h2 class="text-2xl md:text-3xl text-slate-400 mb-6 font-light">System & Network Engineer</h2>

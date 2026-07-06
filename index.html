@@ -33,26 +33,34 @@
         }
     </style>
 </head>
+<!-- Script cho Mobile Menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const links = document.querySelectorAll('.mobile-link');
+
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                });
+
+                links.forEach(link => {
+                    link.addEventListener('click', () => {
+                        menu.classList.add('hidden');
+                    });
+                });
+            }
+        });
+    </script>
 <body class="antialiased selection:bg-sky-500 selection:text-white">
 
-    <!-- Navigation -->
-    
+   <!-- Navigation (Vietnamese) -->
     <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#" class="text-2xl font-bold text-gradient">Nguyễn Viết Thành</a>
-            <div class="hidden md:flex space-x-8 text-sm font-semibold">
-                <a href="#about" class="text-slate-300 hover:text-sky-400 transition-colors">Giới thiệu</a>
-                <a href="#experience" class="text-slate-300 hover:text-sky-400 transition-colors">Kinh nghiệm</a>
-                <a href="#projects" class="text-slate-300 hover:text-sky-400 transition-colors">Dự án</a>
-                <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Kỹ năng</a>
-                <a href="#certifications" class="text-slate-300 hover:text-sky-400 transition-colors">Chứng chỉ</a>
-            </div>
-        </div>
-    </nav>
-    <!-- Navigation (Vietnamese) -->
-    <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-gradient">Nguyễn Viết Thành</a>
+            
+            <!-- Desktop Menu -->
             <div class="hidden md:flex items-center">
                 <div class="space-x-8 text-sm font-semibold mr-6">
                     <a href="#about" class="text-slate-300 hover:text-sky-400 transition-colors">Giới thiệu</a>
@@ -61,7 +69,7 @@
                     <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Kỹ năng</a>
                     <a href="#certifications" class="text-slate-300 hover:text-sky-400 transition-colors">Chứng chỉ</a>
                 </div>
-                <!-- Language Toggle -->
+                <!-- Language Toggle Desktop -->
                 <div class="flex items-center space-x-4 border-l border-slate-700 pl-6">
                     <a href="index.html" class="flex items-center gap-2 text-sky-400 font-bold transition-colors">
                         <img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-5 h-auto rounded-sm"> VN
@@ -70,6 +78,28 @@
                         <img src="https://flagcdn.com/w20/us.png" alt="EN" class="w-5 h-auto rounded-sm"> EN
                     </a>
                 </div>
+            </div>
+
+            <!-- Mobile Menu & Language Toggle -->
+            <div class="flex items-center gap-5 md:hidden">
+                <div class="flex items-center space-x-3 border-r border-slate-700 pr-5">
+                    <a href="index.html" class="opacity-100"><img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-6 h-auto rounded-sm border border-sky-500"></a>
+                    <a href="index-en.html" class="opacity-50 hover:opacity-100"><img src="https://flagcdn.com/w20/us.png" alt="EN" class="w-6 h-auto rounded-sm"></a>
+                </div>
+                <button id="mobile-menu-btn" class="text-slate-300 hover:text-white focus:outline-none text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800">
+            <div class="px-6 py-4 flex flex-col space-y-4 text-center">
+                <a href="#about" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Giới thiệu</a>
+                <a href="#experience" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Kinh nghiệm</a>
+                <a href="#projects" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Dự án</a>
+                <a href="#skills" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Kỹ năng</a>
+                <a href="#certifications" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Chứng chỉ</a>
             </div>
         </div>
     </nav>
