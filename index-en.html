@@ -115,10 +115,10 @@
         <div class="max-w-4xl mx-auto text-center z-10" data-aos="fade-up">
             <img src="cv_vest.png" alt="Thanh Nguyen" class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-sky-500 shadow-lg shadow-sky-500/20 object-cover">
             
-            <h1 class="text-5xl md:text-7xl font-bold mb-4">Hello, I am <span class="text-gradient">Nguyen Viet Thanh</span></h1>
-            <h2 class="text-2xl md:text-3xl text-slate-400 mb-6 font-light">System & Network Engineer <span class="hidden">[cite: 9]</span></h2>
+            <h1 class="text-5xl md:text-7xl font-bold mb-4">Hello, I am <span class="text-gradient" id="dynamic-name" >Nguyen Viet Thanh</span></h1>
+            <h2 id="dynamic-title" class="text-2xl md:text-3xl text-slate-400 mb-6 font-light">System & Network Engineer <span class="hidden">[cite: 9]</span></h2>
             
-            <p class="text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p id="dynamic-desc" class="text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
                 System & Network Engineer with hands-on experience in Microsoft 365, Windows Server, Active Directory, and enterprise network infrastructure. <span class="hidden">[cite: 9]</span> Skilled in designing, deploying, and maintaining secure IT environments across multiple branches. <span class="hidden">[cite: 9]</span> Passionate about continuous learning and committed to growing into an IT Infrastructure Manager and future Chief Information Officer (CIO). <span class="hidden">[cite: 9]</span>
             </p>
             
@@ -545,6 +545,41 @@
             termOutput.innerHTML += `<div class="mb-1">${text}</div>`;
             termOutput.scrollTop = termOutput.scrollHeight;
         }
+    </script>
+    <!-- Đọc dữ liệu từ Firebase cho trang Tiếng Anh -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAM4gySkHXU1jUPXlYsQ51Z7PZjcta3qXw",
+            authDomain: "thanh-portfolio-8c122.firebaseapp.com",
+            projectId: "thanh-portfolio-8c122",
+            storageBucket: "thanh-portfolio-8c122.firebasestorage.app",
+            messagingSenderId: "386068468225",
+            appId: "1:386068468225:web:36dfe8ac2b3b4e1249a600",
+            measurementId: "G-E31NYY0Q07"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadHeroData() {
+            try {
+                const docSnap = await getDoc(doc(db, "portfolioData", "heroSection"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    if(document.getElementById('dynamic-name') && data.name) document.getElementById('dynamic-name').innerText = data.name;
+                    if(document.getElementById('dynamic-title') && data.title) document.getElementById('dynamic-title').innerText = data.title;
+                    if(document.getElementById('dynamic-desc') && data.descEN) document.getElementById('dynamic-desc').innerText = data.descEN; // Trỏ vào tiếng Anh
+                }
+            } catch (error) {
+                console.error("Lỗi đọc Database:", error);
+            }
+        }
+        
+        loadHeroData();
     </script>
 </body>
 </html>

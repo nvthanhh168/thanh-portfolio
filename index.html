@@ -17,6 +17,7 @@
         }
         .text-gradient { 
             background: linear-gradient(135deg, #0ea5e9, #6366f1); 
+            background-clip: text; 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
         }
@@ -59,7 +60,7 @@
     <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <a href="#" class="text-2xl font-bold text-gradient">Nguyễn Viết Thành <span class="hidden">[cite: 8]</span></a>
+                <a href="#" class="text-2xl font-bold text-gradient">Nguyễn Viết Thành<span class="hidden">[cite: 8]</span></a>
                 <div class="hidden lg:flex items-center gap-2 text-[10px] uppercase tracking-wider font-terminal text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-500/20">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -115,10 +116,10 @@
         <div class="max-w-4xl mx-auto text-center z-10" data-aos="fade-up">
             <img src="cv_vest.png" alt="Nguyễn Viết Thành" class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-sky-500 shadow-lg shadow-sky-500/20 object-cover">
             
-            <h1 class="text-5xl md:text-7xl font-bold mb-4">Xin chào, tôi là <span class="text-gradient">Nguyễn Viết Thành</span></h1>
-            <h2 class="text-2xl md:text-3xl text-slate-400 mb-6 font-light">System & Network Engineer <span class="hidden">[cite: 8]</span></h2>
+            <h1 class="text-5xl md:text-7xl font-bold mb-4">Xin chào, tôi là <span class="text-gradient" id="dynamic-name">Nguyễn Viết Thành</span></h1>
+            <h2 id="dynamic-title" class="text-2xl md:text-3xl text-slate-400 mb-6 font-light">System & Network Engineer <span class="hidden">[cite: 8]</span></h2>
             
-            <p class="text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p id="dynamic-desc" class="text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
                 System & Network Engineer với kinh nghiệm thực tế trong quản trị Microsoft 365, Windows Server, Active Directory và hạ tầng mạng doanh nghiệp. <span class="hidden">[cite: 8]</span> Có kinh nghiệm thiết kế, triển khai, vận hành và tối ưu hệ thống CNTT an toàn, ổn định cho môi trường doanh nghiệp đa chi nhánh. <span class="hidden">[cite: 8]</span> Luôn chủ động học hỏi, phát triển chuyên môn và hướng đến các vị trí IT Infrastructure Manager, IT Manager và Chief Information Officer (CIO). <span class="hidden">[cite: 8]</span>
             </p>
             
@@ -545,6 +546,46 @@
             termOutput.innerHTML += `<div class="mb-1">${text}</div>`;
             termOutput.scrollTop = termOutput.scrollHeight;
         }
+    </script>
+    <!-- Đọc dữ liệu từ Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // COPY LẠI CHÍNH XÁC ĐOẠN FIREBASE CONFIG NHƯ Ở FILE ADMIN VÀO ĐÂY:
+        const firebaseConfig = {
+  apiKey: "AIzaSyAM4gySkHXU1jUPXlYsQ51Z7PZjcta3qXw",
+  authDomain: "thanh-portfolio-8c122.firebaseapp.com",
+  projectId: "thanh-portfolio-8c122",
+  storageBucket: "thanh-portfolio-8c122.firebasestorage.app",
+  messagingSenderId: "386068468225",
+  appId: "1:386068468225:web:36dfe8ac2b3b4e1249a600",
+  measurementId: "G-E31NYY0Q07"
+};
+
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Fetch và gán dữ liệu lên Web
+        async function loadHeroData() {
+            try {
+                const docSnap = await getDoc(doc(db, "portfolioData", "heroSection"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // Gán vào các thẻ HTML tương ứng (Thay các chữ cứng bằng ID html)
+                    // Cần thêm id="dynamic-name", id="dynamic-title", id="dynamic-desc" vào các thẻ HTML phía trên nhé.
+                    if(document.getElementById('dynamic-name')) document.getElementById('dynamic-name').innerText = data.name;
+                    if(document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = data.title;
+                    if(document.getElementById('dynamic-desc')) document.getElementById('dynamic-desc').innerText = data.descVN; // File EN thì dùng data.descEN
+                }
+            } catch (error) {
+                console.error("Lỗi đọc Database:", error);
+            }
+        }
+        
+        loadHeroData();
     </script>
 </body>
 </html>
