@@ -8,39 +8,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
-        body { 
-            font-family: 'Space Grotesk', sans-serif; 
-            background-color: #0f172a; 
-            color: #f8fafc;
-        }
-        .text-gradient { 
-            background: linear-gradient(135deg, #0ea5e9, #6366f1); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-        }
-        .glass-card { 
-            background: rgba(30, 41, 59, 0.5); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.3);
-            border-color: rgba(14, 165, 233, 0.3);
-        }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .text-gradient { background: linear-gradient(135deg, #0ea5e9, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .glass-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.3); border-color: rgba(14, 165, 233, 0.3); }
         .font-terminal { font-family: 'Fira Code', monospace; }
+        /* Modal Style */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
     </style>
 </head>
-<body class="antialiased selection:bg-sky-500 selection:text-white">
+<body class="antialiased selection:bg-sky-500 selection:text-white relative">
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-xl font-bold text-slate-300 hover:text-white transition flex items-center gap-2">
+            <a href="index.html" class="text-lg font-bold text-slate-300 hover:text-white transition flex items-center gap-2">
                 <i class="fas fa-arrow-left"></i> Về trang chủ
             </a>
-            <div class="text-xl font-bold text-gradient">Góc Chia Sẻ</div>
+            <button id="openPostModalBtn" class="bg-gradient-to-r from-sky-500 to-indigo-500 text-white px-5 py-2 rounded-full font-bold hover:opacity-90 transition flex items-center gap-2">
+                <i class="fas fa-plus-circle"></i> Tạo bài viết
+            </button>
         </div>
     </nav>
 
@@ -48,91 +35,83 @@
     <section class="pt-32 pb-10 px-6 relative overflow-hidden">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-600/20 rounded-full blur-3xl"></div>
         <div class="max-w-4xl mx-auto text-center z-10 relative">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Tài liệu & <span class="text-gradient">Blog Kỹ Thuật</span></h1>
-            <p class="text-slate-400 text-lg">Nơi lưu trữ các script, tài liệu cấu hình mạng và kinh nghiệm triển khai hệ thống thực tế.</p>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Tài liệu & <span class="text-gradient">Cộng đồng IT</span></h1>
+            <p class="text-slate-400 text-lg">Chia sẻ script, tài liệu mạng và kinh nghiệm triển khai. Mọi người đều có thể đóng góp bài viết!</p>
         </div>
     </section>
 
-    <!-- Danh sách Tài liệu / Bài viết -->
-    <section class="py-10 px-6">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Khu vực hiển thị danh sách bài viết -->
+    <section class="py-10 px-6 min-h-[400px]">
+        <!-- Biểu tượng loading -->
+        <div id="loading" class="text-center text-sky-500 text-2xl py-10"><i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>
+        
+        <!-- Container chứa các bài viết (Render bằng JS) -->
+        <div id="posts-container" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Bài viết sẽ xuất hiện ở đây -->
+        </div>
+    </section>
+
+    <!-- Modal Form Tạo Bài Viết -->
+    <div id="postModal" class="modal flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-2xl p-6 shadow-2xl relative">
+            <span id="closeModalBtn" class="absolute top-4 right-6 text-slate-400 hover:text-white text-2xl cursor-pointer"><i class="fas fa-times"></i></span>
+            <h2 class="text-2xl font-bold text-sky-400 mb-6 border-b border-slate-800 pb-4">Tạo bài chia sẻ mới</h2>
             
-            <!-- Bài viết 1 -->
-            <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
-                <div class="flex justify-between items-start mb-4">
-                    <span class="text-xs font-bold px-3 py-1 bg-sky-500/20 text-sky-400 rounded-full">Microsoft 365</span>
-                    <span class="text-xs text-slate-500 font-terminal">08/07/2026</span>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Người đăng</label>
+                        <input type="text" id="postAuthor" placeholder="Tên của bạn..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Chủ đề (Tag)</label>
+                        <select id="postTag" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500">
+                            <option value="Microsoft 365">Microsoft 365</option>
+                            <option value="Network/Cisco">Network / Cisco</option>
+                            <option value="Security/Firewall">Security / Firewall</option>
+                            <option value="Linux/Script">Linux / Script</option>
+                            <option value="Tài liệu PDF">Tài liệu PDF / File</option>
+                        </select>
+                    </div>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">Checklist Migrate Mailbox sang M365</h3>
-                <p class="text-slate-400 text-sm mb-6 flex-1">Tài liệu tổng hợp các bước cần thiết và file cấu hình để migrate mail từ MDaemon/Zimbra lên Cloud an toàn.</p>
-                <div class="flex gap-3">
-                    <a href="#" class="px-4 py-2 bg-slate-800 hover:bg-sky-600 text-sm font-semibold rounded-lg transition-colors flex-1 text-center">Đọc bài</a>
-                    <a href="#" class="px-4 py-2 border border-slate-700 hover:border-emerald-500 text-emerald-400 text-sm font-semibold rounded-lg transition-colors" title="Tải File PDF"><i class="fas fa-download"></i></a>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Tiêu đề bài viết</label>
+                    <input type="text" id="postTitle" placeholder="Ví dụ: Cấu hình OSPF cơ bản..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500">
                 </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Link Ảnh minh họa hoặc Link Tài liệu (Tùy chọn)</label>
+                    <input type="text" id="postLink" placeholder="Dán link ảnh (.jpg/.png) hoặc link Google Drive vào đây..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Nội dung chi tiết</label>
+                    <textarea id="postContent" rows="6" placeholder="Viết nội dung hoặc dán text từ Word vào đây..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500"></textarea>
+                </div>
+                
+                <button id="submitPostBtn" class="w-full py-3 bg-sky-500 hover:bg-sky-600 rounded-lg text-white font-bold transition-colors">
+                    <i class="fas fa-paper-plane mr-2"></i> Đăng bài viết
+                </button>
             </div>
-
-            <!-- Bài viết 2 -->
-            <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
-                <div class="flex justify-between items-start mb-4">
-                    <span class="text-xs font-bold px-3 py-1 bg-red-500/20 text-red-400 rounded-full">Fortinet</span>
-                    <span class="text-xs text-slate-500 font-terminal">15/06/2026</span>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2">Cấu hình IPsec VPN Site-to-Site</h3>
-                <p class="text-slate-400 text-sm mb-6 flex-1">Hướng dẫn chi tiết kèm lệnh CLI để thiết lập hầm VPN bảo mật giữa 2 thiết bị FortiGate ở 2 chi nhánh.</p>
-                <div class="flex gap-3">
-                    <a href="#" class="px-4 py-2 bg-slate-800 hover:bg-sky-600 text-sm font-semibold rounded-lg transition-colors flex-1 text-center">Đọc bài</a>
-                    <a href="#" class="px-4 py-2 border border-slate-700 hover:border-emerald-500 text-emerald-400 text-sm font-semibold rounded-lg transition-colors"><i class="fas fa-download"></i></a>
-                </div>
-            </div>
-
-            <!-- Bài viết 3 -->
-            <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
-                <div class="flex justify-between items-start mb-4">
-                    <span class="text-xs font-bold px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full">Linux / Scripts</span>
-                    <span class="text-xs text-slate-500 font-terminal">02/05/2026</span>
-                </div>
-                <h3 class="text-xl font-bold text-white mb-2">Script Bash Backup Log Hệ Thống</h3>
-                <p class="text-slate-400 text-sm mb-6 flex-1">Đoạn script tự động nén log trên CentOS/Ubuntu và đẩy lên FTP Server theo lịch cron hàng tuần.</p>
-                <div class="flex gap-3">
-                    <a href="#" class="px-4 py-2 bg-slate-800 hover:bg-sky-600 text-sm font-semibold rounded-lg transition-colors flex-1 text-center">Đọc bài</a>
-                    <a href="#" class="px-4 py-2 border border-slate-700 hover:border-emerald-500 text-emerald-400 text-sm font-semibold rounded-lg transition-colors"><i class="fas fa-download"></i></a>
-                </div>
-            </div>
-
         </div>
-    </section>
+    </div>
 
     <!-- Khu vực Bình luận (Disqus) -->
-    <section class="py-16 px-6 border-t border-slate-800 bg-slate-900/30">
+    <section class="py-16 px-6 border-t border-slate-800 bg-slate-900/30 mt-10">
         <div class="max-w-4xl mx-auto glass-card p-8 rounded-3xl">
-            <h2 class="text-2xl font-bold mb-6 text-white"><i class="fas fa-comments text-sky-400 mr-2"></i>Thảo luận & Góp ý</h2>
-            <p class="text-slate-400 text-sm mb-8">Bạn có câu hỏi hoặc cần xin thêm tài liệu? Cứ để lại bình luận bên dưới nhé, mình sẽ phản hồi sớm nhất!</p>
-            
-            <!-- CHỖ NÀY ĐỂ NHÚNG DISQUS -->
+            <h2 class="text-2xl font-bold mb-6 text-white"><i class="fas fa-comments text-sky-400 mr-2"></i>Thảo luận chung</h2>
             <div id="disqus_thread"></div>
             <script>
-                /**
-                *  HƯỚNG DẪN CÀI ĐẶT DISQUS:
-                *  1. Vào disqus.com đăng ký 1 tài khoản (miễn phí)
-                *  2. Chọn "I want to install Disqus on my site"
-                *  3. Tạo tên shortname (ví dụ: thanh-sysadmin)
-                *  4. Sửa dòng "s.src" bên dưới thành URL của bạn.
-                */
                 var disqus_config = function () {
-                    this.page.url = window.location.href;  // URL trang hiện tại
-                    this.page.identifier = 'blog_page_general'; // ID duy nhất cho trang này
+                    this.page.url = window.location.href;  
+                    this.page.identifier = 'blog_page_general'; 
                 };
-                (function() { // DON'T EDIT BELOW THIS LINE
+                (function() { 
                     var d = document, s = d.createElement('script');
-                    
-                    // THAY ĐỔI 'thanh-sysadmin' THÀNH SHORTNAME BẠN TẠO TRÊN DISQUS
+                    // THAY LẠI TÊN WEBSITE DISQUS BẠN ĐÃ TẠO VÀO ĐÂY NHÉ
                     s.src = 'https://nvthanh-portfolio.disqus.com/embed.js'; 
-                    
                     s.setAttribute('data-timestamp', +new Date());
                     (d.head || d.body).appendChild(s);
                 })();
             </script>
-            <noscript>Vui lòng bật JavaScript để xem <a href="https://disqus.com/?ref_noscript">bình luận được cung cấp bởi Disqus.</a></noscript>
         </div>
     </section>
 
@@ -141,5 +120,126 @@
         <p class="text-slate-500 text-sm font-medium">© 2026 Nguyễn Viết Thành. System & Network Engineer.</p>
     </footer>
 
+    <!-- LOGIC ĐỌC VÀ LƯU BÀI VIẾT (FIREBASE) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // BẠN DÁN CHÍNH XÁC ĐOẠN FIREBASE CONFIG CỦA BẠN VÀO ĐÂY:
+        const firebaseConfig = {
+  apiKey: "AIzaSyAM4gySkHXU1jUPXlYsQ51Z7PZjcta3qXw",
+  authDomain: "thanh-portfolio-8c122.firebaseapp.com",
+  projectId: "thanh-portfolio-8c122",
+  storageBucket: "thanh-portfolio-8c122.firebasestorage.app",
+  messagingSenderId: "386068468225",
+  appId: "1:386068468225:web:36dfe8ac2b3b4e1249a600",
+  measurementId: "G-E31NYY0Q07"
+};
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Xử lý Giao diện Modal
+        const modal = document.getElementById("postModal");
+        document.getElementById("openPostModalBtn").onclick = () => { modal.style.display = "flex"; }
+        document.getElementById("closeModalBtn").onclick = () => { modal.style.display = "none"; }
+        window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; }
+
+        // Hàm lấy danh sách bài viết từ Database và vẽ ra HTML
+        async function fetchPosts() {
+            const container = document.getElementById("posts-container");
+            const loading = document.getElementById("loading");
+            container.innerHTML = '';
+            
+            try {
+                const q = query(collection(db, "blogPosts"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                loading.style.display = 'none';
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p class="text-slate-400 col-span-3 text-center">Chưa có bài viết nào. Hãy là người đầu tiên tạo bài!</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString('vi-VN') : 'Vừa xong';
+                    
+                    // Tạo màu thẻ Tag ngẫu nhiên
+                    let tagColor = "bg-sky-500/20 text-sky-400";
+                    if(data.tag.includes("Security")) tagColor = "bg-red-500/20 text-red-400";
+                    if(data.tag.includes("Linux")) tagColor = "bg-yellow-500/20 text-yellow-400";
+                    if(data.tag.includes("Tài liệu")) tagColor = "bg-emerald-500/20 text-emerald-400";
+
+                    // Vẽ bài viết ra giao diện
+                    const postHTML = `
+                        <div class="glass-card p-6 rounded-2xl flex flex-col h-full overflow-hidden">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-xs font-bold px-3 py-1 ${tagColor} rounded-full">${data.tag}</span>
+                                <span class="text-xs text-slate-500 font-terminal">${date}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">${data.title}</h3>
+                            <p class="text-xs text-slate-400 mb-3 border-b border-slate-800 pb-2"><i class="fas fa-user-edit mr-1"></i> Bởi: ${data.author}</p>
+                            <p class="text-slate-300 text-sm mb-6 flex-1 whitespace-pre-line">${data.content.substring(0, 150)}...</p>
+                            
+                            ${data.link ? `<a href="${data.link}" target="_blank" class="w-full py-2 bg-slate-800 hover:bg-sky-600 text-sm font-semibold rounded-lg transition-colors text-center text-white mb-2"><i class="fas fa-external-link-alt mr-2"></i> Xem Ảnh / Tải Tài Liệu</a>` : ''}
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', postHTML);
+                });
+            } catch (error) {
+                console.error("Lỗi lấy bài viết:", error);
+                loading.innerHTML = '<span class="text-red-500">Có lỗi khi tải dữ liệu!</span>';
+            }
+        }
+
+        // Gọi hàm fetch khi vừa load web
+        fetchPosts();
+
+        // Xử lý sự kiện bấm nút Gửi Bài
+        document.getElementById("submitPostBtn").addEventListener("click", async () => {
+            const author = document.getElementById("postAuthor").value.trim() || "Ẩn danh";
+            const tag = document.getElementById("postTag").value;
+            const title = document.getElementById("postTitle").value.trim();
+            const link = document.getElementById("postLink").value.trim();
+            const content = document.getElementById("postContent").value.trim();
+
+            if(!title || !content) {
+                alert("Vui lòng nhập đủ Tiêu đề và Nội dung bài viết!");
+                return;
+            }
+
+            document.getElementById("submitPostBtn").innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đăng...';
+
+            try {
+                // Đẩy lên Firestore
+                await addDoc(collection(db, "blogPosts"), {
+                    author: author,
+                    tag: tag,
+                    title: title,
+                    link: link,
+                    content: content,
+                    timestamp: serverTimestamp()
+                });
+
+                alert("Đăng bài thành công!");
+                modal.style.display = "none";
+                
+                // Xóa trắng form
+                document.getElementById("postTitle").value = '';
+                document.getElementById("postLink").value = '';
+                document.getElementById("postContent").value = '';
+                document.getElementById("submitPostBtn").innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Đăng bài viết';
+                
+                // Tải lại danh sách
+                fetchPosts();
+
+            } catch (e) {
+                console.error("Lỗi:", e);
+                alert("Đăng bài thất bại. Bạn có nhớ mở Rules trên Firebase chưa?");
+                document.getElementById("submitPostBtn").innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Đăng bài viết';
+            }
+        });
+    </script>
 </body>
 </html>
