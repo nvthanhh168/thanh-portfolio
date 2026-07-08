@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog & Tài liệu | Nguyễn Viết Thành</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        body { 
+            font-family: 'Space Grotesk', sans-serif; 
+            background-color: #0f172a; 
+            color: #f8fafc;
+        }
+        .text-gradient { 
+            background: linear-gradient(135deg, #0ea5e9, #6366f1); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        .glass-card { 
+            background: rgba(30, 41, 59, 0.5); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.3);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+        .font-terminal { font-family: 'Fira Code', monospace; }
+    </style>
+</head>
+<body class="antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold text-slate-300 hover:text-white transition flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Về trang chủ
+            </a>
+            <div class="text-xl font-bold text-gradient">Góc Chia Sẻ</div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="pt-32 pb-10 px-6 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-600/20 rounded-full blur-3xl"></div>
+        <div class="max-w-4xl mx-auto text-center z-10 relative">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Tài liệu & <span class="text-gradient">Blog Kỹ Thuật</span></h1>
+            <p class="text-slate-400 text-lg">Nơi lưu trữ các script, tài liệu cấu hình mạng và kinh nghiệm triển khai hệ thống thực tế.</p>
+        </div>
+    </section>
+
+    <!-- Danh sách Tài liệu / Bài viết -->
+    <section class="py-10 px-6">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Bài viết 1 -->
+            <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-bold px-3 py-1 bg-sky-500/20 text-sky-400 rounded-full">Microsoft 365</span>
+                    <span class="text-xs text-slate-500 font-terminal">08/07/2026</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Checklist Migrate Mailbox sang M365</h3>
+                <p class="text-slate-400 text-sm mb-6 flex-1">Tài liệu tổng hợp các bước cần thiết và file cấu hình để migrate mail từ MDaemon/Zimbra lên Cloud an toàn.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="px-4 py-2 bg-slate-800 hover:bg-sky-600 text-sm font-semibold rounded-lg transition-colors flex-1 text-center">Đọc bài</a>
+                    <a href="#" class="px-4 py-2 border border-slate-700 hover:border-emerald-500 text-emerald-400 text-sm font-semibold rounded-lg transition-colors" title="Tải File PDF"><i class="fas fa-download"></i></a>
+                </div>
+            </div>
+
+            <!-- Bài viết 2 -->
+            <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-bold px-3 py-1 bg-red-500/20 text-red-400 rounded-full">Fortinet</span>
+                    <span class="text-xs text-slate-500 font-terminal">15/06/2026</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Cấu hình IPsec VPN Site-to-Site</h3>
+                <p class="text-slate-400 text-sm mb-6 flex-1">Hướng dẫn chi tiết kèm lệnh CLI để thiết lập hầm VPN bảo mật giữa 2 thiết bị FortiGate ở 2 chi nhánh.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="px-4 py-2 bg-slate-800 hover:bg-sky-600 text-sm font-semibold rounded-lg transition-colors flex-1 text-center">Đọc bài</a>
+                    <a href="#" class="px-4 py-2 border border-slate-700 hover:border-emerald-500 text-emerald-400 text-sm font-semibold rounded-lg transition-colors"><i class="fas fa-download"></i></a>
+                </div>
+            </div>
+
+            <!-- Bài viết 3 -->
+            <div class="glass-card p-6 rounded-2xl flex flex-col h-full">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-xs font-bold px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full">Linux / Scripts</span>
+                    <span class="text-xs text-slate-500 font-terminal">02/05/2026</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Script Bash Backup Log Hệ Thống</h3>
+                <p class="text-slate-400 text-sm mb-6 flex-1">Đoạn script tự động nén log trên CentOS/Ubuntu và đẩy lên FTP Server theo lịch cron hàng tuần.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="px-4 py-2 bg-slate-800 hover:bg-sky-600 text-sm font-semibold rounded-lg transition-colors flex-1 text-center">Đọc bài</a>
+                    <a href="#" class="px-4 py-2 border border-slate-700 hover:border-emerald-500 text-emerald-400 text-sm font-semibold rounded-lg transition-colors"><i class="fas fa-download"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Khu vực Bình luận (Disqus) -->
+    <section class="py-16 px-6 border-t border-slate-800 bg-slate-900/30">
+        <div class="max-w-4xl mx-auto glass-card p-8 rounded-3xl">
+            <h2 class="text-2xl font-bold mb-6 text-white"><i class="fas fa-comments text-sky-400 mr-2"></i>Thảo luận & Góp ý</h2>
+            <p class="text-slate-400 text-sm mb-8">Bạn có câu hỏi hoặc cần xin thêm tài liệu? Cứ để lại bình luận bên dưới nhé, mình sẽ phản hồi sớm nhất!</p>
+            
+            <!-- CHỖ NÀY ĐỂ NHÚNG DISQUS -->
+            <div id="disqus_thread"></div>
+            <script>
+                /**
+                *  HƯỚNG DẪN CÀI ĐẶT DISQUS:
+                *  1. Vào disqus.com đăng ký 1 tài khoản (miễn phí)
+                *  2. Chọn "I want to install Disqus on my site"
+                *  3. Tạo tên shortname (ví dụ: thanh-sysadmin)
+                *  4. Sửa dòng "s.src" bên dưới thành URL của bạn.
+                */
+                var disqus_config = function () {
+                    this.page.url = window.location.href;  // URL trang hiện tại
+                    this.page.identifier = 'blog_page_general'; // ID duy nhất cho trang này
+                };
+                (function() { // DON'T EDIT BELOW THIS LINE
+                    var d = document, s = d.createElement('script');
+                    
+                    // THAY ĐỔI 'thanh-sysadmin' THÀNH SHORTNAME BẠN TẠO TRÊN DISQUS
+                    s.src = 'https://nvthanh-portfolio.disqus.com/embed.js'; 
+                    
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                })();
+            </script>
+            <noscript>Vui lòng bật JavaScript để xem <a href="https://disqus.com/?ref_noscript">bình luận được cung cấp bởi Disqus.</a></noscript>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 pt-8 pb-6 text-center">
+        <p class="text-slate-500 text-sm font-medium">© 2026 Nguyễn Viết Thành. System & Network Engineer.</p>
+    </footer>
+
+</body>
+</html>
