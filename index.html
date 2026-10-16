@@ -8,15 +8,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Tải nhanh Theme từ LocalStorage để tránh giật giao diện (Zero Flash)
+        (function() {
+            try {
+                const t = JSON.parse(localStorage.getItem('portfolio_theme') || '{}');
+                if (t.fontFamily) document.documentElement.style.fontFamily = "'" + t.fontFamily + "', sans-serif";
+                if (t.primaryColor) document.documentElement.style.setProperty('--primary-color', t.primaryColor);
+                if (t.accentColor) document.documentElement.style.setProperty('--accent-color', t.accentColor);
+            } catch(e) {}
+        })();
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        :root {
+            --primary-color: #0ea5e9;
+            --accent-color: #6366f1;
+        }
         body { 
             font-family: 'Space Grotesk', sans-serif; 
             background-color: #0f172a; 
             color: #f8fafc;
         }
         .text-gradient { 
-            background: linear-gradient(135deg, #0ea5e9, #6366f1); 
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); 
             background-clip: text; 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
@@ -541,7 +558,7 @@
     <!-- Footer with IP Tracking -->
     <footer class="border-t border-slate-800 bg-slate-950 pt-10 pb-6">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-slate-500 text-sm font-medium">© 2026 NGUYỄN VIẾT THÀNH. All Rights Reserved.</p>
+            <p class="text-slate-500 text-sm font-medium">© 2026 NGUYỄN VIẾT THÀNH. All Rights Reserved. <a href="admin.html" class="text-slate-600 hover:text-sky-400 transition ml-2" title="Cổng Quản Trị Hệ Thống"><i class="fas fa-user-shield"></i></a></p>
             <div class="flex flex-wrap items-center gap-3 text-xs font-terminal text-slate-500">
                 <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-2">
                     <i class="fas fa-lock text-emerald-500"></i>
@@ -643,7 +660,11 @@
                 printToTerminal(`<span class="text-emerald-500">root@nvthanh:~$</span> ${cmd}`);
                 
                 switch(cmd) {
-                    case 'help': printToTerminal(`Available commands:<br>- <span class="text-white">whoami</span>: Display user info<br>- <span class="text-white">show run</span>: Show system config/skills<br>- <span class="text-white">ping</span>: Check connectivity<br>- <span class="text-white">clear</span>: Clear terminal`); break;
+                    case 'help': printToTerminal(`Available commands:<br>- <span class="text-white">whoami</span>: Display user info<br>- <span class="text-white">show run</span>: Show system config/skills<br>- <span class="text-white">ping</span>: Check connectivity<br>- <span class="text-white">admin</span>: Cổng Quản Trị Hệ Thống<br>- <span class="text-white">clear</span>: Clear terminal`); break;
+                    case 'admin': 
+                        printToTerminal(`<span class="text-sky-400">Đang chuyển hướng tới Cổng Quản Trị Hệ Thống (admin.html)...</span>`);
+                        setTimeout(() => { window.location.href = 'admin.html'; }, 800);
+                        break;
                     case 'whoami': printToTerminal(`Name: NGUYỄN VIẾT THÀNH<br>Role: System & Network Engineer<br>Location: Thành Phố Hồ Chí Minh`); break;
                     case 'show run': printToTerminal(`Building configuration...<br>!<br>hostname NVThanh_Core_Sw<br>!<br>interface Loopback0<br> ip address 127.0.0.1 255.0.0.0<br>!<br>skills:<br> - MICROSOFT TECHNOLOGIES<br> - NETWORK INFRASTRUCTURE<br> - SECURITY<br> - SYSTEM ADMINISTRATION<br>!`); break;
                     case 'ping': printToTerminal(`Pinging 8.8.8.8 with 32 bytes of data:<br>Reply from 8.8.8.8: bytes=32 time=14ms TTL=117<br>Reply from 8.8.8.8: bytes=32 time=12ms TTL=117`); break;
@@ -819,24 +840,43 @@
             }
         ];
 
+        // Khởi tạo danh sách chứng chỉ (Ưu tiên bộ nhớ lưu trữ tùy biến nếu có)
+        try {
+            const localCerts = localStorage.getItem('portfolio_certificates');
+            if (localCerts) {
+                const parsed = JSON.parse(localCerts);
+                if (Array.isArray(parsed) && parsed.length > 0) certificatesData = parsed;
+            }
+        } catch (e) {}
+
+        let currentCertFilter = 'all';
+
         function renderCertificates(filter = 'all') {
+            currentCertFilter = filter;
             const grid = document.getElementById('certsGrid');
             if (!grid) return;
 
             const list = filter === 'all' ? certificatesData : certificatesData.filter(c => c.category === filter);
 
-            grid.innerHTML = list.map((cert, idx) => `
+            grid.innerHTML = list.map((cert, idx) => {
+                const certTitle = cert.titleVN || cert.title || 'Chứng chỉ';
+                const certBadge = cert.badgeVN || cert.badge || 'Chứng chỉ';
+                const certDesc = cert.descVN || cert.desc || '';
+                const certDate = cert.dateVN || cert.date || '';
+                const badgeColor = cert.badgeColor || 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+
+                return `
                 <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-emerald-500/40 transition duration-300" data-aos="fade-up" data-aos-delay="${idx * 50}">
                     <!-- Thumbnail Preview with zoom overlay -->
                     <div class="relative aspect-[16/11] bg-slate-950 overflow-hidden cursor-pointer" onclick="openCertModal('${cert.id}')">
-                        <img src="${cert.img}" alt="${cert.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="${cert.img}" alt="${certTitle}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/0f172a/38bdf8?text=Certificate+Preview'">
                         <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
                             <span class="px-3.5 py-1.5 rounded-full bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition duration-300">
                                 <i class="fas fa-search-plus"></i> Xem chi tiết
                             </span>
                         </div>
-                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[11px] font-semibold border ${cert.badgeColor} backdrop-blur-md">
-                            ${cert.badge}
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[11px] font-semibold border ${badgeColor} backdrop-blur-md">
+                            ${certBadge}
                         </span>
                     </div>
 
@@ -844,14 +884,14 @@
                     <div class="p-5 flex-1 flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5">
-                                <span class="font-terminal text-emerald-400"><i class="fas fa-building mr-1"></i>${cert.issuer}</span>
-                                <span class="font-terminal text-[11px]">${cert.date}</span>
+                                <span class="font-terminal text-emerald-400"><i class="fas fa-building mr-1"></i>${cert.issuer || 'Đơn vị cấp'}</span>
+                                <span class="font-terminal text-[11px]">${certDate}</span>
                             </div>
                             <h3 class="text-base font-bold text-white mb-2 line-clamp-2 group-hover:text-emerald-400 transition-colors">
-                                ${cert.title}
+                                ${certTitle}
                             </h3>
                             <p class="text-slate-400 text-xs line-clamp-2 mb-4 leading-relaxed">
-                                ${cert.desc}
+                                ${certDesc}
                             </p>
                         </div>
 
@@ -866,7 +906,8 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         // Filter buttons
@@ -895,12 +936,16 @@
             const cert = certificatesData.find(c => c.id === id);
             if (!cert) return;
 
-            modalCertTitle.textContent = cert.title;
-            modalCertIssuer.textContent = cert.issuer + ' · ' + cert.badge;
+            const title = cert.titleVN || cert.title || 'Chứng chỉ';
+            const badge = cert.badgeVN || cert.badge || '';
+            const meta = cert.metaVN || cert.meta || '';
+
+            modalCertTitle.textContent = title;
+            modalCertIssuer.textContent = (cert.issuer || '') + (badge ? ' · ' + badge : '');
             modalCertImg.src = cert.img;
-            modalCertMeta.textContent = cert.meta;
+            modalCertMeta.textContent = meta;
             downloadCertBtn.href = cert.img;
-            downloadCertBtn.setAttribute('download', cert.title.replace(/[^a-zA-Z0-9]/g, '_') + '.jpg');
+            downloadCertBtn.setAttribute('download', title.replace(/[^a-zA-Z0-9]/g, '_') + '.jpg');
 
             certModal.classList.remove('hidden');
             certModal.classList.add('flex');
@@ -928,45 +973,82 @@
         // Initial render
         renderCertificates('all');
     </script>
-    <!-- Đọc dữ liệu từ Firebase -->
+    <!-- Đồng Bộ Dữ Liệu Tự Động Từ Firestore & LocalStorage -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // COPY LẠI CHÍNH XÁC ĐOẠN FIREBASE CONFIG NHƯ Ở FILE ADMIN VÀO ĐÂY:
         const firebaseConfig = {
-  apiKey: "AIzaSyAM4gySkHXU1jUPXlYsQ51Z7PZjcta3qXw",
-  authDomain: "thanh-portfolio-8c122.firebaseapp.com",
-  projectId: "thanh-portfolio-8c122",
-  storageBucket: "thanh-portfolio-8c122.firebasestorage.app",
-  messagingSenderId: "386068468225",
-  appId: "1:386068468225:web:36dfe8ac2b3b4e1249a600",
-  measurementId: "G-E31NYY0Q07"
-};
-
+            apiKey: "AIzaSyAM4gySkHXU1jUPXlYsQ51Z7PZjcta3qXw",
+            authDomain: "thanh-portfolio-8c122.firebaseapp.com",
+            projectId: "thanh-portfolio-8c122",
+            storageBucket: "thanh-portfolio-8c122.firebasestorage.app",
+            messagingSenderId: "386068468225",
+            appId: "1:386068468225:web:36dfe8ac2b3b4e1249a600",
+            measurementId: "G-E31NYY0Q07"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Fetch và gán dữ liệu lên Web
-        async function loadHeroData() {
-            try {
-                const docSnap = await getDoc(doc(db, "portfolioData", "heroSection"));
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    // Gán vào các thẻ HTML tương ứng (Thay các chữ cứng bằng ID html)
-                    // Cần thêm id="dynamic-name", id="dynamic-title", id="dynamic-desc" vào các thẻ HTML phía trên nhé.
-                    if(document.getElementById('dynamic-name')) document.getElementById('dynamic-name').innerText = data.name;
-                    if(document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = data.title;
-                    if(document.getElementById('dynamic-desc')) document.getElementById('dynamic-desc').innerText = data.descVN; // File EN thì dùng data.descEN
-                }
-            } catch (error) {
-                console.error("Lỗi đọc Database:", error);
+        // Áp dụng Theme và Font
+        function applyLiveTheme(theme) {
+            if (!theme) return;
+            if (theme.fontFamily) {
+                document.body.style.fontFamily = `'${theme.fontFamily}', sans-serif`;
+            }
+            if (theme.primaryColor && theme.accentColor) {
+                document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+                document.documentElement.style.setProperty('--accent-color', theme.accentColor);
             }
         }
+
+        async function syncPortfolioData() {
+            // 1. Tải Theme
+            try {
+                const localTheme = localStorage.getItem('portfolio_theme');
+                if (localTheme) applyLiveTheme(JSON.parse(localTheme));
+
+                const themeSnap = await getDoc(doc(db, "portfolioData", "theme"));
+                if (themeSnap.exists()) {
+                    const t = themeSnap.data();
+                    applyLiveTheme(t);
+                    localStorage.setItem('portfolio_theme', JSON.stringify(t));
+                }
+            } catch (err) {}
+
+            // 2. Tải Profile (Hero Section VN)
+            try {
+                const localHero = localStorage.getItem('portfolio_hero');
+                if (localHero) {
+                    const h = JSON.parse(localHero);
+                    if (h.name && document.getElementById('dynamic-name')) document.getElementById('dynamic-name').innerText = h.name;
+                    if ((h.titleVN || h.title) && document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = h.titleVN || h.title;
+                    if (h.descVN && document.getElementById('dynamic-desc')) document.getElementById('dynamic-desc').innerText = h.descVN;
+                }
+
+                const heroSnap = await getDoc(doc(db, "portfolioData", "heroSection"));
+                if (heroSnap.exists()) {
+                    const data = heroSnap.data();
+                    if (data.name && document.getElementById('dynamic-name')) document.getElementById('dynamic-name').innerText = data.name;
+                    if ((data.titleVN || data.title) && document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = data.titleVN || data.title;
+                    if (data.descVN && document.getElementById('dynamic-desc')) document.getElementById('dynamic-desc').innerText = data.descVN;
+                    localStorage.setItem('portfolio_hero', JSON.stringify(data));
+                }
+            } catch (error) {}
+
+            // 3. Tải Chứng chỉ (Certificates)
+            try {
+                const certsSnap = await getDoc(doc(db, "portfolioData", "certificates"));
+                if (certsSnap.exists() && Array.isArray(certsSnap.data().list) && certsSnap.data().list.length > 0) {
+                    certificatesData = certsSnap.data().list;
+                    localStorage.setItem('portfolio_certificates', JSON.stringify(certificatesData));
+                    renderCertificates(currentCertFilter);
+                }
+            } catch (err) {}
+        }
         
-        loadHeroData();
+        syncPortfolioData();
     </script>
 </body>
 </html>

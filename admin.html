@@ -1,138 +1,1686 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Admin Panel</title>
+    <title>Cổng Quản Trị Hệ Thống | Nguyễn Viết Thành Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
+        :root {
+            --primary-color: #0ea5e9;
+            --accent-color: #6366f1;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0b1120;
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .bg-gradient-theme {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.25s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(14, 165, 233, 0.4);
+            transform: translateY(-2px);
+        }
+        .font-terminal { font-family: 'Fira Code', monospace; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0b1120; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(99, 102, 241, 0.2));
+            border-color: #0ea5e9;
+            color: #38bdf8;
+        }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
+<body class="selection:bg-sky-500 selection:text-white pb-16">
 
-    <!-- Màn hình đăng nhập -->
-    <div id="loginScreen" class="w-full max-w-md bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-xl">
-        <h2 class="text-3xl font-bold text-center mb-6 text-sky-400">Admin Login</h2>
-        <div class="space-y-4">
-            <input type="email" id="email" placeholder="Admin Email" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-sky-500">
-            <input type="password" id="password" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-sky-500">
-            <button id="loginBtn" class="w-full py-3 bg-sky-500 hover:bg-sky-600 rounded-lg text-white font-bold transition-colors">Đăng nhập</button>
-            <p id="errorMsg" class="text-red-500 text-sm text-center hidden">Sai tài khoản hoặc mật khẩu!</p>
+    <!-- Toast Thông Báo Phản Hồi -->
+    <div id="toastBox" class="fixed top-6 right-6 z-[200] max-w-md pointer-events-none transition-all duration-300 transform translate-x-full opacity-0">
+        <div class="glass-panel p-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700/80 bg-slate-900/95">
+            <div id="toastIconWrapper" class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-lg">
+                <i id="toastIcon" class="fas fa-check-circle"></i>
+            </div>
+            <div>
+                <h4 id="toastTitle" class="text-sm font-bold text-white">Thành công</h4>
+                <p id="toastMsg" class="text-xs text-slate-300 mt-0.5">Dữ liệu đã được cập nhật thành công!</p>
+            </div>
         </div>
     </div>
 
-    <!-- Màn hình Quản trị (Ban đầu ẩn) -->
-    <div id="adminScreen" class="w-full max-w-3xl bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-xl hidden">
-        <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
-            <h2 class="text-2xl font-bold text-emerald-400"><i class="fas fa-server mr-2"></i>Dashboard Control</h2>
-            <button id="logoutBtn" class="px-4 py-2 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500/40 transition">Đăng xuất</button>
-        </div>
+    <!-- MÀN HÌNH ĐĂNG NHẬP (Hiển thị khi chưa có phiên hợp lệ) -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
+        <!-- Ambient glowing background lights -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="space-y-6">
-            <div>
-                <label class="block text-sm text-slate-400 mb-1">Họ Tên (Tất cả ngôn ngữ)</label>
-                <input type="text" id="devName" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:border-emerald-500">
+        <div class="w-full max-w-md relative z-10">
+            <!-- Brand Badge -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white text-2xl shadow-xl shadow-sky-500/25 mb-4">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">NVThanh <span class="text-gradient">Admin Portal</span></h1>
+                <p class="text-sm text-slate-400 mt-1.5 font-light">Quản trị toàn diện Portfolio & Chứng chỉ Chuyên môn</p>
             </div>
-            <div>
-                <label class="block text-sm text-slate-400 mb-1">Chức danh (Ví dụ: System & Network Engineer)</label>
-                <input type="text" id="devTitle" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:border-emerald-500">
+
+            <!-- Login Card -->
+            <div class="glass-panel p-8 rounded-3xl shadow-2xl border border-slate-700/60 bg-slate-900/90">
+                <div class="flex items-center justify-between pb-5 mb-6 border-b border-slate-800">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Đăng Nhập Quản Trị</span>
+                    <span class="text-[11px] font-terminal text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                        <i class="fas fa-lock mr-1"></i>Bảo Mật
+                    </span>
+                </div>
+
+                <form id="loginForm" class="space-y-4" onsubmit="return false;">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Tài khoản</label>
+                        <div class="relative">
+                            <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                            <input type="text" id="usernameInput" value="admin" placeholder="Nhập tên tài khoản..." class="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-11 pr-4 py-3 text-white text-sm focus:outline-none focus:border-sky-500 transition-colors">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Mật khẩu</label>
+                            <span class="text-[11px] text-slate-500">Phân biệt hoa/thường</span>
+                        </div>
+                        <div class="relative">
+                            <i class="fas fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                            <input type="password" id="passwordInput" placeholder="Nhập mật khẩu quản trị..." class="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-11 pr-11 py-3 text-white text-sm focus:outline-none focus:border-sky-500 transition-colors">
+                            <button type="button" id="togglePasswordBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors" title="Hiện/Ẩn mật khẩu">
+                                <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs pt-1">
+                        <label class="flex items-center gap-2 cursor-pointer text-slate-400 hover:text-slate-300">
+                            <input type="checkbox" id="rememberMeCheck" checked class="rounded bg-slate-800 border-slate-700 text-sky-500 focus:ring-0">
+                            <span>Ghi nhớ đăng nhập</span>
+                        </label>
+                        <span class="text-slate-500 font-terminal">tk: admin</span>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div id="loginErrorMsg" class="hidden p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Sai tài khoản hoặc mật khẩu! Vui lòng kiểm tra lại.</span>
+                    </div>
+
+                    <button type="button" id="loginBtn" class="w-full py-3.5 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 rounded-xl text-white font-bold text-sm transition-all shadow-lg shadow-sky-500/25 flex items-center justify-center gap-2">
+                        <i class="fas fa-sign-in-alt"></i> Đăng Nhập Hệ Thống
+                    </button>
+                </form>
+
+                <div class="mt-6 pt-5 border-t border-slate-800/80 text-center">
+                    <a href="index.html" class="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-sky-400 transition-colors">
+                        <i class="fas fa-arrow-left"></i> Quay lại trang chủ Portfolio
+                    </a>
+                </div>
             </div>
-            <div>
-                <label class="block text-sm text-slate-400 mb-1">Mô tả bản thân (Tiếng Việt)</label>
-                <textarea id="devDescVN" rows="4" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:border-emerald-500"></textarea>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH QUẢN TRỊ VIÊN CHÍNH (Hiện khi đã đăng nhập) -->
+    <div id="adminScreen" class="hidden min-h-screen">
+        
+        <!-- Navigation Header -->
+        <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 bg-slate-950/85">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center text-lg shadow-md shadow-sky-500/20">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                            Admin Dashboard <span class="text-[11px] font-normal px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">v2.5 Live</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 hidden sm:block">Xin chào, Quản trị viên <strong class="text-sky-400">admin</strong></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Quick View Links -->
+                    <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium border border-slate-700 transition flex items-center gap-1.5" title="Xem website tiếng Việt">
+                        <i class="fas fa-external-link-alt text-sky-400"></i> <span class="hidden sm:inline">Web VN</span>
+                    </a>
+                    <a href="index-en.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-medium border border-slate-700 transition flex items-center gap-1.5" title="Xem website tiếng Anh">
+                        <i class="fas fa-external-link-alt text-emerald-400"></i> <span class="hidden sm:inline">Web EN</span>
+                    </a>
+                    
+                    <!-- Logout Button -->
+                    <button id="logoutBtn" class="px-3.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-400 hover:text-red-300 text-xs font-semibold border border-red-500/30 transition flex items-center gap-1.5">
+                        <i class="fas fa-power-off"></i> <span class="hidden sm:inline">Đăng xuất</span>
+                    </button>
+                </div>
             </div>
-            <div>
-                <label class="block text-sm text-slate-400 mb-1">Mô tả bản thân (Tiếng Anh)</label>
-                <textarea id="devDescEN" rows="4" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-white focus:border-emerald-500"></textarea>
-            </div>
+        </header>
+
+        <!-- Main Workspace Container -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-16">
             
-            <button id="saveBtn" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 rounded-lg text-white font-bold transition-colors flex items-center justify-center gap-2">
-                <i class="fas fa-save"></i> Lưu Thay Đổi Lên Database
-            </button>
-            <p id="saveMsg" class="text-emerald-400 text-sm text-center hidden">Lưu dữ liệu thành công!</p>
+            <!-- Quick Status & Sync Bar -->
+            <div class="glass-card p-4 rounded-2xl mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-700/60">
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+                    <div class="text-xs text-slate-300">
+                        <span class="font-semibold text-white">Chế độ đồng bộ:</span>
+                        <span id="syncModeLabel" class="text-emerald-400 ml-1">Cloud Firestore & Bộ nhớ cục bộ (Sẵn sàng)</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="saveAllTopBtn" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-xl text-xs font-bold transition shadow-md shadow-emerald-500/20 flex items-center gap-1.5">
+                        <i class="fas fa-cloud-upload-alt"></i> Lưu Tất Cả Thay Đổi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Navigation Tabs -->
+            <div class="flex flex-wrap gap-2 mb-8 border-b border-slate-800/80 pb-3">
+                <button class="tab-btn active px-4 py-2.5 rounded-xl font-semibold text-sm border border-transparent transition flex items-center gap-2" data-tab="tab-theme">
+                    <i class="fas fa-palette"></i> <span>Giao diện & Kiểu chữ</span>
+                </button>
+                <button class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-profile">
+                    <i class="fas fa-user-edit"></i> <span>Thông tin Hồ sơ (Song ngữ)</span>
+                </button>
+                <button class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-certificates">
+                    <i class="fas fa-award"></i> <span>Quản lý Chứng chỉ</span>
+                    <span id="certCountBadge" class="px-2 py-0.5 rounded-full text-[10px] bg-sky-500/20 text-sky-400 border border-sky-500/30">10</span>
+                </button>
+                <button class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-system">
+                    <i class="fas fa-database"></i> <span>Sao lưu & Đặt lại</span>
+                </button>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TAB 1: GIAO DIỆN & KIỂU CHỮ (THEME & FONT) -->
+            <!-- ========================================== -->
+            <div id="tab-theme" class="tab-content space-y-8">
+                
+                <!-- Font Selection -->
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800">
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fas fa-font text-sky-400"></i> Kiểu chữ Website (Typography)
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Chọn kiểu phông chữ hiển thị cho toàn bộ các trang portfolio</p>
+                        </div>
+                        <span id="currentFontBadge" class="text-xs font-terminal px-3 py-1 rounded-full bg-slate-800 text-sky-400 border border-slate-700">Space Grotesk</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="fontOptionsGrid">
+                        <!-- Space Grotesk -->
+                        <div class="font-option-card glass-card p-5 rounded-2xl cursor-pointer border-2 transition" data-font="Space Grotesk" style="font-family: 'Space Grotesk', sans-serif;">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-base">Space Grotesk</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-sky-500/20 text-sky-400">Mặc định</span>
+                            </div>
+                            <p class="text-xs text-slate-400 line-clamp-2">Hạ tầng mạng, điện toán đám mây và an ninh bảo mật hiện đại.</p>
+                            <p class="text-[11px] text-slate-500 mt-3 font-terminal">Aa Bb Cc 123 !@#</p>
+                        </div>
+
+                        <!-- Inter -->
+                        <div class="font-option-card glass-card p-5 rounded-2xl cursor-pointer border-2 border-transparent transition" data-font="Inter" style="font-family: 'Inter', sans-serif;">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-base">Inter</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-700 text-slate-300">Quốc tế</span>
+                            </div>
+                            <p class="text-xs text-slate-400 line-clamp-2">Giao diện sạch sẽ, tiêu chuẩn tối ưu cho màn hình độ phân giải cao.</p>
+                            <p class="text-[11px] text-slate-500 mt-3 font-terminal">Aa Bb Cc 123 !@#</p>
+                        </div>
+
+                        <!-- Plus Jakarta Sans -->
+                        <div class="font-option-card glass-card p-5 rounded-2xl cursor-pointer border-2 border-transparent transition" data-font="Plus Jakarta Sans" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-base">Plus Jakarta Sans</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-700 text-slate-300">Thẩm mỹ</span>
+                            </div>
+                            <p class="text-xs text-slate-400 line-clamp-2">Kiểu chữ thanh lịch, hiện đại chuẩn phong cách Tech Enterprise.</p>
+                            <p class="text-[11px] text-slate-500 mt-3 font-terminal">Aa Bb Cc 123 !@#</p>
+                        </div>
+
+                        <!-- Be Vietnam Pro -->
+                        <div class="font-option-card glass-card p-5 rounded-2xl cursor-pointer border-2 border-transparent transition" data-font="Be Vietnam Pro" style="font-family: 'Be Vietnam Pro', sans-serif;">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-base">Be Vietnam Pro</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">Tối ưu Tiếng Việt</span>
+                            </div>
+                            <p class="text-xs text-slate-400 line-clamp-2">Dấu câu tiếng Việt hoàn hảo, khoảng cách chữ hài hòa và sắc nét.</p>
+                            <p class="text-[11px] text-slate-500 mt-3 font-terminal">Aa Bb Cc 123 !@#</p>
+                        </div>
+
+                        <!-- Outfit -->
+                        <div class="font-option-card glass-card p-5 rounded-2xl cursor-pointer border-2 border-transparent transition" data-font="Outfit" style="font-family: 'Outfit', sans-serif;">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-base">Outfit</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-700 text-slate-300">Tươi sáng</span>
+                            </div>
+                            <p class="text-xs text-slate-400 line-clamp-2">Đường nét hình học cá tính, sang trọng và đầy năng lượng sáng tạo.</p>
+                            <p class="text-[11px] text-slate-500 mt-3 font-terminal">Aa Bb Cc 123 !@#</p>
+                        </div>
+
+                        <!-- Fira Code -->
+                        <div class="font-option-card glass-card p-5 rounded-2xl cursor-pointer border-2 border-transparent transition" data-font="Fira Code" style="font-family: 'Fira Code', monospace;">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-base">Fira Code</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">Terminal Hacker</span>
+                            </div>
+                            <p class="text-xs text-slate-400 line-clamp-2">Phông chữ Monospace kỹ thuật mang đậm phong cách Kỹ sư Hệ thống.</p>
+                            <p class="text-[11px] text-slate-500 mt-3 font-terminal">Aa Bb Cc 123 !@#</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color Palette Selection -->
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800">
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fas fa-paint-brush text-emerald-400"></i> Bảng Màu Chủ Đạo (Theme Accents)
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Tông màu nhận diện thương hiệu hiển thị trên các tiêu đề, nút bấm và hiệu ứng glow</p>
+                        </div>
+                    </div>
+
+                    <!-- Presets -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6" id="paletteGrid">
+                        <!-- Sky & Indigo -->
+                        <div class="palette-card glass-card p-4 rounded-2xl cursor-pointer border-2 transition" data-p1="#0ea5e9" data-p2="#6366f1" data-name="Sky & Indigo">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 rounded-xl shadow-md" style="background: linear-gradient(135deg, #0ea5e9, #6366f1);"></div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Sky & Indigo (Mặc định)</h4>
+                                    <span class="text-[11px] font-terminal text-slate-400">#0ea5e9 → #6366f1</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Emerald & Teal -->
+                        <div class="palette-card glass-card p-4 rounded-2xl cursor-pointer border-2 border-transparent transition" data-p1="#10b981" data-p2="#14b8a6" data-name="Emerald & Teal">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 rounded-xl shadow-md" style="background: linear-gradient(135deg, #10b981, #14b8a6);"></div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Emerald & Teal</h4>
+                                    <span class="text-[11px] font-terminal text-slate-400">#10b981 → #14b8a6</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Violet & Fuchsia -->
+                        <div class="palette-card glass-card p-4 rounded-2xl cursor-pointer border-2 border-transparent transition" data-p1="#8b5cf6" data-p2="#d946ef" data-name="Violet & Fuchsia">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 rounded-xl shadow-md" style="background: linear-gradient(135deg, #8b5cf6, #d946ef);"></div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Violet & Fuchsia</h4>
+                                    <span class="text-[11px] font-terminal text-slate-400">#8b5cf6 → #d946ef</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Amber & Orange -->
+                        <div class="palette-card glass-card p-4 rounded-2xl cursor-pointer border-2 border-transparent transition" data-p1="#f59e0b" data-p2="#ea580c" data-name="Amber & Orange">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 rounded-xl shadow-md" style="background: linear-gradient(135deg, #f59e0b, #ea580c);"></div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Amber & Orange</h4>
+                                    <span class="text-[11px] font-terminal text-slate-400">#f59e0b → #ea580c</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rose & Crimson -->
+                        <div class="palette-card glass-card p-4 rounded-2xl cursor-pointer border-2 border-transparent transition" data-p1="#f43f5e" data-p2="#e11d48" data-name="Rose & Crimson">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 rounded-xl shadow-md" style="background: linear-gradient(135deg, #f43f5e, #e11d48);"></div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Rose & Crimson</h4>
+                                    <span class="text-[11px] font-terminal text-slate-400">#f43f5e → #e11d48</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cyan & Blue -->
+                        <div class="palette-card glass-card p-4 rounded-2xl cursor-pointer border-2 border-transparent transition" data-p1="#06b6d4" data-p2="#3b82f6" data-name="Cyan & Blue">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 rounded-xl shadow-md" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);"></div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Cyan & Blue</h4>
+                                    <span class="text-[11px] font-terminal text-slate-400">#06b6d4 → #3b82f6</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Color Picker -->
+                    <div class="p-5 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Màu chính (Primary)</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="customColor1" value="#0ea5e9" class="w-9 h-9 rounded-lg cursor-pointer bg-transparent border-0">
+                                    <input type="text" id="customColor1Text" value="#0ea5e9" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-terminal text-white w-24">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Màu phụ (Accent)</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="color" id="customColor2" value="#6366f1" class="w-9 h-9 rounded-lg cursor-pointer bg-transparent border-0">
+                                    <input type="text" id="customColor2Text" value="#6366f1" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-terminal text-white w-24">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Preview Widget -->
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs text-slate-400">Xem trước:</span>
+                            <div id="previewBadge" class="px-4 py-2 rounded-xl text-white font-bold text-xs shadow-lg" style="background: linear-gradient(135deg, #0ea5e9, #6366f1);">
+                                Nút thử nghiệm
+                            </div>
+                            <span id="previewText" class="text-base font-bold text-gradient">Nguyễn Viết Thành</span>
+                        </div>
+                    </div>
+
+                    <!-- Save Theme Button -->
+                    <div class="mt-6 flex justify-end">
+                        <button id="saveThemeBtn" class="px-6 py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold rounded-xl text-sm transition shadow-lg shadow-sky-500/20 flex items-center gap-2">
+                            <i class="fas fa-save"></i> Áp Dụng & Lưu Giao Diện
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB 2: THÔNG TIN HỒ SƠ SONG NGỮ (PROFILE BIO) -->
+            <!-- ============================================== -->
+            <div id="tab-profile" class="tab-content hidden space-y-8">
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800">
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fas fa-id-card text-emerald-400"></i> Cập Nhật Thông Tin Cá Nhân (Bilingual)
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Chỉnh sửa nội dung đồng thời cho cả website Tiếng Việt và Tiếng Anh</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-terminal">🇻🇳 VN</span>
+                            <span class="text-xs px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-terminal">🇬🇧 EN</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Họ tên dùng chung -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                                <i class="fas fa-user text-sky-400 mr-1.5"></i> Họ & Tên Đầy Đủ (Hiển thị trang chủ)
+                            </label>
+                            <input type="text" id="profileName" value="Nguyễn Viết Thành" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-sky-500 focus:outline-none">
+                        </div>
+
+                        <!-- Chức danh Song ngữ -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                                    <span class="text-blue-400 font-terminal">[VN]</span> Chức danh Tiếng Việt
+                                </label>
+                                <input type="text" id="profileTitleVN" value="System & Network Engineer" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-sky-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                                    <span class="text-emerald-400 font-terminal">[EN]</span> Chức danh Tiếng Anh
+                                </label>
+                                <input type="text" id="profileTitleEN" value="System & Network Engineer" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-sky-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Giới thiệu bản thân Song ngữ -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                                        <span class="text-blue-400 font-terminal">[VN]</span> Mô tả giới thiệu (Tiếng Việt)
+                                    </label>
+                                    <span id="descVNCount" class="text-[11px] text-slate-500 font-terminal">0 ký tự</span>
+                                </div>
+                                <textarea id="profileDescVN" rows="6" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl p-4 text-white text-sm leading-relaxed focus:border-sky-500 focus:outline-none">System & Network Engineer với kinh nghiệm thực tế trong quản trị Microsoft 365, Windows Server, Active Directory và hạ tầng mạng doanh nghiệp. Có kinh nghiệm thiết kế, triển khai, vận hành và tối ưu hệ thống CNTT an toàn, ổn định cho môi trường doanh nghiệp đa chi nhánh. Luôn chủ động học hỏi, phát triển chuyên môn và hướng đến các vị trí IT Infrastructure Manager, IT Manager và Chief Information Officer (CIO).</textarea>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                                        <span class="text-emerald-400 font-terminal">[EN]</span> Mô tả giới thiệu (Tiếng Anh)
+                                    </label>
+                                    <span id="descENCount" class="text-[11px] text-slate-500 font-terminal">0 ký tự</span>
+                                </div>
+                                <textarea id="profileDescEN" rows="6" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl p-4 text-white text-sm leading-relaxed focus:border-sky-500 focus:outline-none">Results-driven System & Network Engineer with hands-on expertise in Microsoft 365, Windows Server, Active Directory, and enterprise network infrastructure. Experienced in designing, deploying, securing, and maintaining robust IT operations across multi-branch environments. Dedicated to continuous professional growth, aiming towards IT Infrastructure Manager, IT Manager, and Chief Information Officer (CIO) leadership roles.</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin liên lạc & Địa chỉ -->
+                        <div class="pt-4 border-t border-slate-800">
+                            <h4 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                                <i class="fas fa-address-book text-sky-400"></i> Thông Tin Liên Hệ & Mạng Xã Hội
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1.5"><i class="fas fa-envelope text-red-400 mr-1"></i> Email</label>
+                                    <input type="email" id="profileEmail" value="thanhnv168@gmail.com" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs focus:border-sky-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1.5"><i class="fas fa-phone text-emerald-400 mr-1"></i> Số điện thoại</label>
+                                    <input type="text" id="profilePhone" value="0364 892 201" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs focus:border-sky-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1.5"><i class="fas fa-map-marker-alt text-amber-400 mr-1"></i> Địa điểm (VN)</label>
+                                    <input type="text" id="profileLocationVN" value="Thành Phố Hồ Chí Minh" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs focus:border-sky-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1.5"><i class="fab fa-github text-slate-300 mr-1"></i> Link GitHub</label>
+                                    <input type="text" id="profileGithub" value="https://github.com/nvthanhh168" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs focus:border-sky-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1.5"><i class="fab fa-linkedin text-sky-400 mr-1"></i> Link LinkedIn</label>
+                                    <input type="text" id="profileLinkedin" value="https://linkedin.com/in/nvthanh" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs focus:border-sky-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1.5"><i class="fab fa-facebook text-blue-400 mr-1"></i> Link Facebook</label>
+                                    <input type="text" id="profileFacebook" value="https://facebook.com/nvthanh" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-xs focus:border-sky-500 focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Profile Button -->
+                        <div class="mt-6 flex justify-end">
+                            <button id="saveProfileBtn" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold rounded-xl text-sm transition shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+                                <i class="fas fa-save"></i> Lưu Thông Tin Hồ Sơ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB 3: QUẢN LÝ CHỨNG CHỈ (CERTIFICATES MANAGER) -->
+            <!-- ============================================== -->
+            <div id="tab-certificates" class="tab-content hidden space-y-6">
+                
+                <!-- Action & Filter Bar -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <div class="relative flex-1 md:w-72">
+                            <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                            <input type="text" id="certSearchInput" placeholder="Tìm chứng chỉ..." class="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
+                        </div>
+                        <select id="certCategoryFilter" class="bg-slate-950/80 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-sky-500">
+                            <option value="all">Tất cả hãng</option>
+                            <option value="sophos">Sophos</option>
+                            <option value="omada">TP-Link Omada</option>
+                            <option value="peplink">Peplink</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                        <button id="openAddCertModalBtn" class="px-4 py-2 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition shadow-md shadow-sky-500/25 flex items-center gap-1.5">
+                            <i class="fas fa-plus-circle"></i> Thêm Chứng Chỉ Mới
+                        </button>
+                        <button id="resetDefaultCertsBtn" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-medium border border-slate-700 transition flex items-center gap-1.5" title="Khôi phục lại 10 chứng chỉ mặc định">
+                            <i class="fas fa-undo-alt text-amber-400"></i> Khôi phục mẫu 10 chứng chỉ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Certificates Grid -->
+                <div id="certsAdminGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB 4: SAO LƯU & HỆ THỐNG (SYSTEM & BACKUP)    -->
+            <!-- ============================================== -->
+            <div id="tab-system" class="tab-content hidden space-y-8">
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800">
+                    <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                        <i class="fas fa-hdd text-violet-400"></i> Quản Lý & Xuất/Nhập Dữ Liệu
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-6">Xuất toàn bộ cấu hình website ra file JSON để sao lưu hoặc chuyển đổi thiết bị</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Export -->
+                        <div class="glass-card p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                            <div>
+                                <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-lg mb-3">
+                                    <i class="fas fa-download"></i>
+                                </div>
+                                <h4 class="text-sm font-bold text-white mb-1">Sao Lưu Cấu Hình (Export JSON)</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Tải xuống tệp `portfolio-config.json` chứa thông tin cá nhân, theme và toàn bộ danh mục chứng chỉ.</p>
+                            </div>
+                            <button id="exportJsonBtn" class="mt-6 w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition border border-slate-700 flex items-center justify-center gap-2">
+                                <i class="fas fa-file-export"></i> Tải Về Tệp JSON
+                            </button>
+                        </div>
+
+                        <!-- Import -->
+                        <div class="glass-card p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                            <div>
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg mb-3">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                                <h4 class="text-sm font-bold text-white mb-1">Phục Hồi Cấu Hình (Import JSON)</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">Tải lên tệp JSON sao lưu trước đó để khôi phục nhanh toàn bộ cài đặt mà không cần gõ lại thủ công.</p>
+                            </div>
+                            <label class="mt-6 w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition border border-slate-700 flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fas fa-file-import"></i> Chọn Tệp JSON Phục Hồi
+                                <input type="file" id="importJsonInput" accept=".json" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Hard Reset -->
+                    <div class="mt-8 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div>
+                            <h5 class="text-xs font-bold text-red-400 uppercase tracking-wider">Khu vực nguy hiểm</h5>
+                            <p class="text-xs text-slate-400">Xóa bỏ toàn bộ dữ liệu lưu trữ tùy biến và khôi phục về trạng thái nguyên bản của tác giả.</p>
+                        </div>
+                        <button id="factoryResetBtn" class="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                            <i class="fas fa-trash-alt"></i> Khôi Phục Cài Đặt Gốc
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL THÊM / CHỈNH SỬA CHỨNG CHỈ (ADD/EDIT)   -->
+    <!-- ============================================== -->
+    <div id="certModal" class="fixed inset-0 z-[150] hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md transition-all duration-200">
+        <div class="relative max-w-2xl w-full glass-panel bg-slate-900/95 border border-slate-700 rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8 max-h-[90vh] flex flex-col">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-lg">
+                        <i class="fas fa-certificate" id="certModalHeaderIcon"></i>
+                    </div>
+                    <div>
+                        <h3 id="certModalTitle" class="text-base sm:text-lg font-bold text-white">Thêm Chứng Chỉ Mới</h3>
+                        <p class="text-xs text-slate-400">Hỗ trợ đầy đủ song ngữ Tiếng Việt & Tiếng Anh</p>
+                    </div>
+                </div>
+                <button id="closeCertModalBtn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Modal Form Scrollable Content -->
+            <form id="certEditForm" class="my-4 flex-1 overflow-y-auto space-y-4 pr-1 text-xs" onsubmit="return false;">
+                <input type="hidden" id="editCertId">
+
+                <!-- Tên chứng chỉ VN & EN -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-blue-400 font-terminal">[VN]</span> Tên chứng chỉ</label>
+                        <input type="text" id="editCertTitleVN" required placeholder="Ví dụ: Sophos Firewall Administrator..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-emerald-400 font-terminal">[EN]</span> Certificate Title</label>
+                        <input type="text" id="editCertTitleEN" required placeholder="Example: Sophos Firewall Administrator..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                </div>
+
+                <!-- Đơn vị cấp & Danh mục -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Đơn vị cấp (Issuer)</label>
+                        <input type="text" id="editCertIssuer" required placeholder="Ví dụ: Sophos Academy, TP-Link Omada..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Hãng / Danh mục</label>
+                        <select id="editCertCategory" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                            <option value="sophos">Sophos</option>
+                            <option value="omada">TP-Link Omada</option>
+                            <option value="peplink">Peplink</option>
+                            <option value="other">Hãng khác</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Badge Song ngữ & Màu sắc -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-blue-400 font-terminal">[VN]</span> Nhãn chuyên môn</label>
+                        <input type="text" id="editCertBadgeVN" placeholder="Ví dụ: Tường lửa Thế hệ mới" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-emerald-400 font-terminal">[EN]</span> Badge Name</label>
+                        <input type="text" id="editCertBadgeEN" placeholder="Example: Next-Gen Firewall" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Màu nhãn</label>
+                        <select id="editCertBadgeColor" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                            <option value="bg-blue-500/20 text-blue-400 border-blue-500/30">Xanh dương (Blue)</option>
+                            <option value="bg-teal-500/20 text-teal-400 border-teal-500/30">Xanh ngọc (Teal)</option>
+                            <option value="bg-amber-500/20 text-amber-400 border-amber-500/30">Hổ phách (Amber)</option>
+                            <option value="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Xanh lá (Emerald)</option>
+                            <option value="bg-violet-500/20 text-violet-400 border-violet-500/30">Tím (Violet)</option>
+                            <option value="bg-rose-500/20 text-rose-400 border-rose-500/30">Đỏ hồng (Rose)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Đường dẫn ảnh chứng chỉ -->
+                <div>
+                    <label class="block font-semibold text-slate-300 mb-1">Đường dẫn ảnh chứng chỉ (Image URL hoặc local path)</label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="editCertImg" required placeholder="certificates/sophos-ct80-firewall-admin.webp hoặc https://..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500 font-terminal text-[11px]">
+                    </div>
+                </div>
+
+                <!-- Ngày tháng & Meta -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-blue-400 font-terminal">[VN]</span> Ngày cấp / Hiệu lực</label>
+                        <input type="text" id="editCertDateVN" placeholder="Ví dụ: 25/07/2026 hoặc Hiệu lực: 28/08/2029" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-emerald-400 font-terminal">[EN]</span> Date / Validity</label>
+                        <input type="text" id="editCertDateEN" placeholder="Example: Jul 25, 2026 or Valid: Aug 28, 2029" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                </div>
+
+                <!-- Meta chi tiết (Verification / Course ID) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-blue-400 font-terminal">[VN]</span> Thông tin xác thực / Mã khóa</label>
+                        <input type="text" id="editCertMetaVN" placeholder="Ví dụ: Hoàn thành: 25/07/2026 · Mã khóa: CT80..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-emerald-400 font-terminal">[EN]</span> Meta / Verification ID</label>
+                        <input type="text" id="editCertMetaEN" placeholder="Example: Completed: July 25, 2026 · Course: CT80..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500">
+                    </div>
+                </div>
+
+                <!-- Mô tả ngắn gọn -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-blue-400 font-terminal">[VN]</span> Mô tả tóm tắt kỹ năng</label>
+                        <textarea id="editCertDescVN" rows="2" placeholder="Tóm tắt kỹ năng đạt được qua chứng chỉ..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-sky-500 leading-relaxed"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1"><span class="text-emerald-400 font-terminal">[EN]</span> Description / Skills</label>
+                        <textarea id="editCertDescEN" rows="2" placeholder="Summary of skills validated by this certificate..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-sky-500 leading-relaxed"></textarea>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Modal Footer -->
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-800 shrink-0">
+                <button type="button" id="cancelCertModalBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">
+                    Hủy bỏ
+                </button>
+                <button type="button" id="saveCertModalBtn" class="px-5 py-2 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition shadow-md shadow-sky-500/20 flex items-center gap-1.5">
+                    <i class="fas fa-check"></i> Lưu Chứng Chỉ
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Script kết nối Firebase (Dùng Module chuẩn SPA) -->
+    <!-- FIREBASE & LOGIC SCRIPT (SPA MODULE) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // BẠN DÁN ĐOẠN FIREBASE CONFIG Ở BƯỚC 1 VÀO ĐÂY:
+        // Cấu hình Firebase Project
         const firebaseConfig = {
-  apiKey: "AIzaSyAM4gySkHXU1jUPXlYsQ51Z7PZjcta3qXw",
-  authDomain: "thanh-portfolio-8c122.firebaseapp.com",
-  projectId: "thanh-portfolio-8c122",
-  storageBucket: "thanh-portfolio-8c122.firebasestorage.app",
-  messagingSenderId: "386068468225",
-  appId: "1:386068468225:web:36dfe8ac2b3b4e1249a600",
-  measurementId: "G-E31NYY0Q07"
-};
+            apiKey: "AIzaSyAM4gySkHXU1jUPXlYsQ51Z7PZjcta3qXw",
+            authDomain: "thanh-portfolio-8c122.firebaseapp.com",
+            projectId: "thanh-portfolio-8c122",
+            storageBucket: "thanh-portfolio-8c122.firebasestorage.app",
+            messagingSenderId: "386068468225",
+            appId: "1:386068468225:web:36dfe8ac2b3b4e1249a600",
+            measurementId: "G-E31NYY0Q07"
+        };
 
-        // Khởi tạo Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Các biến giao diện
+        // THÔNG TIN ĐĂNG NHẬP THEO YÊU CẦU CỦA USER:
+        const REQUIRED_ADMIN_USER = "admin";
+        const REQUIRED_ADMIN_PASS = "Vntt@#123";
+
+        // DỮ LIỆU CHỨNG CHỈ MẶC ĐỊNH (10 CHỨNG CHỈ CHUẨN)
+        const DEFAULT_CERTIFICATES = [
+            {
+                id: "sophos-ct80",
+                titleVN: "Sophos Firewall Administrator v22.0 (CT80)",
+                titleEN: "Sophos Firewall Administrator v22.0 (CT80)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badgeVN: "Tường lửa Thế hệ mới",
+                badgeEN: "Next-Gen Firewall",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct80-firewall-admin.webp",
+                dateVN: "25/07/2026",
+                dateEN: "Jul 25, 2026",
+                metaVN: "Hoàn thành: 25/07/2026 · Mã khóa: CT80 · Đơn vị: Sophos Academy",
+                metaEN: "Completed: July 25, 2026 · Course: CT80 · Issuer: Sophos Academy",
+                descVN: "Quản trị tường lửa Sophos XGS Firewall, VPN Site-to-Site, NAT, Routing và phòng thủ xâm nhập IPS.",
+                descEN: "Certified expertise in deploying and administering Sophos XGS Firewalls, Site-to-Site VPN, NAT, Routing, and IPS."
+            },
+            {
+                id: "sophos-ct15",
+                titleVN: "Sophos Endpoint Administrator v6.0 (CT15)",
+                titleEN: "Sophos Endpoint Administrator v6.0 (CT15)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badgeVN: "Bảo mật Điểm cuối",
+                badgeEN: "Endpoint Security",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct15-endpoint-admin.webp",
+                dateVN: "25/07/2026",
+                dateEN: "Jul 25, 2026",
+                metaVN: "Hoàn thành: 25/07/2026 · Mã khóa: CT15 · Đơn vị: Sophos Academy",
+                metaEN: "Completed: July 25, 2026 · Course: CT15 · Issuer: Sophos Academy",
+                descVN: "Phòng chống mã độc, Ransomware và phát hiện phản ứng mối đe dọa Sophos Central Endpoint & XDR.",
+                descEN: "Enterprise anti-malware, ransomware prevention, threat detection, and response via Sophos Central & XDR."
+            },
+            {
+                id: "sophos-ct45",
+                titleVN: "Sophos Email v4.0 (CT45)",
+                titleEN: "Sophos Email v4.0 (CT45)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badgeVN: "Bảo mật Email",
+                badgeEN: "Email Security",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct45-email.webp",
+                dateVN: "25/07/2026",
+                dateEN: "Jul 25, 2026",
+                metaVN: "Hoàn thành: 25/07/2026 · Mã khóa: CT45 · Đơn vị: Sophos Academy",
+                metaEN: "Completed: July 25, 2026 · Course: CT45 · Issuer: Sophos Academy",
+                descVN: "Bảo vệ thư điện tử Sophos Email Security, lọc spam, chống tấn công lừa đảo Phishing và mã hóa email.",
+                descEN: "Configuring secure email gateway, spam filtering, anti-phishing protection, and corporate email encryption."
+            },
+            {
+                id: "sophos-ct90",
+                titleVN: "Sophos Wireless v3.0 (CT90)",
+                titleEN: "Sophos Wireless v3.0 (CT90)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badgeVN: "Wi-Fi Doanh nghiệp",
+                badgeEN: "Enterprise Wireless",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct90-wireless.webp",
+                dateVN: "24/07/2026",
+                dateEN: "Jul 24, 2026",
+                metaVN: "Hoàn thành: 24/07/2026 · Mã khóa: CT90 · Đơn vị: Sophos Academy",
+                metaEN: "Completed: July 24, 2026 · Course: CT90 · Issuer: Sophos Academy",
+                descVN: "Kiến trúc mạng không dây doanh nghiệp, tối ưu Access Point và quản lý tập trung qua Sophos Central Cloud.",
+                descEN: "Architecting enterprise wireless networks, optimizing AP coverage, and central cloud management via Sophos Central."
+            },
+            {
+                id: "sophos-ct55",
+                titleVN: "Sophos Workspace Protection v1.0 (CT55)",
+                titleEN: "Sophos Workspace Protection v1.0 (CT55)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badgeVN: "Workspace Protection",
+                badgeEN: "Workspace Protection",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct55-workspace-protection.webp",
+                dateVN: "24/07/2026",
+                dateEN: "Jul 24, 2026",
+                metaVN: "Hoàn thành: 24/07/2026 · Mã khóa: CT55 · Đơn vị: Sophos Academy",
+                metaEN: "Completed: July 24, 2026 · Course: CT55 · Issuer: Sophos Academy",
+                descVN: "Bảo vệ môi trường làm việc số, phân quyền Zero-Trust Network Access (ZTNA) và tuân thủ thiết bị người dùng.",
+                descEN: "Securing digital workspace environments, Zero-Trust Network Access (ZTNA), and device compliance policies."
+            },
+            {
+                id: "omada-rs",
+                titleVN: "Omada Certified Network Administrator (OCNA) Routing & Switching",
+                titleEN: "Omada Certified Network Administrator (OCNA) Routing & Switching",
+                issuer: "TP-Link Omada",
+                category: "omada",
+                badgeVN: "Routing & Switching",
+                badgeEN: "Routing & Switching",
+                badgeColor: "bg-teal-500/20 text-teal-400 border-teal-500/30",
+                img: "certificates/omada-ocna-routing-switching.jpg",
+                dateVN: "Hiệu lực: 28/08/2029",
+                dateEN: "Valid: Aug 28, 2029",
+                metaVN: "Hiệu lực đến 28/08/2029 · Mã xác thực TP-Link: 400B97DF855D4675",
+                metaEN: "Valid through Aug 28, 2029 · Verification NO: 400B97DF855D4675",
+                descVN: "Quản trị định tuyến và chuyển mạch mạng doanh nghiệp qua hệ sinh thái Omada SDN Controller.",
+                descEN: "Enterprise routing, switching, and network infrastructure management through the Omada SDN Controller ecosystem."
+            },
+            {
+                id: "omada-wireless",
+                titleVN: "Omada Certified Network Administrator (OCNA) Wireless",
+                titleEN: "Omada Certified Network Administrator (OCNA) Wireless",
+                issuer: "TP-Link Omada",
+                category: "omada",
+                badgeVN: "Wireless SDN",
+                badgeEN: "Wireless SDN",
+                badgeColor: "bg-teal-500/20 text-teal-400 border-teal-500/30",
+                img: "certificates/omada-ocna-wireless.jpg",
+                dateVN: "Hiệu lực: 28/08/2029",
+                dateEN: "Valid: Aug 28, 2029",
+                metaVN: "Hiệu lực đến 28/08/2029 · Mã xác thực TP-Link: 236667C7F683479F",
+                metaEN: "Valid through Aug 28, 2029 · Verification NO: 236667C7F683479F",
+                descVN: "Khảo sát và tối ưu sóng vô tuyến, cấu hình Seamless Roaming và quản lý Access Point Omada qua Cloud.",
+                descEN: "RF site survey, RF optimization, seamless roaming (802.11k/v/r), and Omada AP cloud management."
+            },
+            {
+                id: "peplink-engineer",
+                titleVN: "Peplink Certified Engineer (PCE)",
+                titleEN: "Peplink Certified Engineer (PCE)",
+                issuer: "Peplink Certification",
+                category: "peplink",
+                badgeVN: "Kỹ sư Peplink",
+                badgeEN: "Certified Engineer",
+                badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                img: "certificates/peplink-certified-engineer.jpg",
+                dateVN: "25/09/2026",
+                dateEN: "Sep 25, 2026",
+                metaVN: "Cấp ngày: 25/09/2026 · Mã xác thực Peplink: Znz6btlpWo",
+                metaEN: "Issued: September 25, 2026 · Verification Code: Znz6btlpWo",
+                descVN: "Cấu hình cân bằng tải đa đường truyền SpeedFusion Bandwidth Bonding, Hot Failover và quản trị qua InControl2.",
+                descEN: "Expertise in SpeedFusion Bandwidth Bonding, WAN Smoothing, Hot Failover, and InControl2 cloud orchestration."
+            },
+            {
+                id: "peplink-associate",
+                titleVN: "Peplink Certified Associate (PCA)",
+                titleEN: "Peplink Certified Associate (PCA)",
+                issuer: "Peplink Certification",
+                category: "peplink",
+                badgeVN: "Chuyên viên Kỹ thuật",
+                badgeEN: "Certified Associate",
+                badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                img: "certificates/peplink-certified-associate.jpg",
+                dateVN: "25/09/2026",
+                dateEN: "Sep 25, 2026",
+                metaVN: "Cấp ngày: 25/09/2026 · Mã xác thực Peplink: mFR0asYixy",
+                metaEN: "Issued: September 25, 2026 · Verification Code: mFR0asYixy",
+                descVN: "Vận hành hệ thống cân bằng tải đa WAN Peplink Balance, MAX router di động và giải pháp mạng dự phòng.",
+                descEN: "Deploying and managing Peplink multi-WAN Balance series, MAX mobile routers, and resilient business continuity."
+            },
+            {
+                id: "peplink-sales",
+                titleVN: "Peplink Certified Sales Specialist (PCSS)",
+                titleEN: "Peplink Certified Sales Specialist (PCSS)",
+                issuer: "Peplink Certification",
+                category: "peplink",
+                badgeVN: "Chuyên gia Giải pháp",
+                badgeEN: "Sales Specialist",
+                badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                img: "certificates/peplink-certified-sales-specialist.jpg",
+                dateVN: "25/09/2026",
+                dateEN: "Sep 25, 2026",
+                metaVN: "Cấp ngày: 25/09/2026 · Mã xác thực Peplink: e8CoCYAULH",
+                metaEN: "Issued: September 25, 2026 · Verification Code: e8CoCYAULH",
+                descVN: "Tư vấn thiết kế giải pháp kiến trúc mạng SD-WAN, kết nối không gián đoạn cho doanh nghiệp và chi nhánh.",
+                descEN: "Architecting SD-WAN network solutions and unbreakable connectivity infrastructure for corporate and branch offices."
+            }
+        ];
+
+        // State quản lý trong Admin
+        let currentTheme = {
+            fontFamily: "Space Grotesk",
+            primaryColor: "#0ea5e9",
+            accentColor: "#6366f1",
+            paletteName: "Sky & Indigo"
+        };
+
+        let currentHero = {
+            name: "Nguyễn Viết Thành",
+            titleVN: "System & Network Engineer",
+            titleEN: "System & Network Engineer",
+            descVN: "System & Network Engineer với kinh nghiệm thực tế trong quản trị Microsoft 365, Windows Server, Active Directory và hạ tầng mạng doanh nghiệp. Có kinh nghiệm thiết kế, triển khai, vận hành và tối ưu hệ thống CNTT an toàn, ổn định cho môi trường doanh nghiệp đa chi nhánh. Luôn chủ động học hỏi, phát triển chuyên môn và hướng đến các vị trí IT Infrastructure Manager, IT Manager và Chief Information Officer (CIO).",
+            descEN: "Results-driven System & Network Engineer with hands-on expertise in Microsoft 365, Windows Server, Active Directory, and enterprise network infrastructure. Experienced in designing, deploying, securing, and maintaining robust IT operations across multi-branch environments. Dedicated to continuous professional growth, aiming towards IT Infrastructure Manager, IT Manager, and Chief Information Officer (CIO) leadership roles.",
+            email: "thanhnv168@gmail.com",
+            phone: "0364 892 201",
+            locationVN: "Thành Phố Hồ Chí Minh",
+            locationEN: "Ho Chi Minh City, Vietnam",
+            github: "https://github.com/nvthanhh168",
+            linkedin: "https://linkedin.com/in/nvthanh",
+            facebook: "https://facebook.com/nvthanh"
+        };
+
+        let currentCertificates = [...DEFAULT_CERTIFICATES];
+
+        // Toast Helper
+        function showToast(title, message, isError = false) {
+            const toast = document.getElementById('toastBox');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMsg = document.getElementById('toastMsg');
+            const iconWrapper = document.getElementById('toastIconWrapper');
+            const icon = document.getElementById('toastIcon');
+
+            toastTitle.textContent = title;
+            toastMsg.textContent = message;
+
+            if (isError) {
+                iconWrapper.className = "w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center shrink-0 text-lg";
+                icon.className = "fas fa-exclamation-circle";
+            } else {
+                iconWrapper.className = "w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-lg";
+                icon.className = "fas fa-check-circle";
+            }
+
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+            }, 3200);
+        }
+
+        // ==========================================
+        // XÁC THỰC & QUẢN LÝ PHIÊN (AUTH SESSION)
+        // ==========================================
         const loginScreen = document.getElementById('loginScreen');
         const adminScreen = document.getElementById('adminScreen');
-        const saveBtn = document.getElementById('saveBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginErrorMsg = document.getElementById('loginErrorMsg');
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        const rememberMeCheck = document.getElementById('rememberMeCheck');
 
-        // Theo dõi trạng thái đăng nhập
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // Đã đăng nhập -> Hiện Admin, ẩn Login
-                loginScreen.classList.add('hidden');
-                adminScreen.classList.remove('hidden');
-                
-                // Kéo dữ liệu hiện tại từ Database để điền vào Form
-                const docSnap = await getDoc(doc(db, "portfolioData", "heroSection"));
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('devName').value = data.name || "";
-                    document.getElementById('devTitle').value = data.title || "";
-                    document.getElementById('devDescVN').value = data.descVN || "";
-                    document.getElementById('devDescEN').value = data.descEN || "";
-                }
+        // Toggle show password
+        togglePasswordBtn.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                togglePasswordIcon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
-                // Chưa đăng nhập -> Hiện Login
-                loginScreen.classList.remove('hidden');
-                adminScreen.classList.add('hidden');
+                passwordInput.type = 'password';
+                togglePasswordIcon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         });
 
-        // Xử lý nút Đăng nhập
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            signInWithEmailAndPassword(auth, email, password)
-                .catch(() => document.getElementById('errorMsg').classList.remove('hidden'));
+        // Kiểm tra xem đã đăng nhập chưa
+        function checkExistingSession() {
+            const sessionAuth = sessionStorage.getItem('portfolio_admin_auth');
+            const localAuth = localStorage.getItem('portfolio_admin_auth');
+            if (sessionAuth === 'authenticated' || localAuth === 'authenticated') {
+                showAdminScreen();
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        function showLoginScreen() {
+            loginScreen.classList.remove('hidden');
+            adminScreen.classList.add('hidden');
+        }
+
+        function showAdminScreen() {
+            loginScreen.classList.add('hidden');
+            adminScreen.classList.remove('hidden');
+            loadAllData();
+        }
+
+        // Xử lý sự kiện đăng nhập
+        loginBtn.addEventListener('click', handleLogin);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleLogin();
         });
 
-        // Xử lý nút Đăng xuất
-        document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+        async function handleLogin() {
+            const user = usernameInput.value.trim();
+            const pass = passwordInput.value;
 
-        // Xử lý nút Lưu dữ liệu lên Database
-        saveBtn.addEventListener('click', async () => {
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
-            try {
-                await setDoc(doc(db, "portfolioData", "heroSection"), {
-                    name: document.getElementById('devName').value,
-                    title: document.getElementById('devTitle').value,
-                    descVN: document.getElementById('devDescVN').value,
-                    descEN: document.getElementById('devDescEN').value
+            loginErrorMsg.classList.add('hidden');
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xác thực...';
+
+            // 1. Kiểm tra tài khoản admin được yêu cầu trực tiếp
+            if (user === REQUIRED_ADMIN_USER && pass === REQUIRED_ADMIN_PASS) {
+                if (rememberMeCheck.checked) {
+                    localStorage.setItem('portfolio_admin_auth', 'authenticated');
+                }
+                sessionStorage.setItem('portfolio_admin_auth', 'authenticated');
+                loginBtn.innerHTML = '<i class="fas fa-check"></i> Đăng nhập thành công!';
+                setTimeout(() => {
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Đăng Nhập Hệ Thống';
+                    showAdminScreen();
+                    showToast("Đăng nhập thành công", "Chào mừng Quản trị viên trở lại hệ thống!");
+                }, 400);
+                return;
+            }
+
+            // 2. Fallback thử đăng nhập bằng tài khoản Firebase (nếu nhập email hợp lệ)
+            if (user.includes('@')) {
+                try {
+                    await signInWithEmailAndPassword(auth, user, pass);
+                    if (rememberMeCheck.checked) {
+                        localStorage.setItem('portfolio_admin_auth', 'authenticated');
+                    }
+                    sessionStorage.setItem('portfolio_admin_auth', 'authenticated');
+                    showAdminScreen();
+                    showToast("Đăng nhập Firebase thành công", "Xác thực qua Firebase Auth");
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Đăng Nhập Hệ Thống';
+                    return;
+                } catch (fbErr) {
+                    console.warn("Firebase auth failed:", fbErr.message);
+                }
+            }
+
+            // Sai tài khoản
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Đăng Nhập Hệ Thống';
+            loginErrorMsg.classList.remove('hidden');
+        }
+
+        // Xử lý Đăng xuất
+        logoutBtn.addEventListener('click', () => {
+            if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi trang quản trị?")) {
+                sessionStorage.removeItem('portfolio_admin_auth');
+                localStorage.removeItem('portfolio_admin_auth');
+                try { signOut(auth); } catch (e) {}
+                showLoginScreen();
+                showToast("Đã đăng xuất", "Phiên làm việc đã kết thúc an toàn.");
+            }
+        });
+
+        // ==========================================
+        // QUẢN LÝ TABS GIAO DIỆN
+        // ==========================================
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-tab');
+                tabBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.add('text-slate-400');
                 });
-                document.getElementById('saveMsg').classList.remove('hidden');
-                setTimeout(() => document.getElementById('saveMsg').classList.add('hidden'), 3000);
-            } catch (error) {
-                alert("Lỗi khi lưu: " + error.message);
-            }
-            saveBtn.innerHTML = '<i class="fas fa-save"></i> Lưu Thay Đổi Lên Database';
+                tabContents.forEach(c => c.classList.add('hidden'));
+
+                btn.classList.add('active');
+                btn.classList.remove('text-slate-400');
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) targetContent.classList.remove('hidden');
+            });
         });
+
+        // ==========================================
+        // TẢI & ÁP DỤNG DỮ LIỆU TỪ STORAGE / FIRESTORE
+        // ==========================================
+        async function loadAllData() {
+            // 1. Tải Theme
+            try {
+                const cachedTheme = localStorage.getItem('portfolio_theme');
+                if (cachedTheme) {
+                    currentTheme = JSON.parse(cachedTheme);
+                }
+                const themeDoc = await getDoc(doc(db, "portfolioData", "theme"));
+                if (themeDoc.exists()) {
+                    currentTheme = { ...currentTheme, ...themeDoc.data() };
+                    localStorage.setItem('portfolio_theme', JSON.stringify(currentTheme));
+                }
+            } catch (err) {
+                console.warn("Load theme fallback to local:", err.message);
+            }
+            applyThemeUI();
+
+            // 2. Tải Profile Hero
+            try {
+                const cachedHero = localStorage.getItem('portfolio_hero');
+                if (cachedHero) {
+                    currentHero = JSON.parse(cachedHero);
+                }
+                const heroDoc = await getDoc(doc(db, "portfolioData", "heroSection"));
+                if (heroDoc.exists()) {
+                    currentHero = { ...currentHero, ...heroDoc.data() };
+                    localStorage.setItem('portfolio_hero', JSON.stringify(currentHero));
+                }
+            } catch (err) {
+                console.warn("Load hero fallback to local:", err.message);
+            }
+            populateProfileUI();
+
+            // 3. Tải Certificates
+            try {
+                const cachedCerts = localStorage.getItem('portfolio_certificates');
+                if (cachedCerts) {
+                    const parsed = JSON.parse(cachedCerts);
+                    if (Array.isArray(parsed) && parsed.length > 0) currentCertificates = parsed;
+                }
+                const certsDoc = await getDoc(doc(db, "portfolioData", "certificates"));
+                if (certsDoc.exists() && Array.isArray(certsDoc.data().list) && certsDoc.data().list.length > 0) {
+                    currentCertificates = certsDoc.data().list;
+                    localStorage.setItem('portfolio_certificates', JSON.stringify(currentCertificates));
+                }
+            } catch (err) {
+                console.warn("Load certs fallback to local:", err.message);
+            }
+            renderCertsGrid();
+        }
+
+        // ==========================================
+        // TAB 1: THEME & FONT LOGIC
+        // ==========================================
+        function applyThemeUI() {
+            // Apply CSS variables to Root
+            document.documentElement.style.setProperty('--primary-color', currentTheme.primaryColor);
+            document.documentElement.style.setProperty('--accent-color', currentTheme.accentColor);
+            document.body.style.fontFamily = `'${currentTheme.fontFamily}', sans-serif`;
+
+            // Update badge text
+            const fontBadge = document.getElementById('currentFontBadge');
+            if (fontBadge) fontBadge.textContent = currentTheme.fontFamily;
+
+            // Highlight selected font card
+            document.querySelectorAll('.font-option-card').forEach(card => {
+                if (card.getAttribute('data-font') === currentTheme.fontFamily) {
+                    card.classList.add('border-sky-500', 'bg-sky-500/10');
+                    card.classList.remove('border-transparent');
+                } else {
+                    card.classList.remove('border-sky-500', 'bg-sky-500/10');
+                    card.classList.add('border-transparent');
+                }
+            });
+
+            // Update custom color pickers
+            const c1 = document.getElementById('customColor1');
+            const c1t = document.getElementById('customColor1Text');
+            const c2 = document.getElementById('customColor2');
+            const c2t = document.getElementById('customColor2Text');
+            if (c1) c1.value = currentTheme.primaryColor;
+            if (c1t) c1t.value = currentTheme.primaryColor;
+            if (c2) c2.value = currentTheme.accentColor;
+            if (c2t) c2t.value = currentTheme.accentColor;
+
+            // Update preview elements
+            const previewBadge = document.getElementById('previewBadge');
+            if (previewBadge) previewBadge.style.background = `linear-gradient(135deg, ${currentTheme.primaryColor}, ${currentTheme.accentColor})`;
+
+            // Highlight palette card
+            document.querySelectorAll('.palette-card').forEach(card => {
+                if (card.getAttribute('data-p1') === currentTheme.primaryColor && card.getAttribute('data-p2') === currentTheme.accentColor) {
+                    card.classList.add('border-sky-500', 'bg-sky-500/10');
+                    card.classList.remove('border-transparent');
+                } else {
+                    card.classList.remove('border-sky-500', 'bg-sky-500/10');
+                    card.classList.add('border-transparent');
+                }
+            });
+        }
+
+        // Font click handlers
+        document.querySelectorAll('.font-option-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const font = card.getAttribute('data-font');
+                currentTheme.fontFamily = font;
+                applyThemeUI();
+            });
+        });
+
+        // Palette click handlers
+        document.querySelectorAll('.palette-card').forEach(card => {
+            card.addEventListener('click', () => {
+                currentTheme.primaryColor = card.getAttribute('data-p1');
+                currentTheme.accentColor = card.getAttribute('data-p2');
+                currentTheme.paletteName = card.getAttribute('data-name');
+                applyThemeUI();
+            });
+        });
+
+        // Custom color input changes
+        document.getElementById('customColor1').addEventListener('input', (e) => {
+            currentTheme.primaryColor = e.target.value;
+            document.getElementById('customColor1Text').value = e.target.value;
+            applyThemeUI();
+        });
+        document.getElementById('customColor2').addEventListener('input', (e) => {
+            currentTheme.accentColor = e.target.value;
+            document.getElementById('customColor2Text').value = e.target.value;
+            applyThemeUI();
+        });
+
+        // Save theme button
+        document.getElementById('saveThemeBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('saveThemeBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+
+            localStorage.setItem('portfolio_theme', JSON.stringify(currentTheme));
+            try {
+                await setDoc(doc(db, "portfolioData", "theme"), currentTheme, { merge: true });
+            } catch (err) {
+                console.warn("Firestore theme save error:", err.message);
+            }
+
+            btn.innerHTML = '<i class="fas fa-check"></i> Đã Lưu Giao Diện!';
+            showToast("Giao diện đã cập nhật", `Phông chữ: ${currentTheme.fontFamily} · Màu: ${currentTheme.primaryColor}`);
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-save"></i> Áp Dụng & Lưu Giao Diện';
+            }, 2000);
+        });
+
+        // ==========================================
+        // TAB 2: PROFILE & BIO LOGIC
+        // ==========================================
+        function populateProfileUI() {
+            document.getElementById('profileName').value = currentHero.name || "";
+            document.getElementById('profileTitleVN').value = currentHero.titleVN || currentHero.title || "";
+            document.getElementById('profileTitleEN').value = currentHero.titleEN || currentHero.title || "";
+            document.getElementById('profileDescVN').value = currentHero.descVN || "";
+            document.getElementById('profileDescEN').value = currentHero.descEN || "";
+            document.getElementById('profileEmail').value = currentHero.email || "thanhnv168@gmail.com";
+            document.getElementById('profilePhone').value = currentHero.phone || "0364 892 201";
+            document.getElementById('profileLocationVN').value = currentHero.locationVN || "Thành Phố Hồ Chí Minh";
+            document.getElementById('profileGithub').value = currentHero.github || "https://github.com/nvthanhh168";
+            document.getElementById('profileLinkedin').value = currentHero.linkedin || "https://linkedin.com/in/nvthanh";
+            document.getElementById('profileFacebook').value = currentHero.facebook || "https://facebook.com/nvthanh";
+
+            updateCharCounts();
+        }
+
+        function updateCharCounts() {
+            const vnText = document.getElementById('profileDescVN').value || "";
+            const enText = document.getElementById('profileDescEN').value || "";
+            document.getElementById('descVNCount').textContent = `${vnText.length} ký tự`;
+            document.getElementById('descENCount').textContent = `${enText.length} ký tự`;
+        }
+
+        document.getElementById('profileDescVN').addEventListener('input', updateCharCounts);
+        document.getElementById('profileDescEN').addEventListener('input', updateCharCounts);
+
+        document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('saveProfileBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+
+            currentHero = {
+                name: document.getElementById('profileName').value.trim(),
+                titleVN: document.getElementById('profileTitleVN').value.trim(),
+                titleEN: document.getElementById('profileTitleEN').value.trim(),
+                title: document.getElementById('profileTitleVN').value.trim(),
+                descVN: document.getElementById('profileDescVN').value.trim(),
+                descEN: document.getElementById('profileDescEN').value.trim(),
+                email: document.getElementById('profileEmail').value.trim(),
+                phone: document.getElementById('profilePhone').value.trim(),
+                locationVN: document.getElementById('profileLocationVN').value.trim(),
+                locationEN: "Ho Chi Minh City, Vietnam",
+                github: document.getElementById('profileGithub').value.trim(),
+                linkedin: document.getElementById('profileLinkedin').value.trim(),
+                facebook: document.getElementById('profileFacebook').value.trim()
+            };
+
+            localStorage.setItem('portfolio_hero', JSON.stringify(currentHero));
+            try {
+                await setDoc(doc(db, "portfolioData", "heroSection"), currentHero, { merge: true });
+            } catch (err) {
+                console.warn("Firestore hero save error:", err.message);
+            }
+
+            btn.innerHTML = '<i class="fas fa-check"></i> Đã Lưu Hồ Sơ!';
+            showToast("Hồ sơ đã cập nhật", "Thông tin song ngữ VN & EN đã sẵn sàng trên trang chủ!");
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-save"></i> Lưu Thông Tin Hồ Sơ';
+            }, 2000);
+        });
+
+        // ==========================================
+        // TAB 3: QUẢN LÝ CHỨNG CHỈ (CERTIFICATES)
+        // ==========================================
+        const certsAdminGrid = document.getElementById('certsAdminGrid');
+        const certCountBadge = document.getElementById('certCountBadge');
+        const certSearchInput = document.getElementById('certSearchInput');
+        const certCategoryFilter = document.getElementById('certCategoryFilter');
+
+        function renderCertsGrid() {
+            const query = (certSearchInput.value || '').toLowerCase();
+            const cat = certCategoryFilter.value;
+
+            const filtered = currentCertificates.filter(c => {
+                const matchCat = (cat === 'all' || c.category === cat);
+                const titleVN = (c.titleVN || c.title || '').toLowerCase();
+                const titleEN = (c.titleEN || c.title || '').toLowerCase();
+                const issuer = (c.issuer || '').toLowerCase();
+                const matchQuery = !query || titleVN.includes(query) || titleEN.includes(query) || issuer.includes(query);
+                return matchCat && matchQuery;
+            });
+
+            certCountBadge.textContent = currentCertificates.length;
+
+            if (filtered.length === 0) {
+                certsAdminGrid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-500">
+                        <i class="fas fa-folder-open text-4xl mb-3"></i>
+                        <p class="text-sm">Không tìm thấy chứng chỉ nào phù hợp bộ lọc.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            certsAdminGrid.innerHTML = filtered.map(cert => `
+                <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 flex flex-col justify-between group">
+                    <div class="relative aspect-[16/10] bg-slate-950 overflow-hidden">
+                        <img src="${cert.img}" alt="${cert.titleVN || cert.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/600x400/0f172a/38bdf8?text=Certificate+Preview'">
+                        <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded text-[10px] font-semibold border ${cert.badgeColor || 'bg-blue-500/20 text-blue-400 border-blue-500/30'} backdrop-blur-md">
+                            ${cert.badgeVN || cert.badge || 'Chứng chỉ'}
+                        </span>
+                        <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded text-[10px] font-terminal bg-slate-900/80 text-slate-400 border border-slate-700">
+                            ${cert.category ? cert.category.toUpperCase() : 'OTHER'}
+                        </span>
+                    </div>
+
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <p class="text-[11px] font-terminal text-emerald-400 mb-1 flex items-center justify-between">
+                                <span><i class="fas fa-building mr-1"></i>${cert.issuer || 'Đơn vị cấp'}</span>
+                                <span class="text-slate-400">${cert.dateVN || cert.date || ''}</span>
+                            </p>
+                            <h4 class="text-sm font-bold text-white line-clamp-2 mb-1" title="${cert.titleVN || cert.title}">
+                                ${cert.titleVN || cert.title}
+                            </h4>
+                            <p class="text-xs text-slate-400 italic mb-2 line-clamp-1" title="${cert.titleEN || ''}">
+                                EN: ${cert.titleEN || cert.titleVN || cert.title}
+                            </p>
+                            <p class="text-xs text-slate-400 line-clamp-2 mb-3">
+                                ${cert.descVN || cert.desc || ''}
+                            </p>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                            <button onclick="window.editCertificate('${cert.id}')" class="flex-1 py-1.5 px-3 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-400 hover:text-sky-300 font-semibold text-xs border border-sky-500/30 transition flex items-center justify-center gap-1.5">
+                                <i class="fas fa-edit"></i> Chỉnh sửa
+                            </button>
+                            <button onclick="window.deleteCertificate('${cert.id}')" class="py-1.5 px-3 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-400 hover:text-red-300 text-xs border border-red-500/30 transition flex items-center justify-center" title="Xóa chứng chỉ này">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        certSearchInput.addEventListener('input', renderCertsGrid);
+        certCategoryFilter.addEventListener('change', renderCertsGrid);
+
+        // MODAL ADD / EDIT CERTIFICATE
+        const certModal = document.getElementById('certModal');
+        const certModalTitle = document.getElementById('certModalTitle');
+        const certEditForm = document.getElementById('certEditForm');
+        const openAddCertModalBtn = document.getElementById('openAddCertModalBtn');
+        const closeCertModalBtn = document.getElementById('closeCertModalBtn');
+        const cancelCertModalBtn = document.getElementById('cancelCertModalBtn');
+        const saveCertModalBtn = document.getElementById('saveCertModalBtn');
+
+        openAddCertModalBtn.addEventListener('click', () => {
+            certModalTitle.textContent = "Thêm Chứng Chỉ Mới";
+            certEditForm.reset();
+            document.getElementById('editCertId').value = "";
+            document.getElementById('editCertBadgeColor').value = "bg-blue-500/20 text-blue-400 border-blue-500/30";
+            document.getElementById('editCertCategory').value = "sophos";
+            certModal.classList.remove('hidden');
+            certModal.classList.add('flex');
+        });
+
+        function closeCertModal() {
+            certModal.classList.add('hidden');
+            certModal.classList.remove('flex');
+        }
+
+        closeCertModalBtn.addEventListener('click', closeCertModal);
+        cancelCertModalBtn.addEventListener('click', closeCertModal);
+
+        // Edit Certificate Global function
+        window.editCertificate = function(id) {
+            const cert = currentCertificates.find(c => c.id === id);
+            if (!cert) return;
+
+            certModalTitle.textContent = "Chỉnh Sửa Chứng Chỉ";
+            document.getElementById('editCertId').value = cert.id;
+            document.getElementById('editCertTitleVN').value = cert.titleVN || cert.title || "";
+            document.getElementById('editCertTitleEN').value = cert.titleEN || cert.title || "";
+            document.getElementById('editCertIssuer').value = cert.issuer || "";
+            document.getElementById('editCertCategory').value = cert.category || "other";
+            document.getElementById('editCertBadgeVN').value = cert.badgeVN || cert.badge || "";
+            document.getElementById('editCertBadgeEN').value = cert.badgeEN || cert.badge || "";
+            document.getElementById('editCertBadgeColor').value = cert.badgeColor || "bg-blue-500/20 text-blue-400 border-blue-500/30";
+            document.getElementById('editCertImg').value = cert.img || "";
+            document.getElementById('editCertDateVN').value = cert.dateVN || cert.date || "";
+            document.getElementById('editCertDateEN').value = cert.dateEN || cert.date || "";
+            document.getElementById('editCertMetaVN').value = cert.metaVN || cert.meta || "";
+            document.getElementById('editCertMetaEN').value = cert.metaEN || cert.meta || "";
+            document.getElementById('editCertDescVN').value = cert.descVN || cert.desc || "";
+            document.getElementById('editCertDescEN').value = cert.descEN || cert.desc || "";
+
+            certModal.classList.remove('hidden');
+            certModal.classList.add('flex');
+        };
+
+        // Delete Certificate Global function
+        window.deleteCertificate = async function(id) {
+            const cert = currentCertificates.find(c => c.id === id);
+            if (!cert) return;
+
+            if (confirm(`Bạn có chắc chắn muốn xóa chứng chỉ "${cert.titleVN || cert.title}" không?`)) {
+                currentCertificates = currentCertificates.filter(c => c.id !== id);
+                await persistCertificates();
+                renderCertsGrid();
+                showToast("Đã xóa chứng chỉ", cert.titleVN || cert.title);
+            }
+        };
+
+        // Save Certificate from modal
+        saveCertModalBtn.addEventListener('click', async () => {
+            const titleVN = document.getElementById('editCertTitleVN').value.trim();
+            const titleEN = document.getElementById('editCertTitleEN').value.trim();
+            const issuer = document.getElementById('editCertIssuer').value.trim();
+            const img = document.getElementById('editCertImg').value.trim();
+
+            if (!titleVN || !issuer || !img) {
+                alert("Vui lòng điền đầy đủ Tên chứng chỉ, Đơn vị cấp và Đường dẫn ảnh!");
+                return;
+            }
+
+            const existingId = document.getElementById('editCertId').value;
+            const certId = existingId || ('cert_' + Date.now().toString(36));
+
+            const newCert = {
+                id: certId,
+                titleVN: titleVN,
+                titleEN: titleEN || titleVN,
+                title: titleVN,
+                issuer: issuer,
+                category: document.getElementById('editCertCategory').value,
+                badgeVN: document.getElementById('editCertBadgeVN').value.trim() || "Chứng chỉ",
+                badgeEN: document.getElementById('editCertBadgeEN').value.trim() || "Certificate",
+                badge: document.getElementById('editCertBadgeVN').value.trim() || "Chứng chỉ",
+                badgeColor: document.getElementById('editCertBadgeColor').value,
+                img: img,
+                dateVN: document.getElementById('editCertDateVN').value.trim(),
+                dateEN: document.getElementById('editCertDateEN').value.trim() || document.getElementById('editCertDateVN').value.trim(),
+                date: document.getElementById('editCertDateVN').value.trim(),
+                metaVN: document.getElementById('editCertMetaVN').value.trim(),
+                metaEN: document.getElementById('editCertMetaEN').value.trim() || document.getElementById('editCertMetaVN').value.trim(),
+                meta: document.getElementById('editCertMetaVN').value.trim(),
+                descVN: document.getElementById('editCertDescVN').value.trim(),
+                descEN: document.getElementById('editCertDescEN').value.trim() || document.getElementById('editCertDescVN').value.trim(),
+                desc: document.getElementById('editCertDescVN').value.trim()
+            };
+
+            if (existingId) {
+                const index = currentCertificates.findIndex(c => c.id === existingId);
+                if (index !== -1) currentCertificates[index] = newCert;
+            } else {
+                currentCertificates.unshift(newCert);
+            }
+
+            closeCertModal();
+            await persistCertificates();
+            renderCertsGrid();
+            showToast("Thành công", `Đã lưu chứng chỉ: ${newCert.titleVN}`);
+        });
+
+        // Khôi phục 10 chứng chỉ mặc định
+        document.getElementById('resetDefaultCertsBtn').addEventListener('click', async () => {
+            if (confirm("Khôi phục danh sách về 10 chứng chỉ mặc định ban đầu?")) {
+                currentCertificates = [...DEFAULT_CERTIFICATES];
+                await persistCertificates();
+                renderCertsGrid();
+                showToast("Đã khôi phục", "Danh sách 10 chứng chỉ mặc định đã được nạp lại!");
+            }
+        });
+
+        async function persistCertificates() {
+            localStorage.setItem('portfolio_certificates', JSON.stringify(currentCertificates));
+            try {
+                await setDoc(doc(db, "portfolioData", "certificates"), { list: currentCertificates }, { merge: true });
+            } catch (err) {
+                console.warn("Firestore certificates save error:", err.message);
+            }
+        }
+
+        // ==========================================
+        // TAB 4: SAO LƯU & HỆ THỐNG
+        // ==========================================
+        document.getElementById('exportJsonBtn').addEventListener('click', () => {
+            const fullData = {
+                exportedAt: new Date().toISOString(),
+                theme: currentTheme,
+                hero: currentHero,
+                certificates: currentCertificates
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullData, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `portfolio-config-${Date.now()}.json`);
+            dlAnchor.click();
+            showToast("Đã xuất tệp", "Tệp sao lưu JSON đã được tải về máy của bạn!");
+        });
+
+        document.getElementById('importJsonInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (evt) => {
+                try {
+                    const parsed = JSON.parse(evt.target.result);
+                    if (parsed.theme) currentTheme = parsed.theme;
+                    if (parsed.hero) currentHero = parsed.hero;
+                    if (parsed.certificates && Array.isArray(parsed.certificates)) currentCertificates = parsed.certificates;
+
+                    applyThemeUI();
+                    populateProfileUI();
+                    renderCertsGrid();
+
+                    localStorage.setItem('portfolio_theme', JSON.stringify(currentTheme));
+                    localStorage.setItem('portfolio_hero', JSON.stringify(currentHero));
+                    localStorage.setItem('portfolio_certificates', JSON.stringify(currentCertificates));
+
+                    try {
+                        await setDoc(doc(db, "portfolioData", "theme"), currentTheme, { merge: true });
+                        await setDoc(doc(db, "portfolioData", "heroSection"), currentHero, { merge: true });
+                        await setDoc(doc(db, "portfolioData", "certificates"), { list: currentCertificates }, { merge: true });
+                    } catch (e) {}
+
+                    showToast("Phục hồi thành công", "Cấu hình từ tệp JSON đã được áp dụng toàn bộ!");
+                } catch (parseErr) {
+                    alert("Lỗi đọc tệp JSON: Tệp không đúng định dạng chuẩn!");
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        document.getElementById('factoryResetBtn').addEventListener('click', async () => {
+            if (confirm("CẢNH BÁO: Hành động này sẽ đặt lại toàn bộ Font chữ, Màu sắc và Chứng chỉ về cấu hình nguyên bản! Bạn có chắc không?")) {
+                localStorage.removeItem('portfolio_theme');
+                localStorage.removeItem('portfolio_hero');
+                localStorage.removeItem('portfolio_certificates');
+                currentTheme = {
+                    fontFamily: "Space Grotesk",
+                    primaryColor: "#0ea5e9",
+                    accentColor: "#6366f1",
+                    paletteName: "Sky & Indigo"
+                };
+                currentHero = {
+                    name: "Nguyễn Viết Thành",
+                    titleVN: "System & Network Engineer",
+                    titleEN: "System & Network Engineer",
+                    descVN: "System & Network Engineer với kinh nghiệm thực tế trong quản trị Microsoft 365, Windows Server, Active Directory và hạ tầng mạng doanh nghiệp.",
+                    descEN: "Results-driven System & Network Engineer with hands-on expertise in Microsoft 365, Windows Server, Active Directory, and enterprise network infrastructure."
+                };
+                currentCertificates = [...DEFAULT_CERTIFICATES];
+                applyThemeUI();
+                populateProfileUI();
+                renderCertsGrid();
+                showToast("Đã khôi phục cài đặt gốc", "Toàn bộ dữ liệu đã được đưa về trạng thái xuất xưởng.");
+            }
+        });
+
+        // Nút Lưu Tất Cả Trên Đầu Trang (Save All)
+        document.getElementById('saveAllTopBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('saveAllTopBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu toàn bộ...';
+
+            // Gather profile inputs
+            currentHero.name = document.getElementById('profileName').value.trim();
+            currentHero.titleVN = document.getElementById('profileTitleVN').value.trim();
+            currentHero.titleEN = document.getElementById('profileTitleEN').value.trim();
+            currentHero.title = currentHero.titleVN;
+            currentHero.descVN = document.getElementById('profileDescVN').value.trim();
+            currentHero.descEN = document.getElementById('profileDescEN').value.trim();
+
+            localStorage.setItem('portfolio_theme', JSON.stringify(currentTheme));
+            localStorage.setItem('portfolio_hero', JSON.stringify(currentHero));
+            localStorage.setItem('portfolio_certificates', JSON.stringify(currentCertificates));
+
+            try {
+                await setDoc(doc(db, "portfolioData", "theme"), currentTheme, { merge: true });
+                await setDoc(doc(db, "portfolioData", "heroSection"), currentHero, { merge: true });
+                await setDoc(doc(db, "portfolioData", "certificates"), { list: currentCertificates }, { merge: true });
+            } catch (err) {
+                console.warn("Firestore save all error:", err.message);
+            }
+
+            btn.innerHTML = '<i class="fas fa-check"></i> Đã Lưu Thành Công!';
+            showToast("Đã lưu đồng bộ", "Giao diện, Hồ sơ và Chứng chỉ đã được lưu lên Cloud & Local!");
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Lưu Tất Cả Thay Đổi';
+            }, 2000);
+        });
+
+        // Khởi động kiểm tra trạng thái
+        checkExistingSession();
     </script>
 </body>
 </html>
