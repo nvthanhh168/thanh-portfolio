@@ -76,6 +76,7 @@
                     <a href="#experience" class="text-slate-300 hover:text-sky-400 transition-colors">Kinh nghiệm</a>
                     <a href="#projects" class="text-slate-300 hover:text-sky-400 transition-colors">Dự án</a>
                     <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Kỹ năng</a>
+                    <a href="#certificates" class="text-slate-300 hover:text-sky-400 transition-colors">Chứng chỉ</a>
                 </div>
                 <div class="flex items-center gap-2 pl-3 border-l border-slate-700/60 whitespace-nowrap">
                     <a href="blog.html" class="text-xs text-sky-400 border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 rounded-full hover:bg-sky-500 hover:text-white transition-colors flex items-center gap-1.5"><i class="fas fa-book-open"></i> Tài liệu</a>
@@ -109,6 +110,7 @@
                 <a href="#experience" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Kinh nghiệm</a>
                 <a href="#projects" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Dự án</a>
                 <a href="#skills" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Học vấn & Kỹ năng</a>
+                <a href="#certificates" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Chứng chỉ</a>
                 <a href="blog.html" class="mobile-link text-sky-400 hover:text-sky-300 font-semibold"><i class="fas fa-book-open mr-1"></i> Tài liệu</a>
                 <a href="music.html" class="mobile-link text-emerald-400 hover:text-emerald-300 font-semibold"><i class="fas fa-music mr-1"></i> Nhạc</a>
                 <a href="storage.html" class="mobile-link text-violet-400 hover:text-violet-300 font-semibold"><i class="fas fa-folder mr-1"></i> Lưu Trữ</a>
@@ -399,6 +401,43 @@
         </div>
     </section>
 
+    <!-- Certifications Section -->
+    <section id="certificates" class="py-20 px-6 relative overflow-hidden border-t border-slate-800/60">
+        <div class="absolute top-1/3 left-0 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-0 w-96 h-96 bg-sky-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-terminal uppercase tracking-widest mb-3">
+                    <i class="fas fa-certificate"></i> Verified Credentials · 10 Chứng chỉ Quốc tế
+                </div>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Chứng chỉ & <span class="text-gradient">Bằng cấp Chuyên môn</span></h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">Tổng hợp chứng chỉ kỹ thuật quốc tế về An ninh mạng Sophos, Quản trị hạ tầng mạng TP-Link Omada và Giải pháp Peplink SD-WAN.</p>
+                
+                <!-- Category Filter Pills -->
+                <div class="flex flex-wrap items-center justify-center gap-2.5 mt-8">
+                    <button class="cert-filter active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-emerald-500 text-white shadow-lg shadow-emerald-500/25" data-filter="all">
+                        Tất cả (10)
+                    </button>
+                    <button class="cert-filter px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white" data-filter="sophos">
+                        🛡️ Sophos Security (5)
+                    </button>
+                    <button class="cert-filter px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white" data-filter="omada">
+                        🌐 TP-Link Omada (2)
+                    </button>
+                    <button class="cert-filter px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white" data-filter="peplink">
+                        ⚡ Peplink (3)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Certifications Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="certsGrid">
+                <!-- Rendered by JavaScript -->
+            </div>
+        </div>
+    </section>
+
     <!-- References Section -->
     <section class="py-20 px-6">
         <div class="max-w-4xl mx-auto">
@@ -619,6 +658,275 @@
             termOutput.innerHTML += `<div class="mb-1">${text}</div>`;
             termOutput.scrollTop = termOutput.scrollHeight;
         }
+    </script>
+
+    <!-- Certificate Lightbox Modal -->
+    <div id="certModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md transition-all duration-200">
+        <div class="relative max-w-4xl w-full glass-card bg-slate-900/95 border border-slate-700/80 rounded-3xl overflow-hidden shadow-2xl p-5 sm:p-7 max-h-[92vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div>
+                        <h3 id="modalCertTitle" class="text-base sm:text-xl font-bold text-white leading-tight"></h3>
+                        <p id="modalCertIssuer" class="text-xs sm:text-sm text-emerald-400 font-terminal mt-0.5"></p>
+                    </div>
+                </div>
+                <button id="closeCertModalBtn" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <!-- Modal Image Container -->
+            <div class="my-4 flex-1 min-h-0 flex items-center justify-center bg-slate-950/60 rounded-2xl p-2 border border-slate-800/80 overflow-hidden">
+                <img id="modalCertImg" src="" alt="Chứng chỉ" class="max-h-[58vh] max-w-full object-contain rounded-xl shadow-lg">
+            </div>
+            <!-- Modal Footer Info & Actions -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-800 shrink-0 text-xs text-slate-400">
+                <span id="modalCertMeta" class="font-terminal text-center sm:text-left"></span>
+                <div class="flex items-center gap-2">
+                    <a id="downloadCertBtn" href="" download class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold flex items-center gap-1.5 hover:opacity-90 transition shadow-md">
+                        <i class="fas fa-download"></i> Tải chứng chỉ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script quản lý hiển thị và lọc Chứng chỉ -->
+    <script>
+        const certificatesData = [
+            {
+                id: "sophos-ct80",
+                title: "Sophos Firewall Administrator v22.0 (CT80)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badge: "Tường lửa Thế hệ mới",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct80-firewall-admin.webp",
+                date: "25/07/2026",
+                meta: "Hoàn thành: 25/07/2026 · Mã khóa: CT80 · Đơn vị: Sophos Academy",
+                desc: "Quản trị tường lửa Sophos XGS Firewall, VPN Site-to-Site, NAT, Routing và phòng thủ xâm nhập IPS."
+            },
+            {
+                id: "sophos-ct15",
+                title: "Sophos Endpoint Administrator v6.0 (CT15)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badge: "Bảo mật Điểm cuối",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct15-endpoint-admin.webp",
+                date: "25/07/2026",
+                meta: "Hoàn thành: 25/07/2026 · Mã khóa: CT15 · Đơn vị: Sophos Academy",
+                desc: "Phòng chống mã độc, Ransomware và phát hiện phản ứng mối đe dọa Sophos Central Endpoint & XDR."
+            },
+            {
+                id: "sophos-ct45",
+                title: "Sophos Email v4.0 (CT45)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badge: "Bảo mật Email",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct45-email.webp",
+                date: "25/07/2026",
+                meta: "Hoàn thành: 25/07/2026 · Mã khóa: CT45 · Đơn vị: Sophos Academy",
+                desc: "Bảo vệ thư điện tử Sophos Email Security, lọc spam, chống tấn công lừa đảo Phishing và mã hóa email."
+            },
+            {
+                id: "sophos-ct90",
+                title: "Sophos Wireless v3.0 (CT90)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badge: "Wi-Fi Doanh nghiệp",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct90-wireless.webp",
+                date: "24/07/2026",
+                meta: "Hoàn thành: 24/07/2026 · Mã khóa: CT90 · Đơn vị: Sophos Academy",
+                desc: "Kiến trúc mạng không dây doanh nghiệp, tối ưu Access Point và quản lý tập trung qua Sophos Central Cloud."
+            },
+            {
+                id: "sophos-ct55",
+                title: "Sophos Workspace Protection v1.0 (CT55)",
+                issuer: "Sophos Academy",
+                category: "sophos",
+                badge: "Workspace Protection",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                img: "certificates/sophos-ct55-workspace-protection.webp",
+                date: "24/07/2026",
+                meta: "Hoàn thành: 24/07/2026 · Mã khóa: CT55 · Đơn vị: Sophos Academy",
+                desc: "Bảo vệ môi trường làm việc số, phân quyền Zero-Trust Network Access (ZTNA) và tuân thủ thiết bị người dùng."
+            },
+            {
+                id: "omada-rs",
+                title: "Omada Certified Network Administrator (OCNA) Routing & Switching",
+                issuer: "TP-Link Omada",
+                category: "omada",
+                badge: "Routing & Switching",
+                badgeColor: "bg-teal-500/20 text-teal-400 border-teal-500/30",
+                img: "certificates/omada-ocna-routing-switching.jpg",
+                date: "Hiệu lực: 28/08/2029",
+                meta: "Hiệu lực đến 28/08/2029 · Mã xác thực TP-Link: 400B97DF855D4675",
+                desc: "Quản trị định tuyến và chuyển mạch mạng doanh nghiệp qua hệ sinh thái Omada SDN Controller."
+            },
+            {
+                id: "omada-wireless",
+                title: "Omada Certified Network Administrator (OCNA) Wireless",
+                issuer: "TP-Link Omada",
+                category: "omada",
+                badge: "Wireless SDN",
+                badgeColor: "bg-teal-500/20 text-teal-400 border-teal-500/30",
+                img: "certificates/omada-ocna-wireless.jpg",
+                date: "Hiệu lực: 28/08/2029",
+                meta: "Hiệu lực đến 28/08/2029 · Mã xác thực TP-Link: 236667C7F683479F",
+                desc: "Khảo sát và tối ưu sóng vô tuyến, cấu hình Seamless Roaming và quản lý Access Point Omada qua Cloud."
+            },
+            {
+                id: "peplink-engineer",
+                title: "Peplink Certified Engineer (PCE)",
+                issuer: "Peplink Certification",
+                category: "peplink",
+                badge: "Kỹ sư Peplink",
+                badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                img: "certificates/peplink-certified-engineer.jpg",
+                date: "25/09/2026",
+                meta: "Cấp ngày: 25/09/2026 · Mã xác thực Peplink: Znz6btlpWo",
+                desc: "Cấu hình cân bằng tải đa đường truyền SpeedFusion Bandwidth Bonding, Hot Failover và quản trị qua InControl2."
+            },
+            {
+                id: "peplink-associate",
+                title: "Peplink Certified Associate (PCA)",
+                issuer: "Peplink Certification",
+                category: "peplink",
+                badge: "Chuyên viên Kỹ thuật",
+                badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                img: "certificates/peplink-certified-associate.jpg",
+                date: "25/09/2026",
+                meta: "Cấp ngày: 25/09/2026 · Mã xác thực Peplink: mFR0asYixy",
+                desc: "Vận hành hệ thống cân bằng tải đa WAN Peplink Balance, MAX router di động và giải pháp mạng dự phòng."
+            },
+            {
+                id: "peplink-sales",
+                title: "Peplink Certified Sales Specialist (PCSS)",
+                issuer: "Peplink Certification",
+                category: "peplink",
+                badge: "Chuyên gia Giải pháp",
+                badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                img: "certificates/peplink-certified-sales-specialist.jpg",
+                date: "25/09/2026",
+                meta: "Cấp ngày: 25/09/2026 · Mã xác thực Peplink: e8CoCYAULH",
+                desc: "Tư vấn thiết kế giải pháp kiến trúc mạng SD-WAN, kết nối không gián đoạn cho doanh nghiệp và chi nhánh."
+            }
+        ];
+
+        function renderCertificates(filter = 'all') {
+            const grid = document.getElementById('certsGrid');
+            if (!grid) return;
+
+            const list = filter === 'all' ? certificatesData : certificatesData.filter(c => c.category === filter);
+
+            grid.innerHTML = list.map((cert, idx) => `
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-emerald-500/40 transition duration-300" data-aos="fade-up" data-aos-delay="${idx * 50}">
+                    <!-- Thumbnail Preview with zoom overlay -->
+                    <div class="relative aspect-[16/11] bg-slate-950 overflow-hidden cursor-pointer" onclick="openCertModal('${cert.id}')">
+                        <img src="${cert.img}" alt="${cert.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
+                            <span class="px-3.5 py-1.5 rounded-full bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                                <i class="fas fa-search-plus"></i> Xem chi tiết
+                            </span>
+                        </div>
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[11px] font-semibold border ${cert.badgeColor} backdrop-blur-md">
+                            ${cert.badge}
+                        </span>
+                    </div>
+
+                    <!-- Certificate Details -->
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5">
+                                <span class="font-terminal text-emerald-400"><i class="fas fa-building mr-1"></i>${cert.issuer}</span>
+                                <span class="font-terminal text-[11px]">${cert.date}</span>
+                            </div>
+                            <h3 class="text-base font-bold text-white mb-2 line-clamp-2 group-hover:text-emerald-400 transition-colors">
+                                ${cert.title}
+                            </h3>
+                            <p class="text-slate-400 text-xs line-clamp-2 mb-4 leading-relaxed">
+                                ${cert.desc}
+                            </p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex items-center gap-2 pt-3 border-t border-slate-800/80">
+                            <button onclick="openCertModal('${cert.id}')" class="flex-1 py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-emerald-500 hover:text-white text-emerald-400 font-semibold text-xs transition flex items-center justify-center gap-1.5 border border-emerald-500/20">
+                                <i class="fas fa-eye"></i> Phóng to
+                            </button>
+                            <a href="${cert.img}" download class="py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs transition flex items-center justify-center" title="Tải ảnh">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.cert-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.cert-filter').forEach(b => {
+                    b.classList.remove('active', 'bg-emerald-500', 'text-white', 'shadow-lg', 'shadow-emerald-500/25');
+                    b.classList.add('glass-card', 'text-slate-300');
+                });
+                btn.classList.add('active', 'bg-emerald-500', 'text-white', 'shadow-lg', 'shadow-emerald-500/25');
+                btn.classList.remove('glass-card', 'text-slate-300');
+                renderCertificates(btn.dataset.filter);
+            });
+        });
+
+        // Modal Handlers
+        const certModal = document.getElementById('certModal');
+        const modalCertTitle = document.getElementById('modalCertTitle');
+        const modalCertIssuer = document.getElementById('modalCertIssuer');
+        const modalCertImg = document.getElementById('modalCertImg');
+        const modalCertMeta = document.getElementById('modalCertMeta');
+        const downloadCertBtn = document.getElementById('downloadCertBtn');
+        const closeCertModalBtn = document.getElementById('closeCertModalBtn');
+
+        function openCertModal(id) {
+            const cert = certificatesData.find(c => c.id === id);
+            if (!cert) return;
+
+            modalCertTitle.textContent = cert.title;
+            modalCertIssuer.textContent = cert.issuer + ' · ' + cert.badge;
+            modalCertImg.src = cert.img;
+            modalCertMeta.textContent = cert.meta;
+            downloadCertBtn.href = cert.img;
+            downloadCertBtn.setAttribute('download', cert.title.replace(/[^a-zA-Z0-9]/g, '_') + '.jpg');
+
+            certModal.classList.remove('hidden');
+            certModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCertModal() {
+            certModal.classList.add('hidden');
+            certModal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        if (closeCertModalBtn) closeCertModalBtn.addEventListener('click', closeCertModal);
+        if (certModal) {
+            certModal.addEventListener('click', (e) => {
+                if (e.target === certModal) closeCertModal();
+            });
+        }
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !certModal.classList.contains('hidden')) {
+                closeCertModal();
+            }
+        });
+
+        // Initial render
+        renderCertificates('all');
     </script>
     <!-- Đọc dữ liệu từ Firebase -->
     <script type="module">

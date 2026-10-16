@@ -101,6 +101,7 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Danh mục</label>
                         <select id="fileCategory" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-violet-500 transition">
+                            <option value="Chứng chỉ">Chứng chỉ</option>
                             <option value="Tài liệu Mạng">Tài liệu Mạng</option>
                             <option value="Microsoft 365">Microsoft 365</option>
                             <option value="Linux/Server">Linux/Server</option>
@@ -136,6 +137,9 @@
             <div class="flex flex-wrap gap-2" id="filterContainer">
                 <button class="filter-pill active text-xs font-semibold px-4 py-2 rounded-full border border-slate-700 bg-slate-800/50 text-slate-300 hover:text-violet-300 transition" data-cat="all">
                     <i class="fas fa-layer-group mr-1"></i> Tất cả
+                </button>
+                <button class="filter-pill text-xs font-semibold px-4 py-2 rounded-full border border-slate-700 bg-slate-800/50 text-slate-300 hover:text-emerald-300 transition" data-cat="Chứng chỉ">
+                    <i class="fas fa-certificate mr-1 text-emerald-400"></i> Chứng chỉ (10)
                 </button>
                 <button class="filter-pill text-xs font-semibold px-4 py-2 rounded-full border border-slate-700 bg-slate-800/50 text-slate-300 hover:text-violet-300 transition" data-cat="Tài liệu Mạng">
                     <i class="fas fa-network-wired mr-1"></i> Tài liệu Mạng
@@ -200,12 +204,106 @@
 
         // ===== CATEGORY CONFIG =====
         const catConfig = {
+            'Chứng chỉ': { icon: 'fa-certificate', color: 'text-emerald-400', bg: 'bg-emerald-500/20' },
             'Tài liệu Mạng': { icon: 'fa-network-wired', color: 'text-sky-400', bg: 'bg-sky-500/20' },
             'Microsoft 365': { icon: 'fa-microsoft', color: 'text-blue-400', bg: 'bg-blue-500/20', iconType: 'fab' },
             'Linux/Server': { icon: 'fa-linux', color: 'text-yellow-400', bg: 'bg-yellow-500/20', iconType: 'fab' },
             'Security': { icon: 'fa-shield-alt', color: 'text-red-400', bg: 'bg-red-500/20' },
             'Khác': { icon: 'fa-folder', color: 'text-violet-400', bg: 'bg-violet-500/20' }
         };
+
+        const defaultCertificates = [
+            {
+                id: "cert-sophos-ct80",
+                name: "Sophos Firewall Administrator v22.0 (CT80)",
+                category: "Chứng chỉ",
+                description: "Quản trị tường lửa thế hệ mới Sophos XGS Firewall, VPN & Network Security.",
+                url: "certificates/sophos-ct80-firewall-admin.webp",
+                dateString: "25/07/2026",
+                isPermanent: true
+            },
+            {
+                id: "cert-sophos-ct15",
+                name: "Sophos Endpoint Administrator v6.0 (CT15)",
+                category: "Chứng chỉ",
+                description: "Quản trị giải pháp phòng chống mã độc, EDR & XDR Sophos Central.",
+                url: "certificates/sophos-ct15-endpoint-admin.webp",
+                dateString: "25/07/2026",
+                isPermanent: true
+            },
+            {
+                id: "cert-sophos-ct45",
+                name: "Sophos Email v4.0 (CT45)",
+                category: "Chứng chỉ",
+                description: "Bảo vệ thư điện tử doanh nghiệp, chống Spam & Phishing Sophos Email.",
+                url: "certificates/sophos-ct45-email.webp",
+                dateString: "25/07/2026",
+                isPermanent: true
+            },
+            {
+                id: "cert-sophos-ct90",
+                name: "Sophos Wireless v3.0 (CT90)",
+                category: "Chứng chỉ",
+                description: "Thiết kế, triển khai và quản trị mạng Wi-Fi doanh nghiệp qua Sophos Central.",
+                url: "certificates/sophos-ct90-wireless.webp",
+                dateString: "24/07/2026",
+                isPermanent: true
+            },
+            {
+                id: "cert-sophos-ct55",
+                name: "Sophos Workspace Protection v1.0 (CT55)",
+                category: "Chứng chỉ",
+                description: "Bảo vệ môi trường làm việc số, phân quyền an toàn và kiểm soát thiết bị.",
+                url: "certificates/sophos-ct55-workspace-protection.webp",
+                dateString: "24/07/2026",
+                isPermanent: true
+            },
+            {
+                id: "cert-omada-rs",
+                name: "TP-Link Omada OCNA Routing & Switching",
+                category: "Chứng chỉ",
+                description: "Quản trị định tuyến và chuyển mạch doanh nghiệp qua Omada SDN (Mã: 400B97DF855D4675).",
+                url: "certificates/omada-ocna-routing-switching.jpg",
+                dateString: "Hiệu lực 2029",
+                isPermanent: true
+            },
+            {
+                id: "cert-omada-wireless",
+                name: "TP-Link Omada OCNA Wireless",
+                category: "Chứng chỉ",
+                description: "Tối ưu sóng Wi-Fi, Roaming và quản lý Access Point Omada (Mã: 236667C7F683479F).",
+                url: "certificates/omada-ocna-wireless.jpg",
+                dateString: "Hiệu lực 2029",
+                isPermanent: true
+            },
+            {
+                id: "cert-peplink-engineer",
+                name: "Peplink Certified Engineer (PCE)",
+                category: "Chứng chỉ",
+                description: "Cấu hình cân bằng tải đa đường truyền SpeedFusion Bandwidth Bonding và InControl2 (Mã: Znz6btlpWo).",
+                url: "certificates/peplink-certified-engineer.jpg",
+                dateString: "25/09/2026",
+                isPermanent: true
+            },
+            {
+                id: "cert-peplink-associate",
+                name: "Peplink Certified Associate (PCA)",
+                category: "Chứng chỉ",
+                description: "Vận hành hệ thống cân bằng tải đa WAN Peplink Balance và Router MAX (Mã: mFR0asYixy).",
+                url: "certificates/peplink-certified-associate.jpg",
+                dateString: "25/09/2026",
+                isPermanent: true
+            },
+            {
+                id: "cert-peplink-sales",
+                name: "Peplink Certified Sales Specialist (PCSS)",
+                category: "Chứng chỉ",
+                description: "Tư vấn thiết kế giải pháp hạ tầng SD-WAN và kết nối không gián đoạn (Mã: e8CoCYAULH).",
+                url: "certificates/peplink-certified-sales-specialist.jpg",
+                dateString: "25/09/2026",
+                isPermanent: true
+            }
+        ];
 
         function getCatIcon(cat) {
             const c = catConfig[cat] || catConfig['Khác'];
@@ -217,6 +315,7 @@
         }
         function getCatTagColor(cat) {
             const colors = {
+                'Chứng chỉ': 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
                 'Tài liệu Mạng': 'bg-sky-500/20 text-sky-400',
                 'Microsoft 365': 'bg-blue-500/20 text-blue-400',
                 'Linux/Server': 'bg-yellow-500/20 text-yellow-400',
@@ -237,19 +336,22 @@
                 const snap = await getDocs(q);
                 loading.style.display = 'none';
 
-                allFiles = [];
+                allFiles = [...defaultCertificates];
                 snap.forEach(d => {
                     allFiles.push({ id: d.id, ...d.data() });
                 });
 
                 document.getElementById('statFiles').textContent = allFiles.length;
                 const cats = new Set(allFiles.map(f => f.category));
-                document.getElementById('statCats').textContent = cats.size || 5;
+                document.getElementById('statCats').textContent = cats.size || 6;
 
                 renderFiles();
             } catch (err) {
                 console.error("Lỗi:", err);
-                loading.innerHTML = '<span class="text-red-500">Lỗi tải dữ liệu!</span>';
+                loading.style.display = 'none';
+                allFiles = [...defaultCertificates];
+                document.getElementById('statFiles').textContent = allFiles.length;
+                renderFiles();
             }
         }
 
@@ -273,7 +375,11 @@
 
             empty.classList.add('hidden');
             grid.innerHTML = files.map(file => {
-                const date = file.timestamp ? new Date(file.timestamp.toDate()).toLocaleDateString('vi-VN') : 'Vừa xong';
+                const date = file.dateString || (file.timestamp ? new Date(file.timestamp.toDate()).toLocaleDateString('vi-VN') : 'Vừa xong');
+                const actionBtn = file.isPermanent ? 
+                    `<span class="px-2.5 py-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-lg flex items-center justify-center font-terminal" title="Chứng chỉ xác thực"><i class="fas fa-check-circle"></i></span>` : 
+                    `<button onclick="deleteFile('${file.id}')" class="px-3 py-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white text-xs rounded-lg transition" title="Xóa"><i class="fas fa-trash"></i></button>`;
+
                 return `
                 <div class="glass-card rounded-2xl p-5 flex flex-col h-full" style="transform:none;" data-id="${file.id}">
                     <div class="flex items-start justify-between mb-3">
@@ -283,15 +389,13 @@
                         <span class="text-[10px] font-bold px-2 py-1 ${getCatTagColor(file.category)} rounded-full">${file.category}</span>
                     </div>
                     <h3 class="text-base font-bold text-white mb-1 line-clamp-2">${file.name}</h3>
-                    <p class="text-slate-500 text-xs mb-3 flex-1">${file.description ? file.description.substring(0, 80) + '...' : 'Không có mô tả'}</p>
-                    <p class="text-[10px] text-slate-600 font-terminal mb-3"><i class="far fa-calendar-alt mr-1"></i>${date}</p>
+                    <p class="text-slate-400 text-xs mb-3 flex-1 leading-relaxed">${file.description ? file.description.substring(0, 85) + '...' : 'Không có mô tả'}</p>
+                    <p class="text-[10px] text-slate-500 font-terminal mb-3"><i class="far fa-calendar-alt mr-1"></i>${date}</p>
                     <div class="flex gap-2">
-                        <a href="${file.url}" target="_blank" class="flex-1 py-2 bg-violet-500/20 hover:bg-violet-500 text-violet-300 hover:text-white text-xs font-bold rounded-lg transition text-center">
-                            <i class="fas fa-external-link-alt mr-1"></i> Mở / Tải về
+                        <a href="${file.url}" target="_blank" download class="flex-1 py-2 bg-violet-500/20 hover:bg-violet-500 text-violet-300 hover:text-white text-xs font-bold rounded-lg transition text-center flex items-center justify-center gap-1.5">
+                            <i class="fas fa-external-link-alt"></i> Mở / Tải về
                         </a>
-                        <button onclick="deleteFile('${file.id}')" class="px-3 py-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white text-xs rounded-lg transition" title="Xóa">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        ${actionBtn}
                     </div>
                 </div>
                 `;
