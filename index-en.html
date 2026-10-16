@@ -76,6 +76,8 @@
                     <a href="#projects" class="text-slate-300 hover:text-sky-400 transition-colors">Projects</a>
                     <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Education & Skills</a>
                      <a href="blog.html" class="text-sky-400 border border-sky-500/30 bg-sky-500/10 px-4 py-1.5 rounded-full hover:bg-sky-500 hover:text-white transition-colors"><i class="fas fa-book-open mr-1"></i> Resources</a>
+                     <a href="music.html" class="text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 rounded-full hover:bg-emerald-500 hover:text-white transition-colors"><i class="fas fa-music mr-1"></i> Music</a>
+                     <a href="storage.html" class="text-violet-400 border border-violet-500/30 bg-violet-500/10 px-4 py-1.5 rounded-full hover:bg-violet-500 hover:text-white transition-colors"><i class="fas fa-folder mr-1"></i> Storage</a>
                 </div>
                 <div class="flex items-center space-x-4 border-l border-slate-700 pl-6">
                     <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
@@ -104,6 +106,9 @@
                 <a href="#experience" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Experience</a>
                 <a href="#projects" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Projects</a>
                 <a href="#skills" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Education & Skills</a>
+                <a href="blog.html" class="mobile-link text-sky-400 hover:text-sky-300 font-semibold"><i class="fas fa-book-open mr-1"></i> Resources</a>
+                <a href="music.html" class="mobile-link text-emerald-400 hover:text-emerald-300 font-semibold"><i class="fas fa-music mr-1"></i> Music</a>
+                <a href="storage.html" class="mobile-link text-violet-400 hover:text-violet-300 font-semibold"><i class="fas fa-folder mr-1"></i> Storage</a>
             </div>
         </div>
     </nav>
@@ -129,6 +134,28 @@
                 </a>
                 <a href="System & Network Engineer EN.pdf" download="Nguyen_Viet_Thanh_CV.pdf" class="px-8 py-3 rounded-full glass-card font-semibold text-white hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 border-emerald-500/30 hover:border-emerald-500/60">
                     <i class="fas fa-file-pdf text-emerald-400"></i> Download Resume (.pdf)
+                </a>
+            </div>
+
+            <!-- Mini Music Player Widget -->
+            <div class="mt-8 max-w-md mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <a href="music.html" class="block glass-card p-4 rounded-2xl hover:border-emerald-500/30 group cursor-pointer" style="transform:none;">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-sky-500 rounded-xl flex items-center justify-center text-white text-xl shrink-0 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-headphones-alt"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 text-left">
+                            <p class="text-xs text-emerald-400 font-terminal">🎵 MUSIC SPACE</p>
+                            <p class="text-white font-semibold truncate text-sm">V-Pop Hot Playlist · Listen Free</p>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-1 bg-emerald-400 rounded-full animate-pulse" style="height:12px;animation-delay:0s"></div>
+                            <div class="w-1 bg-emerald-400 rounded-full animate-pulse" style="height:18px;animation-delay:.2s"></div>
+                            <div class="w-1 bg-emerald-400 rounded-full animate-pulse" style="height:8px;animation-delay:.4s"></div>
+                            <div class="w-1 bg-emerald-400 rounded-full animate-pulse" style="height:14px;animation-delay:.1s"></div>
+                            <div class="w-1 bg-emerald-400 rounded-full animate-pulse" style="height:10px;animation-delay:.3s"></div>
+                        </div>
+                    </div>
                 </a>
             </div>
         </div>
@@ -436,13 +463,52 @@
         </div>
     </section>
 
+    <!-- Social & Quick Links -->
+    <section class="py-12 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-center mb-8 text-gradient" data-aos="fade-up">Connect & Explore</h2>
+            <div class="flex flex-wrap justify-center gap-4" data-aos="fade-up">
+                <a href="https://github.com/nvthanh" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-slate-500/50 transition-all">
+                    <i class="fab fa-github text-xl text-white"></i>
+                    <span class="text-slate-300 font-medium">GitHub</span>
+                </a>
+                <a href="https://linkedin.com/in/nvthanh" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-sky-500/50 transition-all">
+                    <i class="fab fa-linkedin text-xl text-sky-400"></i>
+                    <span class="text-slate-300 font-medium">LinkedIn</span>
+                </a>
+                <a href="https://facebook.com/nvthanh" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-blue-500/50 transition-all">
+                    <i class="fab fa-facebook text-xl text-blue-400"></i>
+                    <span class="text-slate-300 font-medium">Facebook</span>
+                </a>
+                <a href="music.html" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-emerald-500/50 transition-all">
+                    <i class="fas fa-music text-xl text-emerald-400"></i>
+                    <span class="text-slate-300 font-medium">Music</span>
+                </a>
+                <a href="storage.html" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-violet-500/50 transition-all">
+                    <i class="fas fa-folder-open text-xl text-violet-400"></i>
+                    <span class="text-slate-300 font-medium">Storage Hub</span>
+                </a>
+                <a href="blog.html" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-sky-500/50 transition-all">
+                    <i class="fas fa-book-open text-xl text-sky-400"></i>
+                    <span class="text-slate-300 font-medium">Resources</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer with IP Tracking -->
     <footer class="border-t border-slate-800 bg-slate-950 pt-10 pb-6">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-slate-500 text-sm font-medium">© 2026 NGUYEN VIET THANH.</p>
-            <div class="flex items-center gap-2 text-xs font-terminal text-slate-500 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
-                <i class="fas fa-lock text-emerald-500"></i>
-                <span id="visitor-ip">Fetching IP...</span> | Secure Connection
+            <p class="text-slate-500 text-sm font-medium">© 2026 NGUYEN VIET THANH. All Rights Reserved.</p>
+            <div class="flex flex-wrap items-center gap-3 text-xs font-terminal text-slate-500">
+                <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-2">
+                    <i class="fas fa-lock text-emerald-500"></i>
+                    <span id="visitor-ip">Fetching IP...</span> | Secure Connection
+                </div>
+                <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 flex items-center gap-2">
+                    <i class="fas fa-signal text-sky-400"></i>
+                    <span>PING: <span id="footer-ping">14</span>ms</span>
+                </div>
             </div>
         </div>
     </footer>
@@ -490,7 +556,11 @@
         });
 
         setInterval(() => {
-            document.getElementById('ping-ms').innerText = Math.floor(Math.random() * (25 - 8 + 1)) + 8;
+            const p = Math.floor(Math.random() * (25 - 8 + 1)) + 8;
+            const el1 = document.getElementById('ping-ms');
+            const el2 = document.getElementById('footer-ping');
+            if (el1) el1.innerText = p;
+            if (el2) el2.innerText = p;
         }, 2000);
 
         fetch('https://api.ipify.org?format=json')
