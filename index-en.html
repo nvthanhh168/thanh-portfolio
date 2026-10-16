@@ -527,15 +527,15 @@
         <div class="max-w-4xl mx-auto">
             <h2 class="text-2xl font-bold text-center mb-8 text-gradient" data-aos="fade-up">Connect & Explore</h2>
             <div class="flex flex-wrap justify-center gap-4" data-aos="fade-up">
-                <a href="https://github.com/nvthanh" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-slate-500/50 transition-all">
+                <a id="dynamic-github" href="https://github.com/nvthanhh168" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-slate-500/50 transition-all">
                     <i class="fab fa-github text-xl text-white"></i>
                     <span class="text-slate-300 font-medium">GitHub</span>
                 </a>
-                <a href="https://linkedin.com/in/nvthanh" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-sky-500/50 transition-all">
+                <a id="dynamic-linkedin" href="https://linkedin.com/in/nvthanh" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-sky-500/50 transition-all">
                     <i class="fab fa-linkedin text-xl text-sky-400"></i>
                     <span class="text-slate-300 font-medium">LinkedIn</span>
                 </a>
-                <a href="https://facebook.com/nvthanh" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-blue-500/50 transition-all">
+                <a id="dynamic-facebook" href="https://www.facebook.com/nvthanhhhhh" target="_blank" class="flex items-center gap-3 px-6 py-3 glass-card rounded-xl hover:border-blue-500/50 transition-all">
                     <i class="fab fa-facebook text-xl text-blue-400"></i>
                     <span class="text-slate-300 font-medium">Facebook</span>
                 </a>
@@ -1025,6 +1025,9 @@
                     if (h.name && document.getElementById('dynamic-name')) document.getElementById('dynamic-name').innerText = h.name;
                     if ((h.titleEN || h.title) && document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = h.titleEN || h.title;
                     if (h.descEN && document.getElementById('dynamic-desc')) document.getElementById('dynamic-desc').innerText = h.descEN;
+                    if (h.facebook && document.getElementById('dynamic-facebook')) document.getElementById('dynamic-facebook').href = h.facebook;
+                    if (h.github && document.getElementById('dynamic-github')) document.getElementById('dynamic-github').href = h.github;
+                    if (h.linkedin && document.getElementById('dynamic-linkedin')) document.getElementById('dynamic-linkedin').href = h.linkedin;
                 }
 
                 const heroSnap = await getDoc(doc(db, "portfolioData", "heroSection"));
@@ -1033,6 +1036,9 @@
                     if (data.name && document.getElementById('dynamic-name')) document.getElementById('dynamic-name').innerText = data.name;
                     if ((data.titleEN || data.title) && document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = data.titleEN || data.title;
                     if (data.descEN && document.getElementById('dynamic-desc')) document.getElementById('dynamic-desc').innerText = data.descEN;
+                    if (data.facebook && document.getElementById('dynamic-facebook')) document.getElementById('dynamic-facebook').href = data.facebook;
+                    if (data.github && document.getElementById('dynamic-github')) document.getElementById('dynamic-github').href = data.github;
+                    if (data.linkedin && document.getElementById('dynamic-linkedin')) document.getElementById('dynamic-linkedin').href = data.linkedin;
                     localStorage.setItem('portfolio_hero', JSON.stringify(data));
                 }
             } catch (error) {}
