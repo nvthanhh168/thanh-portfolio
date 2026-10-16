@@ -59,8 +59,8 @@
     <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <a href="#" class="text-2xl font-bold text-gradient">Thanh Nguyen <span class="hidden">[cite: 9]</span></a>
-                <div class="hidden lg:flex items-center gap-2 text-[10px] uppercase tracking-wider font-terminal text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                <a href="#" class="text-2xl font-bold text-gradient whitespace-nowrap">Thanh Nguyen</a>
+                <div class="hidden xl:flex items-center gap-2 text-[10px] uppercase tracking-wider font-terminal text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-500/20 whitespace-nowrap">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -69,28 +69,30 @@
                 </div>
             </div>
             
-            <div class="hidden md:flex items-center">
-                <div class="space-x-8 text-sm font-semibold mr-6">
+            <div class="hidden lg:flex items-center gap-3 xl:gap-5 flex-nowrap shrink-0">
+                <div class="flex items-center gap-3 xl:gap-5 text-sm font-semibold whitespace-nowrap">
                     <a href="#about" class="text-slate-300 hover:text-sky-400 transition-colors">About</a>
                     <a href="#experience" class="text-slate-300 hover:text-sky-400 transition-colors">Experience</a>
                     <a href="#projects" class="text-slate-300 hover:text-sky-400 transition-colors">Projects</a>
-                    <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Education & Skills</a>
-                     <a href="blog.html" class="text-sky-400 border border-sky-500/30 bg-sky-500/10 px-4 py-1.5 rounded-full hover:bg-sky-500 hover:text-white transition-colors"><i class="fas fa-book-open mr-1"></i> Resources</a>
-                     <a href="music.html" class="text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 rounded-full hover:bg-emerald-500 hover:text-white transition-colors"><i class="fas fa-music mr-1"></i> Music</a>
-                     <a href="storage.html" class="text-violet-400 border border-violet-500/30 bg-violet-500/10 px-4 py-1.5 rounded-full hover:bg-violet-500 hover:text-white transition-colors"><i class="fas fa-folder mr-1"></i> Storage</a>
+                    <a href="#skills" class="text-slate-300 hover:text-sky-400 transition-colors">Skills</a>
                 </div>
-                <div class="flex items-center space-x-4 border-l border-slate-700 pl-6">
-                    <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
-                        <img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-5 h-auto rounded-sm"> VN
+                <div class="flex items-center gap-2 pl-3 border-l border-slate-700/60 whitespace-nowrap">
+                    <a href="blog.html" class="text-xs text-sky-400 border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 rounded-full hover:bg-sky-500 hover:text-white transition-colors flex items-center gap-1.5"><i class="fas fa-book-open"></i> Resources</a>
+                    <a href="music.html" class="text-xs text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 rounded-full hover:bg-emerald-500 hover:text-white transition-colors flex items-center gap-1.5"><i class="fas fa-music"></i> Music</a>
+                    <a href="storage.html" class="text-xs text-violet-400 border border-violet-500/30 bg-violet-500/10 px-3 py-1.5 rounded-full hover:bg-violet-500 hover:text-white transition-colors flex items-center gap-1.5"><i class="fas fa-folder"></i> Storage</a>
+                </div>
+                <div class="flex items-center space-x-3 border-l border-slate-700 pl-4 whitespace-nowrap">
+                    <a href="index.html" class="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors text-xs">
+                        <img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-4 h-auto rounded-sm"> VN
                     </a>
-                    <a href="index-en.html" class="flex items-center gap-2 text-sky-400 font-bold transition-colors">
-                        <img src="https://flagcdn.com/w20/us.png" alt="EN" class="w-5 h-auto rounded-sm"> EN
+                    <a href="index-en.html" class="flex items-center gap-1.5 text-sky-400 font-bold transition-colors text-xs">
+                        <img src="https://flagcdn.com/w20/us.png" alt="EN" class="w-4 h-auto rounded-sm"> EN
                     </a>
                 </div>
             </div>
 
-            <div class="flex items-center gap-5 md:hidden">
-                <div class="flex items-center space-x-3 border-r border-slate-700 pr-5">
+            <div class="flex items-center gap-4 lg:hidden">
+                <div class="flex items-center space-x-2 border-r border-slate-700 pr-4">
                     <a href="index.html" class="opacity-50 hover:opacity-100"><img src="https://flagcdn.com/w20/vn.png" alt="VN" class="w-6 h-auto rounded-sm"></a>
                     <a href="index-en.html" class="opacity-100"><img src="https://flagcdn.com/w20/us.png" alt="EN" class="w-6 h-auto rounded-sm border border-sky-500"></a>
                 </div>
@@ -100,7 +102,7 @@
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800">
+        <div id="mobile-menu" class="hidden lg:hidden bg-slate-900 border-t border-slate-800">
             <div class="px-6 py-4 flex flex-col space-y-4 text-center">
                 <a href="#about" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">About</a>
                 <a href="#experience" class="mobile-link text-slate-300 hover:text-sky-400 font-semibold">Experience</a>

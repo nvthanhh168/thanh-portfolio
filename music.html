@@ -3,111 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎵 Nghe Nhạc | Nguyễn Viết Thành</title>
+    <title>🎵 Nghe Nhạc Trực Tuyến | Nguyễn Viết Thành</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
         body { font-family: 'Space Grotesk', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .text-gradient { background: linear-gradient(135deg, #10b981, #0ea5e9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .glass-card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .glass-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.2); }
+        .glass-card { background: rgba(30, 41, 59, 0.55); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); transition: transform 0.25s ease, box-shadow 0.25s ease; }
+        .glass-card:hover { border-color: rgba(16, 185, 129, 0.3); }
         .font-terminal { font-family: 'Fira Code', monospace; }
 
         /* Equalizer Bars */
-        .eq-bar { width: 4px; background: linear-gradient(to top, #10b981, #0ea5e9); border-radius: 2px; animation: eq-idle 1.5s ease-in-out infinite; }
-        .eq-playing .eq-bar { animation-name: eq-bounce; }
+        .eq-bar { width: 3.5px; background: linear-gradient(to top, #10b981, #0ea5e9); border-radius: 2px; height: 4px; transition: height 0.15s ease; }
+        .eq-playing .eq-bar { animation: eq-bounce 1.2s ease-in-out infinite; }
         .eq-bar:nth-child(1) { animation-delay: 0s; }
-        .eq-bar:nth-child(2) { animation-delay: 0.15s; }
-        .eq-bar:nth-child(3) { animation-delay: 0.3s; }
-        .eq-bar:nth-child(4) { animation-delay: 0.1s; }
-        .eq-bar:nth-child(5) { animation-delay: 0.25s; }
+        .eq-bar:nth-child(2) { animation-delay: 0.18s; }
+        .eq-bar:nth-child(3) { animation-delay: 0.35s; }
+        .eq-bar:nth-child(4) { animation-delay: 0.12s; }
+        .eq-bar:nth-child(5) { animation-delay: 0.26s; }
         .eq-bar:nth-child(6) { animation-delay: 0.05s; }
-        .eq-bar:nth-child(7) { animation-delay: 0.2s; }
-        .eq-bar:nth-child(8) { animation-delay: 0.35s; }
-        .eq-bar:nth-child(9) { animation-delay: 0.12s; }
-        .eq-bar:nth-child(10) { animation-delay: 0.28s; }
+        .eq-bar:nth-child(7) { animation-delay: 0.22s; }
+        .eq-bar:nth-child(8) { animation-delay: 0.38s; }
+        .eq-bar:nth-child(9) { animation-delay: 0.15s; }
+        .eq-bar:nth-child(10) { animation-delay: 0.3s; }
         .eq-bar:nth-child(11) { animation-delay: 0.08s; }
-        .eq-bar:nth-child(12) { animation-delay: 0.22s; }
-        .eq-bar:nth-child(13) { animation-delay: 0.18s; }
-        .eq-bar:nth-child(14) { animation-delay: 0.32s; }
+        .eq-bar:nth-child(12) { animation-delay: 0.24s; }
+        .eq-bar:nth-child(13) { animation-delay: 0.19s; }
+        .eq-bar:nth-child(14) { animation-delay: 0.33s; }
         .eq-bar:nth-child(15) { animation-delay: 0.02s; }
-        .eq-bar:nth-child(16) { animation-delay: 0.27s; }
+        .eq-bar:nth-child(16) { animation-delay: 0.28s; }
 
-        @keyframes eq-idle {
-            0%, 100% { height: 4px; }
-            50% { height: 8px; }
-        }
         @keyframes eq-bounce {
             0% { height: 4px; }
-            25% { height: 28px; }
-            50% { height: 12px; }
-            75% { height: 22px; }
+            30% { height: 26px; }
+            60% { height: 10px; }
+            80% { height: 20px; }
             100% { height: 4px; }
         }
 
-        /* Progress bar */
-        .progress-container { cursor: pointer; }
-        .progress-bar { transition: width 0.1s linear; }
-        .volume-slider { -webkit-appearance: none; appearance: none; height: 4px; background: #334155; border-radius: 2px; outline: none; }
-        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #10b981; cursor: pointer; }
+        /* Seek & Volume sliders */
+        .progress-container { cursor: pointer; position: relative; }
+        .progress-container:hover .progress-scrub { opacity: 1; }
+        .progress-scrub { opacity: 0; transition: opacity 0.2s ease; }
+        .volume-slider { -webkit-appearance: none; appearance: none; height: 5px; background: #334155; border-radius: 999px; outline: none; }
+        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #10b981; cursor: pointer; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
 
-        /* Song card active state */
-        .song-card.active { border-color: rgba(16, 185, 129, 0.5); box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
-        .song-card.active .song-index { display: none; }
-        .song-card.active .song-playing-icon { display: flex; }
+        /* Song card states */
+        .song-card { transition: all 0.2s ease; }
+        .song-card:hover { transform: translateY(-2px); border-color: rgba(16, 185, 129, 0.4); }
+        .song-card.active { border-color: rgba(16, 185, 129, 0.7); background: rgba(16, 185, 129, 0.08); box-shadow: 0 0 25px rgba(16, 185, 129, 0.15); }
+        .song-card.active .song-num { display: none; }
+        .song-card.active .song-pulse { display: flex; }
+
+        /* Media frame styling */
+        #ytPlayerContainer iframe { width: 100%; height: 100%; border: 0; border-radius: 1rem; }
     </style>
 </head>
-<body class="antialiased selection:bg-emerald-500 selection:text-white">
+<body class="antialiased selection:bg-emerald-500 selection:text-white min-h-screen flex flex-col justify-between">
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <a href="index.html" class="text-lg font-bold text-slate-300 hover:text-white transition flex items-center gap-2">
-                    <i class="fas fa-arrow-left"></i> Về trang chủ
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
+            <div class="flex items-center gap-3 shrink-0">
+                <a href="index.html" class="text-base sm:text-lg font-bold text-slate-300 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
+                    <i class="fas fa-arrow-left text-emerald-400"></i> Trang chủ
                 </a>
-                <div class="hidden sm:flex items-center gap-2 pl-4 border-l border-slate-700">
-                    <a href="storage.html" class="text-xs text-violet-400 hover:text-white font-medium px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20"><i class="fas fa-folder mr-1"></i> Kho Lưu Trữ</a>
-                    <a href="blog.html" class="text-xs text-sky-400 hover:text-white font-medium px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20"><i class="fas fa-book-open mr-1"></i> Tài liệu</a>
+                <div class="hidden sm:flex items-center gap-2 pl-3 border-l border-slate-700 whitespace-nowrap">
+                    <a href="storage.html" class="text-xs text-violet-400 hover:text-white font-medium px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center gap-1.5"><i class="fas fa-folder"></i> Lưu Trữ</a>
+                    <a href="blog.html" class="text-xs text-sky-400 hover:text-white font-medium px-3 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center gap-1.5"><i class="fas fa-book-open"></i> Tài liệu</a>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-1 eq-container" id="navEq">
-                    <div class="eq-bar" style="height:4px"></div>
-                    <div class="eq-bar" style="height:4px"></div>
-                    <div class="eq-bar" style="height:4px"></div>
-                    <div class="eq-bar" style="height:4px"></div>
-                    <div class="eq-bar" style="height:4px"></div>
+            
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="hidden sm:flex items-center gap-1 eq-container" id="navEq">
+                    <div class="eq-bar"></div><div class="eq-bar"></div>
+                    <div class="eq-bar"></div><div class="eq-bar"></div>
+                    <div class="eq-bar"></div>
                 </div>
-                <span class="text-emerald-400 font-bold text-lg">🎵 NVThanh Music</span>
+                <span class="text-emerald-400 font-bold text-sm sm:text-base font-terminal flex items-center gap-2">
+                    <i class="fas fa-headphones-alt"></i> NVThanh Music
+                </span>
             </div>
         </div>
     </nav>
 
-    <!-- Header -->
-    <section class="pt-32 pb-10 px-6 relative overflow-hidden">
-        <div class="absolute top-0 left-1/3 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl"></div>
-        <div class="absolute top-0 right-1/3 w-96 h-96 bg-sky-600/15 rounded-full blur-3xl"></div>
+    <!-- Header Section -->
+    <section class="pt-28 pb-6 px-6 relative overflow-hidden">
+        <div class="absolute top-0 left-1/3 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-0 right-1/3 w-96 h-96 bg-sky-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        
         <div class="max-w-4xl mx-auto text-center z-10 relative">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4">Nghe Nhạc <span class="text-gradient">Trực Tuyến</span></h1>
-            <p class="text-slate-400 text-lg">Thư giãn với những bản nhạc yêu thích. Hoàn toàn miễn phí! 🎧</p>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-terminal mb-3">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>STREAMING AUDIO & MV LIVE</span>
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-bold mb-3 tracking-tight">Nghe Nhạc <span class="text-gradient">Trực Tuyến</span></h1>
+            <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">Thưởng thức playlist V-Pop hot & giai điệu Chill Lofi tập trung làm việc, hoàn toàn miễn phí!</p>
         </div>
     </section>
 
-    <!-- Main Player -->
-    <section class="px-6 pb-8">
+    <!-- Main Player Card -->
+    <section class="px-4 sm:px-6 pb-8">
         <div class="max-w-4xl mx-auto">
-            <div class="glass-card rounded-3xl p-6 md:p-8" style="transform:none;">
-                <div class="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6 md:gap-8">
-                    <!-- Album Art -->
-                    <div class="relative mx-auto md:mx-0">
-                        <div id="albumArt" class="w-64 h-64 md:w-[280px] md:h-[280px] rounded-2xl bg-gradient-to-br from-emerald-600 via-sky-600 to-indigo-600 flex items-center justify-center shadow-2xl shadow-emerald-500/20 overflow-hidden">
-                            <i class="fas fa-music text-6xl text-white/30" id="albumIcon"></i>
-                            <img id="albumImg" src="" alt="" class="absolute inset-0 w-full h-full object-cover rounded-2xl hidden">
+            <div class="glass-card rounded-3xl p-5 sm:p-8 relative overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[300px_1fr] gap-6 sm:gap-8 items-center">
+                    
+                    <!-- Left: Screen / Artwork Container -->
+                    <div class="relative mx-auto md:mx-0 w-full max-w-[280px] sm:max-w-[300px]">
+                        <div class="relative w-full aspect-square rounded-2xl bg-slate-900 border border-slate-700/60 overflow-hidden shadow-2xl shadow-emerald-500/10 group">
+                            
+                            <!-- YouTube Player Frame Container -->
+                            <div id="ytPlayerContainer" class="w-full h-full relative z-0">
+                                <div id="ytPlayer" class="w-full h-full"></div>
+                            </div>
+                            
+                            <!-- Cover Art Image (overlay when paused or in cover view) -->
+                            <div id="coverOverlay" class="absolute inset-0 z-10 bg-slate-900 transition-opacity duration-300 flex items-center justify-center cursor-pointer">
+                                <img id="albumCoverImg" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" alt="Album Art" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition flex items-center justify-center">
+                                    <div class="w-16 h-16 rounded-full bg-emerald-500/90 text-white flex items-center justify-center shadow-lg shadow-emerald-500/50 group-hover:scale-110 transition">
+                                        <i class="fas fa-play text-2xl ml-1 text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mode Toggle Pill: Xem MV vs Ẩn Video -->
+                            <button id="toggleVideoBtn" class="absolute top-3 right-3 z-20 text-[11px] font-terminal px-2.5 py-1 rounded-full bg-slate-900/80 hover:bg-emerald-500 hover:text-white text-emerald-400 border border-emerald-500/30 backdrop-blur-md transition flex items-center gap-1.5 shadow">
+                                <i class="fas fa-tv"></i> <span id="toggleVideoText">Xem MV</span>
+                            </button>
                         </div>
-                        <!-- Equalizer -->
-                        <div class="flex items-end justify-center gap-[3px] h-10 mt-4 eq-container" id="mainEq">
+
+                        <!-- Equalizer Visualizer -->
+                        <div class="flex items-end justify-center gap-[3px] h-7 mt-4 eq-container" id="mainEq">
                             <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
                             <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
                             <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
@@ -116,70 +144,101 @@
                             <div class="eq-bar"></div>
                         </div>
                     </div>
-                    <!-- Controls -->
+
+                    <!-- Right: Track Information & Player Controls -->
                     <div class="flex flex-col justify-between min-w-0">
                         <div>
-                            <p class="text-xs text-emerald-400 font-terminal mb-2 uppercase tracking-widest">Đang phát</p>
-                            <h2 id="songTitle" class="text-2xl md:text-3xl font-bold text-white mb-1 truncate">Chọn bài hát...</h2>
-                            <p id="songArtist" class="text-lg text-slate-400 mb-6 truncate">---</p>
-                        </div>
-                        <!-- Progress -->
-                        <div class="mb-4">
-                            <div class="progress-container w-full h-2 bg-slate-700 rounded-full overflow-hidden" id="progressContainer">
-                                <div class="progress-bar h-full bg-gradient-to-r from-emerald-500 to-sky-500 rounded-full" id="progressBar" style="width:0%"></div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-terminal uppercase tracking-widest font-semibold">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span id="playerStatusBadge">Sẵn sàng phát</span>
+                                </span>
+                                <span id="currentSourceType" class="text-[11px] font-terminal text-slate-500 border border-slate-700/60 rounded px-2 py-0.5">
+                                    YouTube HD
+                                </span>
                             </div>
-                            <div class="flex justify-between text-xs text-slate-500 font-terminal mt-2">
+                            
+                            <h2 id="songTitle" class="text-2xl sm:text-3xl font-bold text-white mb-1.5 truncate tracking-tight">Chọn bài hát...</h2>
+                            <p id="songArtist" class="text-base sm:text-lg text-slate-400 mb-6 truncate font-medium">Nguyễn Viết Thành Playlist</p>
+                        </div>
+
+                        <!-- Progress Bar & Scrubbing -->
+                        <div class="mb-5">
+                            <div class="progress-container w-full h-2.5 bg-slate-800 rounded-full overflow-hidden" id="progressContainer">
+                                <div class="h-full bg-gradient-to-r from-emerald-500 to-sky-500 rounded-full transition-all duration-150" id="progressBar" style="width: 0%;"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-slate-400 font-terminal mt-2">
                                 <span id="currentTime">0:00</span>
                                 <span id="totalTime">0:00</span>
                             </div>
                         </div>
-                        <!-- Buttons -->
-                        <div class="flex items-center justify-center gap-4 md:gap-6 mb-4">
-                            <button id="shuffleBtn" class="text-slate-500 hover:text-emerald-400 transition text-lg" title="Phát ngẫu nhiên">
+
+                        <!-- Playback Controls -->
+                        <div class="flex items-center justify-center gap-5 sm:gap-7 mb-6">
+                            <button id="shuffleBtn" class="text-slate-400 hover:text-emerald-400 transition text-lg p-2" title="Phát ngẫu nhiên">
                                 <i class="fas fa-random"></i>
                             </button>
-                            <button id="prevBtn" class="text-slate-300 hover:text-white transition text-xl" title="Bài trước">
+                            <button id="prevBtn" class="text-slate-300 hover:text-white transition text-2xl p-2" title="Bài trước">
                                 <i class="fas fa-step-backward"></i>
                             </button>
-                            <button id="playBtn" class="w-14 h-14 bg-gradient-to-r from-emerald-500 to-sky-500 rounded-full flex items-center justify-center text-white text-xl hover:opacity-90 transition shadow-lg shadow-emerald-500/30" title="Phát / Tạm dừng">
-                                <i class="fas fa-play" id="playIcon"></i>
+                            <button id="playBtn" class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-sky-500 rounded-full flex items-center justify-center text-white text-2xl hover:scale-105 active:scale-95 transition shadow-lg shadow-emerald-500/30" title="Phát / Dừng">
+                                <i class="fas fa-play ml-0.5" id="playIcon"></i>
                             </button>
-                            <button id="nextBtn" class="text-slate-300 hover:text-white transition text-xl" title="Bài tiếp">
+                            <button id="nextBtn" class="text-slate-300 hover:text-white transition text-2xl p-2" title="Bài tiếp">
                                 <i class="fas fa-step-forward"></i>
                             </button>
-                            <button id="repeatBtn" class="text-slate-500 hover:text-emerald-400 transition text-lg" title="Lặp lại">
+                            <button id="repeatBtn" class="text-slate-400 hover:text-emerald-400 transition text-lg p-2 relative" title="Lặp lại">
                                 <i class="fas fa-redo"></i>
                             </button>
                         </div>
-                        <!-- Volume -->
-                        <div class="flex items-center gap-3">
-                            <button id="muteBtn" class="text-slate-400 hover:text-white transition">
+
+                        <!-- Volume Slider -->
+                        <div class="flex items-center gap-3 px-2">
+                            <button id="muteBtn" class="text-slate-400 hover:text-white transition text-base w-7">
                                 <i class="fas fa-volume-up" id="volumeIcon"></i>
                             </button>
-                            <input type="range" id="volumeSlider" min="0" max="100" value="80" class="volume-slider flex-1">
-                            <span id="volumeValue" class="text-xs text-slate-500 font-terminal w-10 text-right">80%</span>
+                            <input type="range" id="volumeSlider" min="0" max="100" value="85" class="volume-slider flex-1">
+                            <span id="volumeValue" class="text-xs text-slate-400 font-terminal w-10 text-right">85%</span>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Playlist -->
-    <section class="px-6 pb-20">
+    <!-- Playlist Section -->
+    <section class="px-4 sm:px-6 pb-20">
         <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-white"><i class="fas fa-list-ul text-emerald-400 mr-2"></i>Playlist V-Pop Hot</h2>
-                <span class="text-sm text-slate-500 font-terminal" id="playlistCount">10 bài hát</span>
+            
+            <!-- Category Tabs & Count -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <div class="flex items-center gap-2">
+                    <button id="tabVpop" class="px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 transition">
+                        🔥 V-Pop Hot Hits
+                    </button>
+                    <button id="tabLofi" class="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-800/60 text-slate-400 border border-slate-700/60 hover:text-white transition">
+                        ☕ Lofi & Chill Beats
+                    </button>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <div class="relative flex-1 sm:w-60">
+                        <i class="fas fa-search absolute left-3 top-3 text-slate-500 text-xs"></i>
+                        <input type="text" id="searchInput" placeholder="Tìm bài hát, ca sĩ..." class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                    <span class="text-xs text-slate-500 font-terminal whitespace-nowrap" id="playlistCount">10 bài hát</span>
+                </div>
             </div>
+
+            <!-- Playlist Items Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="playlistGrid">
-                <!-- Rendered by JS -->
+                <!-- Rendered dynamically by JavaScript -->
             </div>
         </div>
     </section>
 
-    <!-- Hidden YouTube Player -->
-    <div id="ytPlayer" style="position:absolute;top:-9999px;left:-9999px;width:1px;height:1px;"></div>
+    <!-- Hidden HTML5 Audio Element for direct stream fallback -->
+    <audio id="directAudio" preload="none"></audio>
 
     <!-- Footer -->
     <footer class="border-t border-slate-800 bg-slate-950 pt-8 pb-6 text-center">
@@ -187,32 +246,122 @@
     </footer>
 
     <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
     <script>
         // ===== PLAYLIST DATA =====
-        const playlist = [
-            { title: "Hoá Ra", artist: "Grey D", videoId: "dLRk22FWDwc" },
-            { title: "Nấu Ăn Cho Em", artist: "HIEUTHUHAI", videoId: "r44BHTdT0y4" },
-            { title: "Exit Sign", artist: "HIEUTHUHAI x MARZUZ", videoId: "PjSfUX9cOog" },
-            { title: "Không Thể Say", artist: "HIEUTHUHAI", videoId: "FwDdJk1XPUM" },
-            { title: "Ngày Đầu Tiên", artist: "Đức Phúc", videoId: "w9JFfb_0FVY" },
-            { title: "Cắt Đôi Nỗi Sầu", artist: "Tăng Duy Tân ft Drum7", videoId: "dCXRV7ffXYM" },
-            { title: "Đừng Làm Trái Tim Anh Đau", artist: "Sơn Tùng M-TP", videoId: "GaGjfqMYYKU" },
-            { title: "Em Của Ngày Hôm Qua", artist: "Sơn Tùng M-TP", videoId: "JW9sAyMPxQA" },
-            { title: "Thương Em", artist: "WinterPlay", videoId: "hBRZkxOvWP8" },
-            { title: "Waiting For You", artist: "MONO", videoId: "bSH1R_jhTlQ" }
+        const vpopPlaylist = [
+            { 
+                title: "Đừng Làm Trái Tim Anh Đau", 
+                artist: "Sơn Tùng M-TP", 
+                videoId: "abPmZCZZrFA",
+                cover: "https://img.youtube.com/vi/abPmZCZZrFA/hqdefault.jpg"
+            },
+            { 
+                title: "Waiting For You", 
+                artist: "MONO", 
+                videoId: "CHw1b_1LVBA",
+                cover: "https://img.youtube.com/vi/CHw1b_1LVBA/hqdefault.jpg"
+            },
+            { 
+                title: "Nấu Ăn Cho Em", 
+                artist: "Đen ft. PiaLinh", 
+                videoId: "ukHK1GVyr0I",
+                cover: "https://img.youtube.com/vi/ukHK1GVyr0I/hqdefault.jpg"
+            },
+            { 
+                title: "Cắt Đôi Nỗi Sầu", 
+                artist: "Tăng Duy Tân ft Drum7", 
+                videoId: "GpmOn4RyzZI",
+                cover: "https://img.youtube.com/vi/GpmOn4RyzZI/hqdefault.jpg"
+            },
+            { 
+                title: "Ngày Đầu Tiên", 
+                artist: "Đức Phúc", 
+                videoId: "rIXhXaQ8tiM",
+                cover: "https://img.youtube.com/vi/rIXhXaQ8tiM/hqdefault.jpg"
+            },
+            { 
+                title: "vaicaunoicokhiennguoithaydoi", 
+                artist: "GREY D x tlinh", 
+                videoId: "2iidlwQ-NfU",
+                cover: "https://img.youtube.com/vi/2iidlwQ-NfU/hqdefault.jpg"
+            },
+            { 
+                title: "Không Thể Say", 
+                artist: "HIEUTHUHAI", 
+                videoId: "37DzQpGgtOs",
+                cover: "https://img.youtube.com/vi/37DzQpGgtOs/hqdefault.jpg"
+            },
+            { 
+                title: "Exit Sign", 
+                artist: "HIEUTHUHAI x MARZUZ", 
+                videoId: "sJt_i0hOugA",
+                cover: "https://img.youtube.com/vi/sJt_i0hOugA/hqdefault.jpg"
+            },
+            { 
+                title: "Em Của Ngày Hôm Qua", 
+                artist: "Sơn Tùng M-TP", 
+                videoId: "kebCY6ahbHQ",
+                cover: "https://img.youtube.com/vi/kebCY6ahbHQ/hqdefault.jpg"
+            },
+            { 
+                title: "Bước Qua Nhau", 
+                artist: "Vũ.", 
+                videoId: "A419kK_JqA8",
+                cover: "https://img.youtube.com/vi/A419kK_JqA8/hqdefault.jpg"
+            }
+        ];
+
+        const lofiPlaylist = [
+            {
+                title: "Chill Lofi Study Beats",
+                artist: "Lofi Focus",
+                audioUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3",
+                cover: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                title: "Late Night Coding",
+                artist: "Coffee & Rain",
+                audioUrl: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=lofi-chill-medium-version-159456.mp3",
+                cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                title: "Midnight Dreamer",
+                artist: "Chillwave Synthesizer",
+                audioUrl: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=lofi-ambient-110128.mp3",
+                cover: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                title: "Acoustic Sunset",
+                artist: "Peaceful Mind",
+                audioUrl: "https://cdn.pixabay.com/download/audio/2021/09/06/audio_985559cfd2.mp3?filename=guitar-acoustic-chill-9207.mp3",
+                cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80"
+            }
         ];
 
         // ===== STATE =====
+        let currentTab = 'vpop'; // 'vpop' | 'lofi'
+        let currentPlaylist = vpopPlaylist;
         let currentIndex = -1;
         let isPlaying = false;
         let isShuffle = false;
-        let repeatMode = 0; // 0: off, 1: all, 2: one
-        let player = null;
+        let repeatMode = 0; // 0: no, 1: all, 2: one
+        let showVideo = false;
+        let ytPlayer = null;
+        let ytReady = false;
         let progressInterval = null;
+        const directAudio = document.getElementById('directAudio');
 
-        // ===== DOM =====
+        // ===== DOM ELEMENTS =====
         const songTitle = document.getElementById('songTitle');
         const songArtist = document.getElementById('songArtist');
+        const playerStatusBadge = document.getElementById('playerStatusBadge');
+        const currentSourceType = document.getElementById('currentSourceType');
+        const albumCoverImg = document.getElementById('albumCoverImg');
+        const coverOverlay = document.getElementById('coverOverlay');
+        const toggleVideoBtn = document.getElementById('toggleVideoBtn');
+        const toggleVideoText = document.getElementById('toggleVideoText');
         const playBtn = document.getElementById('playBtn');
         const playIcon = document.getElementById('playIcon');
         const prevBtn = document.getElementById('prevBtn');
@@ -228,204 +377,390 @@
         const muteBtn = document.getElementById('muteBtn');
         const volumeIcon = document.getElementById('volumeIcon');
         const playlistGrid = document.getElementById('playlistGrid');
+        const playlistCount = document.getElementById('playlistCount');
+        const searchInput = document.getElementById('searchInput');
+        const tabVpop = document.getElementById('tabVpop');
+        const tabLofi = document.getElementById('tabLofi');
         const mainEq = document.getElementById('mainEq');
         const navEq = document.getElementById('navEq');
 
-        // ===== RENDER PLAYLIST =====
-        function renderPlaylist() {
-            playlistGrid.innerHTML = playlist.map((song, i) => `
-                <div class="song-card glass-card rounded-xl p-4 flex items-center gap-4 cursor-pointer group" data-index="${i}" style="transform:none;" onclick="playSong(${i})">
-                    <div class="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-slate-400 group-hover:bg-emerald-500 group-hover:text-white transition shrink-0">
-                        <span class="song-index font-terminal text-sm">${String(i+1).padStart(2,'0')}</span>
-                        <div class="song-playing-icon hidden items-center gap-[2px]">
-                            <div class="w-[3px] h-3 bg-white rounded-full animate-pulse"></div>
-                            <div class="w-[3px] h-4 bg-white rounded-full animate-pulse" style="animation-delay:.15s"></div>
-                            <div class="w-[3px] h-2 bg-white rounded-full animate-pulse" style="animation-delay:.3s"></div>
-                        </div>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-white font-semibold truncate text-sm">${song.title}</p>
-                        <p class="text-slate-500 text-xs truncate">${song.artist}</p>
-                    </div>
-                    <button class="text-slate-600 group-hover:text-emerald-400 transition text-lg shrink-0">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-        renderPlaylist();
-
-        // ===== YOUTUBE API =====
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.head.appendChild(tag);
-
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('ytPlayer', {
-                height: '1',
-                width: '1',
-                playerVars: { autoplay: 0, controls: 0, disablekb: 1, fs: 0, modestbranding: 1 },
+        // ===== YOUTUBE IFRAME INITIALIZATION =====
+        window.onYouTubeIframeAPIReady = function() {
+            ytPlayer = new YT.Player('ytPlayer', {
+                height: '100%',
+                width: '100%',
+                videoId: currentPlaylist[0].videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'playsinline': 1,
+                    'iv_load_policy': 3
+                },
                 events: {
-                    'onReady': () => { player.setVolume(80); },
-                    'onStateChange': onPlayerStateChange
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
                 }
             });
+        };
+
+        function onPlayerReady(event) {
+            ytReady = true;
+            ytPlayer.setVolume(parseInt(volumeSlider.value));
+            // Show first song info in player
+            loadSongInfo(0);
         }
 
         function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                handleSongEnd();
-            } else if (event.data === YT.PlayerState.PLAYING) {
+            if (event.data === YT.PlayerState.PLAYING) {
                 isPlaying = true;
-                updatePlayButton();
-                startProgressTracking();
+                updatePlayUI();
+                startProgressLoop();
+                playerStatusBadge.textContent = "Đang phát...";
             } else if (event.data === YT.PlayerState.PAUSED) {
                 isPlaying = false;
-                updatePlayButton();
-                stopProgressTracking();
+                updatePlayUI();
+                stopProgressLoop();
+                playerStatusBadge.textContent = "Tạm dừng";
+            } else if (event.data === YT.PlayerState.ENDED) {
+                handleTrackEnd();
+            } else if (event.data === YT.PlayerState.BUFFERING) {
+                playerStatusBadge.textContent = "Đang tải dữ liệu...";
             }
         }
 
-        // ===== PLAY SONG =====
-        function playSong(index) {
-            if (index < 0 || index >= playlist.length) return;
+        function onPlayerError(event) {
+            console.warn("YouTube Player error:", event.data);
+            playerStatusBadge.textContent = "Tự động chuyển bài...";
+            setTimeout(() => { playNext(); }, 1200);
+        }
+
+        // ===== HTML5 AUDIO EVENTS =====
+        directAudio.addEventListener('playing', () => {
+            isPlaying = true;
+            updatePlayUI();
+            startProgressLoop();
+            playerStatusBadge.textContent = "Đang phát Lofi...";
+        });
+
+        directAudio.addEventListener('pause', () => {
+            isPlaying = false;
+            updatePlayUI();
+            stopProgressLoop();
+            playerStatusBadge.textContent = "Tạm dừng";
+        });
+
+        directAudio.addEventListener('ended', handleTrackEnd);
+
+        directAudio.addEventListener('timeupdate', () => {
+            if (currentTab === 'lofi') {
+                const current = directAudio.currentTime || 0;
+                const dur = directAudio.duration || 0;
+                if (dur > 0) {
+                    progressBar.style.width = ((current / dur) * 100) + '%';
+                    currentTimeEl.textContent = formatTime(current);
+                    totalTimeEl.textContent = formatTime(dur);
+                }
+            }
+        });
+
+        // ===== RENDER PLAYLIST =====
+        function renderPlaylist(filter = '') {
+            const list = currentPlaylist.filter(song => 
+                song.title.toLowerCase().includes(filter.toLowerCase()) || 
+                song.artist.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            playlistCount.textContent = list.length + " bài hát";
+
+            playlistGrid.innerHTML = list.map((song, idx) => {
+                const originalIndex = currentPlaylist.indexOf(song);
+                const isActive = originalIndex === currentIndex;
+                const cover = song.cover || `https://img.youtube.com/vi/${song.videoId}/hqdefault.jpg`;
+
+                return `
+                    <div class="song-card glass-card rounded-2xl p-3 sm:p-4 flex items-center gap-3.5 cursor-pointer ${isActive ? 'active' : ''}" 
+                         onclick="playSong(${originalIndex})">
+                        <div class="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-slate-800">
+                            <img src="${cover}" alt="${song.title}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                <span class="song-num font-terminal text-xs text-slate-300 font-bold">${String(originalIndex + 1).padStart(2, '0')}</span>
+                                <div class="song-pulse hidden items-center gap-[2px]">
+                                    <div class="w-[3px] h-3 bg-emerald-400 rounded-full animate-bounce"></div>
+                                    <div class="w-[3px] h-5 bg-emerald-400 rounded-full animate-bounce" style="animation-delay:.15s"></div>
+                                    <div class="w-[3px] h-3 bg-emerald-400 rounded-full animate-bounce" style="animation-delay:.3s"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white font-semibold truncate text-sm sm:text-base">${song.title}</p>
+                            <p class="text-slate-400 text-xs truncate mt-0.5">${song.artist}</p>
+                        </div>
+                        <div class="shrink-0 text-slate-500 hover:text-emerald-400 transition text-lg px-2">
+                            <i class="fas ${isActive && isPlaying ? 'fa-pause text-emerald-400' : 'fa-play'}"></i>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ===== SONG LOADING & PLAYBACK =====
+        function loadSongInfo(index) {
+            if (index < 0 || index >= currentPlaylist.length) return;
             currentIndex = index;
-            const song = playlist[currentIndex];
+            const song = currentPlaylist[currentIndex];
 
             songTitle.textContent = song.title;
             songArtist.textContent = song.artist;
 
-            // Load album thumbnail from YouTube
-            const albumImg = document.getElementById('albumImg');
-            const albumIcon = document.getElementById('albumIcon');
-            albumImg.src = `https://img.youtube.com/vi/${song.videoId}/hqdefault.jpg`;
-            albumImg.classList.remove('hidden');
-            albumIcon.classList.add('hidden');
+            const cover = song.cover || `https://img.youtube.com/vi/${song.videoId}/hqdefault.jpg`;
+            albumCoverImg.src = cover;
+            currentSourceType.textContent = currentTab === 'vpop' ? 'YouTube HD' : 'Direct Audio';
 
-            // Load and play
-            if (player && player.loadVideoById) {
-                player.loadVideoById(song.videoId);
+            updateActiveCardHighlight();
+        }
+
+        function playSong(index) {
+            if (index < 0 || index >= currentPlaylist.length) return;
+            loadSongInfo(index);
+            const song = currentPlaylist[currentIndex];
+
+            if (currentTab === 'vpop') {
+                // Pause HTML5 audio if playing
+                directAudio.pause();
+
+                if (ytReady && ytPlayer && ytPlayer.loadVideoById) {
+                    ytPlayer.loadVideoById(song.videoId);
+                    ytPlayer.playVideo();
+                }
+
+                // If user wants to see the video right away, hide overlay
+                if (showVideo) {
+                    coverOverlay.style.opacity = '0';
+                    coverOverlay.style.pointerEvents = 'none';
+                }
+            } else {
+                // Lofi audio stream
+                if (ytReady && ytPlayer && ytPlayer.pauseVideo) {
+                    ytPlayer.pauseVideo();
+                }
+
+                directAudio.src = song.audioUrl;
+                directAudio.play().catch(e => console.log('Audio autoplay prevented:', e));
+
+                // Always show cover art in lofi mode
+                coverOverlay.style.opacity = '1';
+                coverOverlay.style.pointerEvents = 'auto';
             }
 
             isPlaying = true;
-            updatePlayButton();
-            updateActiveCard();
+            updatePlayUI();
         }
 
-        // ===== CONTROLS =====
-        playBtn.addEventListener('click', () => {
-            if (currentIndex === -1) { playSong(0); return; }
-            if (isPlaying) {
-                player.pauseVideo();
-            } else {
-                player.playVideo();
+        function togglePlay() {
+            if (currentIndex === -1) {
+                playSong(0);
+                return;
             }
-        });
 
-        prevBtn.addEventListener('click', () => {
-            if (currentIndex <= 0) playSong(playlist.length - 1);
-            else playSong(currentIndex - 1);
-        });
-
-        nextBtn.addEventListener('click', () => { playNext(); });
+            if (currentTab === 'vpop') {
+                if (!ytPlayer) return;
+                if (isPlaying) {
+                    ytPlayer.pauseVideo();
+                } else {
+                    ytPlayer.playVideo();
+                }
+            } else {
+                if (isPlaying) {
+                    directAudio.pause();
+                } else {
+                    directAudio.play();
+                }
+            }
+        }
 
         function playNext() {
             if (isShuffle) {
-                let rand;
-                do { rand = Math.floor(Math.random() * playlist.length); } while (rand === currentIndex && playlist.length > 1);
-                playSong(rand);
+                let nextIdx;
+                do {
+                    nextIdx = Math.floor(Math.random() * currentPlaylist.length);
+                } while (nextIdx === currentIndex && currentPlaylist.length > 1);
+                playSong(nextIdx);
             } else {
-                playSong((currentIndex + 1) % playlist.length);
+                const nextIdx = (currentIndex + 1) % currentPlaylist.length;
+                playSong(nextIdx);
             }
         }
 
-        function handleSongEnd() {
-            if (repeatMode === 2) { playSong(currentIndex); }
-            else if (repeatMode === 1 || currentIndex < playlist.length - 1) { playNext(); }
-            else { isPlaying = false; updatePlayButton(); }
+        function playPrev() {
+            if (currentIndex <= 0) {
+                playSong(currentPlaylist.length - 1);
+            } else {
+                playSong(currentIndex - 1);
+            }
         }
+
+        function handleTrackEnd() {
+            if (repeatMode === 2) {
+                // Repeat single track
+                playSong(currentIndex);
+            } else if (repeatMode === 1 || currentIndex < currentPlaylist.length - 1) {
+                // Repeat all or not last track
+                playNext();
+            } else {
+                isPlaying = false;
+                updatePlayUI();
+                playerStatusBadge.textContent = "Hoàn tất";
+            }
+        }
+
+        // ===== PROGRESS LOOP =====
+        function startProgressLoop() {
+            stopProgressLoop();
+            progressInterval = setInterval(() => {
+                if (currentTab === 'vpop' && ytPlayer && ytPlayer.getCurrentTime) {
+                    const current = ytPlayer.getCurrentTime() || 0;
+                    const dur = ytPlayer.getDuration() || 0;
+                    if (dur > 0) {
+                        progressBar.style.width = ((current / dur) * 100) + '%';
+                        currentTimeEl.textContent = formatTime(current);
+                        totalTimeEl.textContent = formatTime(dur);
+                    }
+                }
+            }, 400);
+        }
+
+        function stopProgressLoop() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+        }
+
+        function formatTime(sec) {
+            const s = Math.floor(sec);
+            const m = Math.floor(s / 60);
+            const remSec = s % 60;
+            return m + ':' + String(remSec).padStart(2, '0');
+        }
+
+        // Click to seek progress
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const pct = (e.clientX - rect.left) / rect.width;
+            
+            if (currentTab === 'vpop' && ytPlayer && ytPlayer.getDuration) {
+                const targetTime = pct * ytPlayer.getDuration();
+                ytPlayer.seekTo(targetTime, true);
+            } else if (currentTab === 'lofi' && directAudio.duration) {
+                directAudio.currentTime = pct * directAudio.duration;
+            }
+        });
+
+        // ===== VOLUME CONTROL =====
+        volumeSlider.addEventListener('input', () => {
+            const val = parseInt(volumeSlider.value);
+            volumeValue.textContent = val + '%';
+            if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(val);
+            directAudio.volume = val / 100;
+            updateVolumeIcon(val);
+        });
+
+        muteBtn.addEventListener('click', () => {
+            if (volumeSlider.value > 0) {
+                muteBtn.dataset.prevVol = volumeSlider.value;
+                volumeSlider.value = 0;
+            } else {
+                volumeSlider.value = muteBtn.dataset.prevVol || 80;
+            }
+            volumeSlider.dispatchEvent(new Event('input'));
+        });
+
+        function updateVolumeIcon(vol) {
+            if (vol === 0) {
+                volumeIcon.className = 'fas fa-volume-mute text-slate-500';
+            } else if (vol < 50) {
+                volumeIcon.className = 'fas fa-volume-down text-slate-300';
+            } else {
+                volumeIcon.className = 'fas fa-volume-up text-emerald-400';
+            }
+        }
+
+        // ===== BUTTON EVENTS =====
+        playBtn.addEventListener('click', togglePlay);
+        coverOverlay.addEventListener('click', togglePlay);
+        prevBtn.addEventListener('click', playPrev);
+        nextBtn.addEventListener('click', playNext);
 
         shuffleBtn.addEventListener('click', () => {
             isShuffle = !isShuffle;
             shuffleBtn.classList.toggle('text-emerald-400', isShuffle);
-            shuffleBtn.classList.toggle('text-slate-500', !isShuffle);
+            shuffleBtn.classList.toggle('text-slate-400', !isShuffle);
         });
 
         repeatBtn.addEventListener('click', () => {
             repeatMode = (repeatMode + 1) % 3;
             if (repeatMode === 0) {
-                repeatBtn.classList.remove('text-emerald-400');
-                repeatBtn.classList.add('text-slate-500');
+                repeatBtn.className = 'text-slate-400 hover:text-emerald-400 transition text-lg p-2 relative';
                 repeatBtn.innerHTML = '<i class="fas fa-redo"></i>';
+                repeatBtn.title = "Lặp lại: Tắt";
             } else if (repeatMode === 1) {
-                repeatBtn.classList.add('text-emerald-400');
-                repeatBtn.classList.remove('text-slate-500');
+                repeatBtn.className = 'text-emerald-400 transition text-lg p-2 relative';
                 repeatBtn.innerHTML = '<i class="fas fa-redo"></i>';
+                repeatBtn.title = "Lặp lại: Toàn bộ danh sách";
             } else {
-                repeatBtn.innerHTML = '<i class="fas fa-redo"></i><span class="text-[10px] ml-0.5">1</span>';
+                repeatBtn.className = 'text-emerald-400 transition text-lg p-2 relative';
+                repeatBtn.innerHTML = '<i class="fas fa-redo"></i><span class="absolute -top-1 -right-1 text-[9px] font-bold bg-emerald-500 text-slate-900 rounded-full w-3.5 h-3.5 flex items-center justify-center">1</span>';
+                repeatBtn.title = "Lặp lại: 1 bài";
             }
         });
 
-        // ===== PROGRESS =====
-        function startProgressTracking() {
-            stopProgressTracking();
-            progressInterval = setInterval(updateProgress, 500);
-        }
-        function stopProgressTracking() {
-            if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
-        }
-        function updateProgress() {
-            if (!player || !player.getCurrentTime) return;
-            const current = player.getCurrentTime();
-            const duration = player.getDuration();
-            if (duration > 0) {
-                progressBar.style.width = (current / duration * 100) + '%';
-                currentTimeEl.textContent = formatTime(current);
-                totalTimeEl.textContent = formatTime(duration);
-            }
-        }
-        function formatTime(s) {
-            const m = Math.floor(s / 60);
-            const sec = Math.floor(s % 60);
-            return m + ':' + String(sec).padStart(2, '0');
-        }
-
-        progressContainer.addEventListener('click', (e) => {
-            if (!player || !player.getDuration) return;
-            const rect = progressContainer.getBoundingClientRect();
-            const pct = (e.clientX - rect.left) / rect.width;
-            player.seekTo(pct * player.getDuration(), true);
-        });
-
-        // ===== VOLUME =====
-        volumeSlider.addEventListener('input', () => {
-            const vol = parseInt(volumeSlider.value);
-            if (player && player.setVolume) player.setVolume(vol);
-            volumeValue.textContent = vol + '%';
-            updateVolumeIcon(vol);
-        });
-        muteBtn.addEventListener('click', () => {
-            if (!player) return;
-            if (player.isMuted()) {
-                player.unMute();
-                volumeSlider.value = player.getVolume();
+        // Toggle Video Mode
+        toggleVideoBtn.addEventListener('click', () => {
+            showVideo = !showVideo;
+            if (showVideo) {
+                coverOverlay.style.opacity = '0';
+                coverOverlay.style.pointerEvents = 'none';
+                toggleVideoText.textContent = "Ẩn MV";
             } else {
-                player.mute();
-                volumeSlider.value = 0;
+                coverOverlay.style.opacity = '1';
+                coverOverlay.style.pointerEvents = 'auto';
+                toggleVideoText.textContent = "Xem MV";
             }
-            volumeValue.textContent = volumeSlider.value + '%';
-            updateVolumeIcon(parseInt(volumeSlider.value));
         });
-        function updateVolumeIcon(vol) {
-            if (vol === 0) volumeIcon.className = 'fas fa-volume-mute';
-            else if (vol < 50) volumeIcon.className = 'fas fa-volume-down';
-            else volumeIcon.className = 'fas fa-volume-up';
-        }
 
-        // ===== UI UPDATES =====
-        function updatePlayButton() {
-            playIcon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
-            // Equalizer animation
+        // Search Input
+        searchInput.addEventListener('input', (e) => {
+            renderPlaylist(e.target.value);
+        });
+
+        // Tabs
+        tabVpop.addEventListener('click', () => {
+            currentTab = 'vpop';
+            currentPlaylist = vpopPlaylist;
+            tabVpop.className = 'px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 transition';
+            tabLofi.className = 'px-4 py-2 rounded-xl text-sm font-semibold bg-slate-800/60 text-slate-400 border border-slate-700/60 hover:text-white transition';
+            toggleVideoBtn.classList.remove('hidden');
+            renderPlaylist();
+            loadSongInfo(0);
+        });
+
+        tabLofi.addEventListener('click', () => {
+            currentTab = 'lofi';
+            currentPlaylist = lofiPlaylist;
+            tabLofi.className = 'px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 transition';
+            tabVpop.className = 'px-4 py-2 rounded-xl text-sm font-semibold bg-slate-800/60 text-slate-400 border border-slate-700/60 hover:text-white transition';
+            toggleVideoBtn.classList.add('hidden');
+            renderPlaylist();
+            loadSongInfo(0);
+        });
+
+        // ===== UI SYNC =====
+        function updatePlayUI() {
+            playIcon.className = isPlaying ? 'fas fa-pause text-white' : 'fas fa-play ml-0.5 text-white';
+            
             if (isPlaying) {
                 mainEq.classList.add('eq-playing');
                 navEq.classList.add('eq-playing');
@@ -433,13 +768,19 @@
                 mainEq.classList.remove('eq-playing');
                 navEq.classList.remove('eq-playing');
             }
+
+            renderPlaylist(searchInput.value);
         }
 
-        function updateActiveCard() {
-            document.querySelectorAll('.song-card').forEach((card, i) => {
-                card.classList.toggle('active', i === currentIndex);
+        function updateActiveCardHighlight() {
+            document.querySelectorAll('.song-card').forEach((card, idx) => {
+                card.classList.toggle('active', idx === currentIndex);
             });
         }
+
+        // Initial setup
+        renderPlaylist();
+        loadSongInfo(0);
     </script>
 </body>
 </html>
