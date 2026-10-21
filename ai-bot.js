@@ -11,8 +11,13 @@
 
     // 1. CẤU HÌNH API & THÔNG TIN HỆ THỐNG
     const DEFAULT_API_KEY = typeof atob === "function" ? atob("QVEuQWI4Uk42THNBNDhrT2JkZnRFOW1MVFV0YVdIdVdrWVZ6eEVqeGhybllQbGFmOWhLTFE=") : "";
-    const PRIMARY_MODEL = "gemini-3.5-flash";
-    const FALLBACK_MODELS = ["gemini-3.5-flash", "gemini-3.8-flash", "gemini-flash-latest"];
+    const GEMINI_MODELS = [
+        "gemini-3.5-flash-lite",
+        "gemini-flash-lite-latest",
+        "gemini-3-flash-preview",
+        "gemini-3.5-flash",
+        "gemini-flash-latest"
+    ];
     
     const getApiKey = () => localStorage.getItem('portfolio_gemini_api_key') || DEFAULT_API_KEY;
 
@@ -1048,11 +1053,19 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                 bubbleEl.innerHTML = formatMarkdown(fallbackReply);
                 chatHistory.push({ role: 'model', parts: [{ text: fallbackReply }] });
             } catch (err2) {
-                console.error("Gemini Direct Error:", err2);
-                const errorMsg = isEnglishPage
-                    ? "Sorry, I'm experiencing a brief connection hiccup. Please ask again or feel free to check out Thanh's certificates directly on the page! ✨"
-                    : "Ôi bạn ơi, kết nối của mình vừa chập chờn một chút. Bạn thử gửi lại câu hỏi nhé hoặc xem các mục chứng chỉ ngay trên trang nha! ✨";
-                bubbleEl.innerHTML = `<p>${errorMsg}</p>`;
+                console.warn("Gemini Direct Error, falling back to smart local knowledge base:", err2);
+                
+                // Smart Local Knowledge Base Fallback: Trả lời tức thì không bao giờ để người dùng thấy lỗi chập chờn
+                const localAnswer = getSmartLocalAnswer(userText, isEnglishPage);
+                if (localAnswer) {
+                    bubbleEl.innerHTML = formatMarkdown(localAnswer);
+                    chatHistory.push({ role: 'model', parts: [{ text: localAnswer }] });
+                } else {
+                    const errorMsg = isEnglishPage
+                        ? "Google Gemini cloud quota is temporarily busy right now. Feel free to ask about Thanh's 10 certificates, core skills, projects or contact details! ✨"
+                        : "Hệ thống AI Gemini hiện đang tạm chạm giới hạn lượt truy vấn miễn phí trong ngày của Google. Bạn cứ thoải mái hỏi mình về 10 chứng chỉ quốc tế, kỹ năng chuyên môn, kinh nghiệm hay cách liên hệ anh Thành nhé! ✨";
+                    bubbleEl.innerHTML = `<p>${errorMsg}</p>`;
+                }
             }
         } finally {
             isProcessing = false;
@@ -1061,75 +1074,93 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         }
     }
 
-    // HÀM 1: GỌI GEMINI DẠNG STREAMING (SSE) - HIỂN THỊ TỨC THÌ
+    // Helper cấu hình thế hệ Token và Thinking Budget phù hợp cho từng Model
+    function getGenerationConfig(model) {
+        const config = {
+            temperature: 0.65,
+            maxOutputTokens: 2500, // ĐỦ CHỖ ĐỂ KHÔNG BAO GIỜ BỊ ĐỨT CÂU
+            topP: 0.95
+        };
+        // Chỉ thêm thinkingConfig cho các model tiêu chuẩn hỗ trợ thinking mode (không thêm cho dòng lite để tránh lỗi 400)
+        if (!model.includes('lite') && (model.includes('2.5') || model.includes('3.5') || model.includes('3.7') || model.includes('3.8'))) {
+            config.thinkingConfig = {
+                thinkingBudget: 0 // Loại bỏ độ trễ suy nghĩ ngầm
+            };
+        }
+        return config;
+    }
+
+    // HÀM 1: GỌI GEMINI DẠNG STREAMING (SSE) - HIỂN THỊ TỨC THÌ (HỖ TRỢ TỰ ĐỘNG CHUYỂN MODEL KHI HẾT QUOTA)
     async function callGeminiStreaming(history, onChunk) {
         const apiKey = getApiKey();
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${PRIMARY_MODEL}:streamGenerateContent?key=${apiKey}&alt=sse`;
-
-        // Chỉ gửi tối đa 4 lượt hội thoại gần nhất để phản hồi nhanh nhất
         const recentHistory = history.slice(-6);
+        let lastError = null;
 
-        const payload = {
-            system_instruction: {
-                parts: [{ text: SYSTEM_INSTRUCTION }]
-            },
-            contents: recentHistory,
-            generationConfig: {
-                temperature: 0.65,
-                maxOutputTokens: 2500, // ĐỦ CHỖ ĐỂ KHÔNG BAO GIỜ BỊ ĐỨT CÂU
-                topP: 0.95,
-                thinkingConfig: {
-                    thinkingBudget: 0  // LOẠI BỎ ĐỘ TRỄ NGHĨ, PHẢN HỒI NGAY LẬP TỨC
+        for (const model of GEMINI_MODELS) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${apiKey}&alt=sse`;
+
+                const payload = {
+                    system_instruction: {
+                        parts: [{ text: SYSTEM_INSTRUCTION }]
+                    },
+                    contents: recentHistory,
+                    generationConfig: getGenerationConfig(model)
+                };
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    console.warn(`Model ${model} stream returned status ${response.status}, switching to next model...`);
+                    continue;
                 }
-            }
-        };
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let fullText = '';
+                let buffer = '';
 
-        if (!response.ok) {
-            throw new Error(`Streaming failed with status: ${response.status}`);
-        }
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let fullText = '';
-        let buffer = '';
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || ''; // Giữ lại phần chưa hoàn chỉnh
 
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split('\n');
-            buffer = lines.pop() || ''; // Giữ lại phần chưa hoàn chỉnh
-
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (trimmed.startsWith('data: ')) {
-                    const jsonStr = trimmed.slice(6).trim();
-                    if (jsonStr === '[DONE]') continue;
-                    try {
-                        const parsed = JSON.parse(jsonStr);
-                        const part = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (part) {
-                            fullText += part;
-                            onChunk(fullText);
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('data: ')) {
+                            const jsonStr = trimmed.slice(6).trim();
+                            if (jsonStr === '[DONE]') continue;
+                            try {
+                                const parsed = JSON.parse(jsonStr);
+                                const part = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
+                                if (part) {
+                                    fullText += part;
+                                    onChunk(fullText);
+                                }
+                            } catch (e) {
+                                // Bỏ qua dòng json chưa hoàn chỉnh
+                            }
                         }
-                    } catch (e) {
-                        // Bỏ qua dòng json chưa hoàn chỉnh
                     }
                 }
+
+                if (fullText && fullText.trim().length > 0) {
+                    return fullText;
+                }
+            } catch (err) {
+                console.warn(`Stream error on ${model}:`, err.message);
+                lastError = err;
             }
         }
 
-        if (!fullText) {
-            throw new Error("Stream returned empty content");
-        }
-        return fullText;
+        throw lastError || new Error("All streaming models failed.");
     }
 
     // HÀM 2: GỌI GEMINI DẠNG TRỰC TIẾP (FALLBACK DỰ PHÒNG NẾU STREAM LỖI)
@@ -1137,7 +1168,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         const apiKey = getApiKey();
         const recentHistory = history.slice(-6);
 
-        for (const model of FALLBACK_MODELS) {
+        for (const model of GEMINI_MODELS) {
             try {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
@@ -1146,14 +1177,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                         parts: [{ text: SYSTEM_INSTRUCTION }]
                     },
                     contents: recentHistory,
-                    generationConfig: {
-                        temperature: 0.65,
-                        maxOutputTokens: 2500, // ĐỦ CHỖ ĐỂ KHÔNG BAO GIỜ BỊ ĐỨT CÂU
-                        topP: 0.95,
-                        thinkingConfig: {
-                            thinkingBudget: 0
-                        }
-                    }
+                    generationConfig: getGenerationConfig(model)
                 };
 
                 const response = await fetch(url, {
@@ -1166,7 +1190,10 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 
                 const result = await response.json();
                 if (result.candidates && result.candidates[0] && result.candidates[0].content) {
-                    return result.candidates[0].content.parts[0].text;
+                    const text = result.candidates[0].content.parts[0].text;
+                    if (text && text.trim().length > 0) {
+                        return text;
+                    }
                 }
             } catch (err) {
                 console.warn(`Model ${model} direct fallback failed:`, err.message);
@@ -1174,6 +1201,137 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         }
 
         throw new Error("All fallback models failed.");
+    }
+
+    // HÀM 3: SMART LOCAL KNOWLEDGE BASE (TRẢ LỜI DỰ PHÒNG TỨC THÌ KHI MẠNG HOẶC QUOTA GOOGLE BỊ NGHẼN)
+    function getSmartLocalAnswer(query, isEn) {
+        if (!query) return null;
+        const q = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+        // 1. Danh sách 10 chứng chỉ quốc tế
+        if (q.includes('chung chi') || q.includes('cert') || q.includes('bang cap') || q.includes('sophos') || q.includes('omada') || q.includes('peplink')) {
+            if (isEn) {
+                return `Hello! Nguyen Viet Thanh holds **10 prestigious international certifications** in enterprise network administration and cybersecurity:
+
+1. **Sophos Firewall Administrator v22.0 (CT80)** – Deep expertise in XGS Firewall, VPN, NAT, Routing & IPS.
+2. **Sophos Endpoint Administrator v6.0 (CT15)** – Endpoint security, ransomware defense & Extended Detection and Response (XDR).
+3. **Sophos Email v4.0 (CT45)** – Email gateway protection, phishing prevention & encryption.
+4. **Sophos Wireless v3.0 (CT90)** – Enterprise Wi-Fi architecture & Cloud AP optimization.
+5. **Sophos Workspace Protection v1.0 (CT55)** – Zero-Trust Network Access (ZTNA) digital workplace security.
+6. **Omada Certified Network Administrator (OCNA) Routing & Switching** – TP-Link Omada SDN enterprise switch/router administration.
+7. **Omada Certified Network Administrator (OCNA) Wireless** – SDN central Wi-Fi management, seamless roaming & RF optimization.
+8. **Peplink Certified Engineer (PCE)** – Multi-WAN balancing, SpeedFusion bandwidth bonding & hot failover.
+9. **Peplink Certified Associate (PCA)** – Peplink Balance multi-WAN operation & MAX mobile routers.
+10. **Peplink Certified Sales Specialist (PCSS)** – SD-WAN software-defined wide area network solutions consulting.
+
+All 10 certifications are fully verified and showcased in the Certificates section of this portfolio! 🏆✨`;
+            }
+            return `Chào bạn! Anh **Nguyễn Viết Thành** hiện sở hữu **10 chứng chỉ quốc tế** uy tín hàng đầu trong lĩnh vực Hạ tầng Mạng và Bảo mật doanh nghiệp:
+
+1. 🏆 **Sophos Firewall Administrator v22.0 (CT80)**: Chuyên sâu về tường lửa XGS Firewall, VPN Site-to-Site, NAT, Routing và hệ thống ngăn chặn xâm nhập IPS.
+2. 🛡️ **Sophos Endpoint Administrator v6.0 (CT15)**: Bảo mật điểm cuối, phòng chống mã độc tống tiền (Ransomware) và công nghệ phản ứng mở rộng XDR.
+3. 📧 **Sophos Email v4.0 (CT45)**: Bảo vệ thư điện tử doanh nghiệp, chống lừa đảo Phishing và mã hóa Email Gateway an toàn.
+4. 📶 **Sophos Wireless v3.0 (CT90)**: Khảo sát, thiết kế hệ thống mạng Wifi doanh nghiệp và quản trị Access Point trên Cloud.
+5. 🔐 **Sophos Workspace Protection v1.0 (CT55)**: Bảo vệ không gian làm việc số với mô hình truy cập không tin cậy Zero-Trust (ZTNA).
+6. 🌐 **Omada Certified Network Administrator (OCNA) Routing & Switching**: Quản trị Switch / Router tập trung trên nền tảng TP-Link Omada SDN.
+7. 📡 **Omada Certified Network Administrator (OCNA) Wireless**: Quản trị hệ thống Wifi SDN quy mô lớn, chuyển vùng mượt mà Seamless Roaming (802.11k/v/r).
+8. 🚀 **Peplink Certified Engineer (PCE)**: Kỹ sư chuyên sâu về cân bằng tải đa đường truyền, công nghệ gộp băng thông SpeedFusion Bandwidth Bonding và dự phòng nóng Hot Failover.
+9. ⚙️ **Peplink Certified Associate (PCA)**: Vận hành thành thạo các thiết bị Peplink Balance Multi-WAN và dòng router công nghiệp di động Peplink MAX.
+10. 💼 **Peplink Certified Sales Specialist (PCSS)**: Tư vấn kiến trúc và thiết kế giải pháp mạng diện rộng định nghĩa bằng phần mềm (SD-WAN).
+
+Tất cả 10 chứng chỉ này đều có ảnh chứng nhận và chi tiết đầy đủ trên trang Portfolio của anh Thành nha! ✨`;
+        }
+
+        // 2. Anh Thành là ai / Giới thiệu / Profile
+        if (q.includes('nguyen viet thanh') || q.includes('thanh la ai') || q.includes('gioi thieu') || q.includes('ai la anh thanh') || q.includes('who is') || q.includes('about')) {
+            if (isEn) {
+                return `Hello! Let me introduce **Nguyen Viet Thanh** 👨‍💻✨
+
+- **Current Role:** System & Network Engineer (Enterprise Infrastructure & Cybersecurity).
+- **Career Goal:** Aiming towards IT Infrastructure Manager, IT Manager, and Chief Information Officer (CIO).
+- **Core Strengths:**
+  - **Enterprise Network Architecture:** Peplink SD-WAN, Omada SDN, Routing & Switching, VLAN, Site-to-Site VPN.
+  - **Cybersecurity:** Sophos XGS Firewall, IPS/IDS, Central Intercept X, XDR, Zero-Trust (ZTNA).
+  - **Systems & Cloud:** Windows Server, Active Directory (AD DS), Group Policy (GPO), Microsoft 365.
+- **Certifications:** 10 verified international certificates from Sophos, Peplink, and TP-Link Omada.
+
+Feel free to explore his portfolio, download his CV, or connect directly! 🚀`;
+            }
+            return `Chào bạn! Rất vui được giới thiệu với bạn về **Nguyễn Viết Thành** 👨‍💻✨
+
+- **Vị trí chuyên môn**: System & Network Engineer (Kỹ sư Hệ thống & Hạ tầng Mạng doanh nghiệp).
+- **Định hướng sự nghiệp**: Hướng tới các vị trí Quản lý Hạ tầng CNTT (IT Infrastructure Manager), IT Manager và Giám đốc Công nghệ Thông tin (CIO).
+- **Thế mạnh cốt lõi**:
+  - **Mạng doanh nghiệp**: Thiết kế và vận hành hệ thống mạng độ sẵn sàng cao, cân bằng tải đa WAN (Peplink SpeedFusion), hạ tầng SDN (TP-Link Omada), định tuyến, VLAN, VPN Site-to-Site.
+  - **Bảo mật & Tường lửa**: Triển khai giải pháp bảo mật toàn diện với Sophos XGS Firewall, ngăn ngừa xâm nhập IPS, bảo vệ điểm cuối XDR, chống Phishing Email và kiến trúc Zero-Trust (ZTNA).
+  - **Hệ thống**: Quản trị Windows Server, Active Directory (AD DS), Group Policy (GPO), DNS, DHCP và bộ giải pháp đám mây Microsoft 365.
+- **Chứng chỉ**: Đã đạt 10 chứng chỉ quốc tế chính thức từ Sophos, Peplink và TP-Link.
+
+Anh Thành là người làm việc tỉ mỉ, trách nhiệm cao và luôn đón đầu các công nghệ hạ tầng hiện đại nhất! 🚀`;
+        }
+
+        // 3. Kỹ năng chuyên môn / Kinh nghiệm
+        if (q.includes('ky nang') || q.includes('chuyen mon') || q.includes('kinh nghiem') || q.includes('skill') || q.includes('experience')) {
+            if (isEn) {
+                return `Here are the core technical competencies of **Nguyen Viet Thanh** 🛠️:
+
+- **Network & SD-WAN:** Peplink Balance Multi-WAN, SpeedFusion Bandwidth Bonding, Hot Failover, Routing & Switching, VLANs, Site-to-Site VPN.
+- **Cybersecurity & Firewalls:** Sophos XGS Series, IPS/IDS, Central Intercept X, Endpoint XDR, Email Gateway Protection, Zero-Trust (ZTNA).
+- **Wireless SDN:** TP-Link Omada SDN Controller, RF Site Survey, 802.11k/v/r Seamless Roaming.
+- **Enterprise Systems:** Microsoft 365 Administration, Windows Server, Active Directory, GPO, DNS, DHCP.
+
+He focuses on building resilient, high-availability, and zero-downtime enterprise infrastructure! 🌐`;
+            }
+            return `Dưới đây là các kỹ năng chuyên môn nổi bật của anh **Nguyễn Viết Thành** 🛠️:
+
+1. **Hạ tầng Mạng & SD-WAN**:
+   - Cân bằng tải đa đường truyền (Multi-WAN), gộp băng thông SpeedFusion Bonding và dự phòng nóng Hot Failover với Peplink.
+   - Thiết kế hệ thống mạng SDN quy mô lớn với TP-Link Omada Controller, VLAN, Routing & Switching, VPN Site-to-Site.
+   - Triển khai mạng Wifi doanh nghiệp phủ sóng liền mạch Seamless Roaming (802.11k/v/r).
+2. **Bảo mật & Tường lửa (Cybersecurity)**:
+   - Cấu hình và tối ưu hóa tường lửa thế hệ mới Sophos XGS Firewall, phòng chống xâm nhập IPS/IDS.
+   - Bảo mật điểm cuối với Sophos Intercept X, phát hiện và phản ứng mở rộng XDR.
+   - Bảo mật Email chống Phishing và triển khai mô hình truy cập Zero-Trust Network Access (ZTNA).
+3. **Quản trị Hệ thống Doanh nghiệp**:
+   - Quản trị Microsoft 365, Windows Server, phân quyền người dùng qua Active Directory (AD DS) và Group Policy (GPO).
+   - Tối ưu hóa các dịch vụ mạng hạ tầng cốt lõi: DNS, DHCP, File Server.
+
+Tất cả kỹ năng đều được chứng minh qua 10 chứng chỉ quốc tế và các dự án thực tế! 🚀`;
+        }
+
+        // 4. Liên hệ / SĐT / Email / Facebook / CV
+        if (q.includes('lien he') || q.includes('contact') || q.includes('sdt') || q.includes('dien thoai') || q.includes('phone') || q.includes('email') || q.includes('facebook') || q.includes('fb') || q.includes('cv')) {
+            if (isEn) {
+                return `Here is how you can connect with **Nguyen Viet Thanh** 📞:
+
+- **Phone / Zalo:** 0364 892 201
+- **Email:** thanhnv168@gmail.com
+- **Facebook:** [fb.com/nvthanhhhhh](https://www.facebook.com/nvthanhhhhh)
+- **GitHub:** [github.com/nvthanhh168](https://github.com/nvthanhh168)
+- **Location:** Ho Chi Minh City, Vietnam
+- **Resume (CV):** You can download both Vietnamese and English CV versions directly from the top menu of this website! 📄✨`;
+            }
+            return `Bạn có thể kết nối trực tiếp với anh **Nguyễn Viết Thành** qua các kênh sau nhé 📞:
+
+- 📱 **Số điện thoại / Zalo**: **0364 892 201**
+- ✉️ **Email**: **thanhnv168@gmail.com**
+- 🌐 **Facebook cá nhân**: [fb.com/nvthanhhhhh](https://www.facebook.com/nvthanhhhhh)
+- 🐙 **GitHub**: [github.com/nvthanhh168](https://github.com/nvthanhh168)
+- 📍 **Địa chỉ**: Thành Phố Hồ Chí Minh, Việt Nam
+- 📄 **Tải CV**: Trên thanh điều hướng của trang có nút tải CV định dạng PDF cả **Bản Tiếng Việt** lẫn **Bản Tiếng Anh** rất tiện lợi!
+
+Anh Thành luôn sẵn sàng trao đổi các cơ hội nghề nghiệp và hợp tác dự án! 🤝✨`;
+        }
+
+        // 5. Tính năng trang web: nhạc, lưu trữ, blog, admin
+        if (q.includes('nhac') || q.includes('music')) {
+            return `Trang nghe nhạc trực tuyến đã có sẵn trên Portfolio! Bạn có thể nhấn vào menu **Nghe nhạc** hoặc truy cập [music.html](music.html) để thưởng thức các bản nhạc chọn lọc nhé! 🎵🎧`;
+        }
+        if (q.includes('luu tru') || q.includes('storage') || q.includes('tai lieu')) {
+            return `Khu vực kho lưu trữ tài liệu cá nhân có tại mục **Kho lưu trữ** hoặc [storage.html](storage.html). Tại đây lưu giữ các tài liệu và dự án quan trọng! 📁💾`;
+        }
+
+        return null;
     }
 
     // Hiển thị tin nhắn lên UI với format Markdown cơ bản
