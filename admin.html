@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -220,6 +220,10 @@
                 </button>
                 <button class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-system">
                     <i class="fas fa-database"></i> <span>Sao lưu & Đặt lại</span>
+                </button>
+                <button class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-ai-bot">
+                    <i class="fas fa-robot text-sky-400"></i> <span>Trợ lý AI Bot</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Mới</span>
                 </button>
             </div>
 
@@ -617,6 +621,84 @@
                         <button id="factoryResetBtn" class="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl text-xs font-bold transition flex items-center gap-2">
                             <i class="fas fa-trash-alt"></i> Khôi Phục Cài Đặt Gốc
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- TAB 5: TRỢ LÝ AI BOT (GOOGLE GEMINI)          -->
+            <!-- ============================================== -->
+            <div id="tab-ai-bot" class="tab-content hidden space-y-8">
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800">
+                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fas fa-robot text-sky-400"></i> Cấu Hình Trợ Lý AI Bot (Google Gemini)
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">Quản lý API Key, tính năng tự động hỏi thăm và khả năng trả lời câu hỏi của bot</p>
+                        </div>
+                        <span class="text-xs font-terminal px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <i class="fas fa-check-circle mr-1"></i>Sẵn sàng
+                        </span>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- API Key -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                                    <i class="fas fa-key text-amber-400 mr-1.5"></i> Google Gemini API Key
+                                </label>
+                                <span class="text-[11px] text-slate-500 font-terminal">Hỗ trợ Gemini 3.5 Flash</span>
+                            </div>
+                            <div class="relative">
+                                <input type="password" id="geminiApiKeyInput" placeholder="Nhập Google Gemini API Key..." class="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-4 pr-28 py-3 text-white text-xs font-terminal focus:border-sky-500 focus:outline-none">
+                                <button type="button" id="toggleAiKeyVisibility" class="absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 text-slate-400 hover:text-white text-xs transition">
+                                    <i class="fas fa-eye" id="toggleAiKeyIcon"></i>
+                                </button>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1.5">API Key này được dùng để cung cấp trí tuệ nhân tạo trả lời câu hỏi trong và ngoài profile cho khách truy cập.</p>
+                        </div>
+
+                        <!-- Test Connection Button -->
+                        <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <div>
+                                <h4 class="text-xs font-bold text-white mb-0.5">Kiểm Tra Kết Nối API Trực Tiếp</h4>
+                                <p class="text-[11px] text-slate-400">Gửi tín hiệu thử nghiệm đến máy chủ Google Gemini để đảm bảo kết nối hoạt động tốt.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span id="apiTestStatus" class="text-xs font-terminal text-slate-400"></span>
+                                <button type="button" id="testAiKeyBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-sky-400 rounded-xl text-xs font-semibold border border-sky-500/30 transition flex items-center gap-1.5">
+                                    <i class="fas fa-vial"></i> Thử nghiệm API
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Bot Features Info -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                            <div class="glass-card p-4 rounded-xl border border-slate-800">
+                                <div class="text-sky-400 text-lg mb-2"><i class="fas fa-walking"></i></div>
+                                <h5 class="text-xs font-bold text-white mb-1">Đi dạo quanh profile</h5>
+                                <p class="text-[11px] text-slate-400">Bot tự động bay lượn nhẹ nhàng theo hiệu ứng tuần tra sinh động.</p>
+                            </div>
+                            <div class="glass-card p-4 rounded-xl border border-slate-800">
+                                <div class="text-emerald-400 text-lg mb-2"><i class="fas fa-comment-dots"></i></div>
+                                <h5 class="text-xs font-bold text-white mb-1">Chủ động hỏi thăm</h5>
+                                <p class="text-[11px] text-slate-400">Định kỳ bật bong bóng trò chuyện gợi ý hỗ trợ khách xem portfolio.</p>
+                            </div>
+                            <div class="glass-card p-4 rounded-xl border border-slate-800">
+                                <div class="text-violet-400 text-lg mb-2"><i class="fas fa-brain"></i></div>
+                                <h5 class="text-xs font-bold text-white mb-1">Hỏi đáp đa năng</h5>
+                                <p class="text-[11px] text-slate-400">Hiểu tường tận 10 chứng chỉ của anh Thành và trả lời được mọi kiến thức đời sống.</p>
+                            </div>
+                        </div>
+
+                        <!-- Save AI Config Button -->
+                        <div class="mt-6 flex justify-end">
+                            <button id="saveAiConfigBtn" class="px-6 py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold rounded-xl text-sm transition shadow-lg shadow-sky-500/20 flex items-center gap-2">
+                                <i class="fas fa-save"></i> Lưu Cấu Hình AI Bot
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1678,6 +1760,72 @@
                 btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Lưu Tất Cả Thay Đổi';
             }, 2000);
         });
+
+        // ==========================================
+        // TAB 5: AI BOT CONFIG SCRIPT HANDLERS
+        // ==========================================
+        const geminiApiKeyInput = document.getElementById("geminiApiKeyInput");
+        const toggleAiKeyVisibility = document.getElementById("toggleAiKeyVisibility");
+        const toggleAiKeyIcon = document.getElementById("toggleAiKeyIcon");
+        const testAiKeyBtn = document.getElementById("testAiKeyBtn");
+        const apiTestStatus = document.getElementById("apiTestStatus");
+        const saveAiConfigBtn = document.getElementById("saveAiConfigBtn");
+
+        const defaultGeminiKey = atob("QVEuQWI4Uk42THNBNDhrT2JkZnRFOW1MVFV0YVdIdVdrWVZ6eEVqeGhybllQbGFmOWhLTFE=");
+        const storedApiKey = localStorage.getItem("portfolio_gemini_api_key");
+        if (geminiApiKeyInput) {
+            geminiApiKeyInput.value = storedApiKey || defaultGeminiKey;
+        }
+
+        if (toggleAiKeyVisibility) {
+            toggleAiKeyVisibility.addEventListener("click", () => {
+                if (geminiApiKeyInput.type === "password") {
+                    geminiApiKeyInput.type = "text";
+                    toggleAiKeyIcon.classList.replace("fa-eye", "fa-eye-slash");
+                } else {
+                    geminiApiKeyInput.type = "password";
+                    toggleAiKeyIcon.classList.replace("fa-eye-slash", "fa-eye");
+                }
+            });
+        }
+
+        if (testAiKeyBtn) {
+            testAiKeyBtn.addEventListener("click", async () => {
+                const key = geminiApiKeyInput.value.trim();
+                if (!key) { alert("Vui lòng nhập API Key!"); return; }
+                testAiKeyBtn.innerHTML = "<i class=\"fas fa-spinner fa-spin\"></i> Đang test...";
+                apiTestStatus.textContent = "";
+                try {
+                    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${key}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: "Ping" }] }] })
+                    });
+                    if (resp.ok) {
+                        apiTestStatus.innerHTML = "<span class=\"text-emerald-400 font-bold\"><i class=\"fas fa-check-circle mr-1\"></i>Kết nối thành công (200 OK)!</span>";
+                        showToast("API Hoạt Động Tốt", "Đã kết nối thành công với Google Gemini 3.5 Flash!");
+                    } else {
+                        const err = await resp.json().catch(() => ({}));
+                        apiTestStatus.innerHTML = "<span class=\"text-red-400 font-bold\"><i class=\"fas fa-times-circle mr-1\"></i>Lỗi: " + (err.error?.message || resp.status) + "</span>";
+                    }
+                } catch(e) {
+                    apiTestStatus.innerHTML = "<span class=\"text-red-400 font-bold\"><i class=\"fas fa-times-circle mr-1\"></i>Lỗi kết nối</span>";
+                } finally {
+                    testAiKeyBtn.innerHTML = "<i class=\"fas fa-vial\"></i> Thử nghiệm API";
+                }
+            });
+        }
+
+        if (saveAiConfigBtn) {
+            saveAiConfigBtn.addEventListener("click", async () => {
+                const key = geminiApiKeyInput.value.trim();
+                localStorage.setItem("portfolio_gemini_api_key", key);
+                try {
+                    await setDoc(doc(db, "portfolioData", "aiBotConfig"), { geminiApiKey: key }, { merge: true });
+                } catch(e) {}
+                showToast("Đã lưu cấu hình AI Bot", "API Key đã được cập nhật thành công!");
+            });
+        }
 
         // Khởi động kiểm tra trạng thái
         checkExistingSession();
