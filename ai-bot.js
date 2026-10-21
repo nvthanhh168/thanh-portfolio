@@ -1,7 +1,8 @@
-﻿/**
+/**
  * ====================================================================
  * THÀNH AI BOT - CUTE WANDERING AI ASSISTANT (POWERED BY GOOGLE GEMINI)
  * Portfolio Nguyễn Viết Thành | System & Network Engineer
+ * Phiên bản v2.0: Tối ưu phản hồi siêu tốc & Không bao giờ đứt câu
  * ====================================================================
  */
 
@@ -10,7 +11,8 @@
 
     // 1. CẤU HÌNH API & THÔNG TIN HỆ THỐNG
     const DEFAULT_API_KEY = typeof atob === "function" ? atob("QVEuQWI4Uk42THNBNDhrT2JkZnRFOW1MVFV0YVdIdVdrWVZ6eEVqeGhybllQbGFmOWhLTFE=") : "";
-    const GEMINI_MODELS = ["gemini-3.5-flash", "gemini-3.8-flash", "gemini-flash-latest"];
+    const PRIMARY_MODEL = "gemini-3.5-flash";
+    const FALLBACK_MODELS = ["gemini-3.5-flash", "gemini-3.8-flash", "gemini-flash-latest"];
     
     const getApiKey = () => localStorage.getItem('portfolio_gemini_api_key') || DEFAULT_API_KEY;
 
@@ -58,6 +60,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 3. Phong cách giao tiếp: Dễ thương, ấm áp, dùng các biểu tượng emoji phù hợp (🤖, ✨, 🚀, 💬, 👨‍💻, 🏆). Khi nói về anh Thành hãy xưng là "anh Thành" và xưng "mình" / "em" với người dùng.
 4. Ngôn ngữ: Tự động phát hiện và trả lời theo ngôn ngữ của người dùng (Tiếng Việt hoặc Tiếng Anh).
 5. Trình bày: Dùng định dạng Markdown đẹp mắt (gạch đầu dòng, in đậm từ khóa quan trọng).
+6. NGUYÊN TẮC HOÀN THIỆN CÂU QUAN TRỌNG: LUÔN trả lời đầy đủ, trọn vẹn từng câu, kết thúc bằng dấu chấm câu rõ ràng. Tuyệt đối KHÔNG BAO GIỜ được bỏ lửng câu chữ hoặc ngừng giữa chừng.
 `.trim();
 
     // 2. CÂU HỎI / LỜI CHÀO NGẪU NHIÊN CỦA BOT KHI ĐI DẠO ("LÂU LÂU NÓ HỎI")
@@ -269,9 +272,9 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
     position: absolute;
     bottom: 84px;
     right: 0;
-    width: 375px;
+    width: 385px;
     max-width: calc(100vw - 32px);
-    height: 560px;
+    height: 570px;
     max-height: calc(100vh - 120px);
     background: rgba(15, 23, 42, 0.95);
     backdrop-filter: blur(20px);
@@ -458,12 +461,12 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 .ai-msg {
     display: flex;
     gap: 10px;
-    max-width: 88%;
-    animation: msgFadeIn 0.3s ease;
+    max-width: 90%;
+    animation: msgFadeIn 0.25s ease;
 }
 
 @keyframes msgFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -549,6 +552,23 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
     border-radius: 4px;
     font-family: monospace;
     font-size: 11.5px;
+}
+
+/* Con trỏ stream realtime nhấp nháy */
+.ai-stream-cursor {
+    display: inline-block;
+    width: 6px;
+    height: 13px;
+    background: #38bdf8;
+    vertical-align: middle;
+    margin-left: 2px;
+    border-radius: 1px;
+    animation: streamBlink 0.7s infinite;
+}
+
+@keyframes streamBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 /* Typing Indicator */
@@ -690,7 +710,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                         <div>
                             <h4 class="ai-chat-title">
                                 Thành AI Bot 
-                                <span class="ai-chat-badge-model">Gemini 3.5</span>
+                                <span class="ai-chat-badge-model">Flash Realtime ⚡</span>
                             </h4>
                             <p class="ai-chat-subtitle">Trợ lý Portfolio & Kỹ thuật thông minh</p>
                         </div>
@@ -708,7 +728,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                 <!-- Suggestion Chips -->
                 <div class="ai-chat-chips" id="aiChatChips">
                     <button class="ai-chip" data-question="Nguyễn Viết Thành là ai? Hãy giới thiệu chi tiết.">👨‍💻 Anh Thành là ai?</button>
-                    <button class="ai-chip" data-question="Anh Thành có những chứng chỉ quốc tế nào?">📜 Danh sách 10 chứng chỉ</button>
+                    <button class="ai-chip" data-question="Anh Thành có những chứng chỉ quốc tế nào? Hãy liệt kê chi tiết đầy đủ 10 chứng chỉ.">📜 Danh sách 10 chứng chỉ</button>
                     <button class="ai-chip" data-question="Kỹ năng chuyên môn nổi bật của anh Thành là gì?">🛠️ Kỹ năng & Kinh nghiệm</button>
                     <button class="ai-chip" data-question="Cho mình xin số điện thoại, email và cách liên hệ anh Thành?">📞 Liên hệ & CV</button>
                     <button class="ai-chip" data-question="Bạn có thể giải thích mô hình OSI trong mạng máy tính không?">🌐 Hỏi kiến thức IT</button>
@@ -720,7 +740,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                         <div class="ai-msg-avatar"><i class="fas fa-robot"></i></div>
                         <div class="ai-msg-bubble">
                             <p>Xin chào! Mình là <strong>Thành AI Assistant</strong> 🤖✨</p>
-                            <p>Mình có thể giải đáp chi tiết về kinh nghiệm, chứng chỉ, kỹ năng của anh Thành hoặc <strong>bất kỳ câu hỏi nào trong & ngoài profile</strong>. Bạn cần giúp gì không?</p>
+                            <p>Mình có thể giải đáp chi tiết về kinh nghiệm, 10 chứng chỉ của anh Thành hoặc <strong>bất kỳ câu hỏi nào trong & ngoài profile</strong>. Bạn cần giúp gì không?</p>
                         </div>
                     </div>
                 </div>
@@ -971,7 +991,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         }, 42000);
     }
 
-    // 6. XỬ LÝ GỬI VÀ NHẬN TIN NHẮN TỪ GEMINI API
+    // 6. XỬ LÝ GỬI VÀ NHẬN TIN NHẮN TỪ GEMINI API (STREAMING SIÊU TỐC & KHÔNG NGẮT CÂU)
     async function sendMessage(userText) {
         if (isProcessing) return;
 
@@ -983,46 +1003,57 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         appendMessage('user', userText);
         chatHistory.push({ role: 'user', parts: [{ text: userText }] });
 
-        // 2. Hiển thị Typing Indicator
-        const typingId = 'typing-' + Date.now();
-        const typingEl = document.createElement('div');
-        typingEl.id = typingId;
-        typingEl.className = 'ai-msg ai-msg-bot';
-        typingEl.innerHTML = `
+        // 2. Tạo sẵn bong bóng trả lời của Bot với hiệu ứng typing
+        const botMsgDiv = document.createElement('div');
+        botMsgDiv.className = 'ai-msg ai-msg-bot';
+        botMsgDiv.innerHTML = `
             <div class="ai-msg-avatar"><i class="fas fa-robot"></i></div>
-            <div class="ai-msg-bubble ai-typing-indicator">
-                <span class="ai-typing-dot"></span>
-                <span class="ai-typing-dot"></span>
-                <span class="ai-typing-dot"></span>
+            <div class="ai-msg-bubble">
+                <div class="ai-typing-indicator">
+                    <span class="ai-typing-dot"></span>
+                    <span class="ai-typing-dot"></span>
+                    <span class="ai-typing-dot"></span>
+                </div>
             </div>
         `;
-        messagesContainer.appendChild(typingEl);
+        messagesContainer.appendChild(botMsgDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        const bubbleEl = botMsgDiv.querySelector('.ai-msg-bubble');
 
         isProcessing = true;
         sendBtn.disabled = true;
 
-        try {
-            // 3. Gọi Google Gemini API
-            const botReply = await callGeminiAPI(chatHistory);
-            
-            // Xóa typing indicator
-            const el = document.getElementById(typingId);
-            if (el) el.remove();
+        let accumulatedText = '';
 
-            // Hiển thị câu trả lời của Bot
-            appendMessage('bot', botReply);
-            chatHistory.push({ role: 'model', parts: [{ text: botReply }] });
+        try {
+            // 3. Gọi Streaming API để hiển thị từng từ theo thời gian thực (Zero Lag)
+            await callGeminiStreaming(chatHistory, (chunkText) => {
+                accumulatedText = chunkText;
+                // Render realtime với con trỏ nhấp nháy
+                bubbleEl.innerHTML = formatMarkdown(accumulatedText) + '<span class="ai-stream-cursor"></span>';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+
+            // Khi stream kết thúc, bỏ con trỏ stream và render hoàn chỉnh
+            bubbleEl.innerHTML = formatMarkdown(accumulatedText);
+            chatHistory.push({ role: 'model', parts: [{ text: accumulatedText }] });
 
         } catch (error) {
-            console.error("Gemini API Error:", error);
-            const el = document.getElementById(typingId);
-            if (el) el.remove();
+            console.warn("Streaming error, falling back to direct call:", error);
 
-            const fallbackMsg = isEnglishPage
-                ? "Sorry, I'm experiencing a brief connection hiccup. Please ask again or feel free to check out Thanh's certificates directly on the page! ✨"
-                : "Ôi bạn ơi, kết nối của mình vừa chập chờn một chút. Bạn thử gửi lại câu hỏi nhé hoặc xem các mục chứng chỉ ngay trên trang nha! ✨";
-            appendMessage('bot', fallbackMsg);
+            // Fallback sang gọi thông thường nếu stream bị lỗi mạng
+            try {
+                const fallbackReply = await callGeminiDirect(chatHistory);
+                bubbleEl.innerHTML = formatMarkdown(fallbackReply);
+                chatHistory.push({ role: 'model', parts: [{ text: fallbackReply }] });
+            } catch (err2) {
+                console.error("Gemini Direct Error:", err2);
+                const errorMsg = isEnglishPage
+                    ? "Sorry, I'm experiencing a brief connection hiccup. Please ask again or feel free to check out Thanh's certificates directly on the page! ✨"
+                    : "Ôi bạn ơi, kết nối của mình vừa chập chờn một chút. Bạn thử gửi lại câu hỏi nhé hoặc xem các mục chứng chỉ ngay trên trang nha! ✨";
+                bubbleEl.innerHTML = `<p>${errorMsg}</p>`;
+            }
         } finally {
             isProcessing = false;
             sendBtn.disabled = false;
@@ -1030,27 +1061,98 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         }
     }
 
-    // Hàm gọi Google Gemini API với cơ chế tự động thử model khả dụng
-    async function callGeminiAPI(history) {
+    // HÀM 1: GỌI GEMINI DẠNG STREAMING (SSE) - HIỂN THỊ TỨC THÌ
+    async function callGeminiStreaming(history, onChunk) {
         const apiKey = getApiKey();
-        let lastError = null;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${PRIMARY_MODEL}:streamGenerateContent?key=${apiKey}&alt=sse`;
 
-        // Cắt bớt lịch sử hội thoại nếu quá dài để tiết kiệm context
-        const recentHistory = history.slice(-8);
+        // Chỉ gửi tối đa 4 lượt hội thoại gần nhất để phản hồi nhanh nhất
+        const recentHistory = history.slice(-6);
 
-        for (const model of GEMINI_MODELS) {
+        const payload = {
+            system_instruction: {
+                parts: [{ text: SYSTEM_INSTRUCTION }]
+            },
+            contents: recentHistory,
+            generationConfig: {
+                temperature: 0.65,
+                maxOutputTokens: 2500, // ĐỦ CHỖ ĐỂ KHÔNG BAO GIỜ BỊ ĐỨT CÂU
+                topP: 0.95,
+                thinkingConfig: {
+                    thinkingBudget: 0  // LOẠI BỎ ĐỘ TRỄ NGHĨ, PHẢN HỒI NGAY LẬP TỨC
+                }
+            }
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Streaming failed with status: ${response.status}`);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let fullText = '';
+        let buffer = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || ''; // Giữ lại phần chưa hoàn chỉnh
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('data: ')) {
+                    const jsonStr = trimmed.slice(6).trim();
+                    if (jsonStr === '[DONE]') continue;
+                    try {
+                        const parsed = JSON.parse(jsonStr);
+                        const part = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (part) {
+                            fullText += part;
+                            onChunk(fullText);
+                        }
+                    } catch (e) {
+                        // Bỏ qua dòng json chưa hoàn chỉnh
+                    }
+                }
+            }
+        }
+
+        if (!fullText) {
+            throw new Error("Stream returned empty content");
+        }
+        return fullText;
+    }
+
+    // HÀM 2: GỌI GEMINI DẠNG TRỰC TIẾP (FALLBACK DỰ PHÒNG NẾU STREAM LỖI)
+    async function callGeminiDirect(history) {
+        const apiKey = getApiKey();
+        const recentHistory = history.slice(-6);
+
+        for (const model of FALLBACK_MODELS) {
             try {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-                
+
                 const payload = {
                     system_instruction: {
                         parts: [{ text: SYSTEM_INSTRUCTION }]
                     },
                     contents: recentHistory,
                     generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 600,
-                        topP: 0.95
+                        temperature: 0.65,
+                        maxOutputTokens: 2500, // ĐỦ CHỖ ĐỂ KHÔNG BAO GIỜ BỊ ĐỨT CÂU
+                        topP: 0.95,
+                        thinkingConfig: {
+                            thinkingBudget: 0
+                        }
                     }
                 };
 
@@ -1060,22 +1162,18 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) {
-                    const errData = await response.json().catch(() => ({}));
-                    throw new Error(`Model ${model} returned ${response.status}: ${JSON.stringify(errData)}`);
-                }
+                if (!response.ok) continue;
 
                 const result = await response.json();
                 if (result.candidates && result.candidates[0] && result.candidates[0].content) {
                     return result.candidates[0].content.parts[0].text;
                 }
             } catch (err) {
-                lastError = err;
-                console.warn(`Fallback to next model from ${model}:`, err.message);
+                console.warn(`Model ${model} direct fallback failed:`, err.message);
             }
         }
 
-        throw lastError || new Error("All Gemini models failed to respond.");
+        throw new Error("All fallback models failed.");
     }
 
     // Hiển thị tin nhắn lên UI với format Markdown cơ bản
@@ -1101,7 +1199,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // Helper format Markdown đơn giản & an toàn
+    // Helper format Markdown an toàn và đẹp mắt
     function formatMarkdown(text) {
         if (!text) return '';
         let escaped = escapeHtml(text);
@@ -1121,20 +1219,20 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         let htmlLines = [];
 
         for (let line of lines) {
-            line = line.trim();
-            if (line.startsWith('- ') || line.startsWith('* ')) {
+            const trimmed = line.trim();
+            if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
                 if (!inList) {
                     htmlLines.push('<ul>');
                     inList = true;
                 }
-                htmlLines.push(`<li>${line.substring(2)}</li>`);
+                htmlLines.push(`<li>${trimmed.substring(2)}</li>`);
             } else {
                 if (inList) {
                     htmlLines.push('</ul>');
                     inList = false;
                 }
-                if (line) {
-                    htmlLines.push(`<p>${line}</p>`);
+                if (trimmed) {
+                    htmlLines.push(`<p>${trimmed}</p>`);
                 }
             }
         }
