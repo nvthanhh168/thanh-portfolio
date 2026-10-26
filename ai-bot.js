@@ -55,12 +55,14 @@ THÔNG TIN VỀ NGUYỄN VIẾT THÀNH (PROFILE CONTEXT):
   + File CV có sẵn trên web: "System & Network Engineer VN.pdf" (bản Việt) và "System & Network Engineer EN.pdf" (bản Anh).
 - Dự án nổi bật (Flagship Project):
   + NetUptime Sentinel: Hệ thống phần mềm giám sát hạ tầng mạng, trạm viễn thông (POP), máy chủ, camera và thiết bị chấm công thời gian thực 24/7 (C#, .NET, Raw Socket ICMP, SNMP v2c/v3, Sơ đồ mạng động Topology Canvas, cảnh báo Telegram/Email/Zalo, Entra ID SSO). Triển khai thực tế tại VNTT, đã được mặt nạ hóa an toàn và có bản Live Demo Sandbox tại netuptime-demo.html.
+  + VNTT ITAM & EAM (Quản lý Tài sản CNTT & Bản quyền phần mềm): Hệ thống quản trị vòng đời tài sản CNTT doanh nghiệp tập trung (550+ thiết bị, PC/Laptop/Monitor/Server/Network), tích hợp Microsoft Intune MDM qua Microsoft Graph API (đồng bộ thiết bị, trạng thái tuân thủ Compliance, mã hóa BitLocker), quản lý hạn mức bản quyền Microsoft 365 (F1, Business Standard, Windows GGWA), bàn giao Combo kèm biên bản in hợp đồng pháp lý và quét mã QR Code tài sản bằng camera. Triển khai thực tế tại VNTT, dữ liệu đã được mặt nạ hóa bảo mật (Enterprise Security Masking) theo tiêu chuẩn an toàn thông tin công ty và có bản Live Demo Sandbox tại itam-demo.html.
 - Các trang tính năng trên website:
   + Trang nghe nhạc trực tuyến: music.html
   + Kho lưu trữ tài liệu: storage.html
   + Blog chia sẻ kiến thức: blog.html
   + Cổng quản trị: admin.html
   + Bản Demo Giám sát Mạng 24/7: netuptime-demo.html
+  + Bản Demo Quản lý Tài sản CNTT (ITAM): itam-demo.html
 
 NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 1. Trả lời chi tiết, chính xác các câu hỏi về Nguyễn Viết Thành (tiểu sử, kỹ năng, kinh nghiệm, 10 chứng chỉ, cách liên hệ hoặc xin CV).
@@ -74,6 +76,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
     // 2. CÂU HỎI / LỜI CHÀO NGẪU NHIÊN CỦA BOT KHI ĐI DẠO ("LÂU LÂU NÓ HỎI")
     const RANDOM_PROMPTS_VN = [
         "Chào bạn! Cần mình giúp gì không? Mình là AI của anh Thành nè! 🤖✨",
+        "Bạn có muốn trải nghiệm thử bản Live Demo quản trị tài sản & bản quyền CNTT (VNTT ITAM) của anh Thành không? 📦",
         "Bạn có muốn trải nghiệm thử bản Live Demo hệ thống giám sát mạng NetUptime Sentinel 24/7 của anh Thành không? 🚀",
         "Bạn có muốn xem nhanh danh sách 10 chứng chỉ quốc tế của anh Thành không? 🏆",
         "Cần lấy số điện thoại, email hay tải CV của anh Thành không bạn? 📄",
@@ -84,6 +87,8 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 
     const RANDOM_PROMPTS_EN = [
         "Hi there! Need any help? I'm Thanh's AI Assistant! 🤖✨",
+        "Would you like to try the live demo of VNTT ITAM & License Management system? 📦",
+        "Would you like to explore NetUptime Sentinel 24/7 network monitoring demo? 🚀",
         "Would you like to see Thanh's 10 international certifications? 🏆",
         "Looking for Thanh's contact info or resume download? 📄",
         "Ask me anything about enterprise networking, Sophos firewalls, or general tech! 🚀",
@@ -736,6 +741,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 
                 <!-- Suggestion Chips -->
                 <div class="ai-chat-chips" id="aiChatChips">
+                    <button class="ai-chip" data-question="VNTT ITAM là gì? Giới thiệu hệ thống Quản lý Tài sản và Bản quyền CNTT của anh Thành.">📦 Demo VNTT ITAM</button>
                     <button class="ai-chip" data-question="NetUptime Sentinel là gì? Giới thiệu hệ thống giám sát mạng 24/7 của anh Thành.">🖥️ Demo NetUptime Sentinel</button>
                     <button class="ai-chip" data-question="Nguyễn Viết Thành là ai? Hãy giới thiệu chi tiết.">👨‍💻 Anh Thành là ai?</button>
                     <button class="ai-chip" data-question="Anh Thành có những chứng chỉ quốc tế nào? Hãy liệt kê chi tiết đầy đủ 10 chứng chỉ.">📜 Danh sách 10 chứng chỉ</button>
@@ -1328,7 +1334,35 @@ Tất cả kỹ năng đều được chứng minh qua 10 chứng chỉ quốc t
 Anh Thành luôn sẵn sàng trao đổi các cơ hội nghề nghiệp và hợp tác dự án! 🤝✨`;
         }
 
-        // 5. Dự án trọng điểm: NetUptime Sentinel
+        // 5. Dự án trọng điểm: VNTT ITAM & EAM
+        if (q.includes('itam') || q.includes('qlts') || q.includes('tai san') || q.includes('asset') || q.includes('intune') || q.includes('ban quyen') || q.includes('license')) {
+            if (isEn) {
+                return `**VNTT ITAM & EAM** (IT Asset Management & Software License Governance) is an enterprise lifecycle management system architected and deployed by **Nguyen Viet Thanh** 📦🚀:
+
+- **Key Capabilities:**
+  - 💻 **Centralized IT Asset Lifecycle:** Manages 550+ enterprise hardware units (Laptops, Desktop PCs, Core/Edge Monitors, Servers, Network devices) with granular component-level telemetry (RAM, SSD, CPU, Serials).
+  - 🔄 **Microsoft Intune MDM & Graph API Integration:** Real-time bidirectional synchronization, hardware specifications, corporate compliance checks, and BitLocker encryption status auditing.
+  - 📊 **Microsoft 365 License Governance Matrix:** Live license pool tracking (M365 Business Standard, Frontline F1, Windows 11 GGWA, Exchange Online P1) preventing license waste and optimizing renewal budgets.
+  - 📋 **Combo Checkout & Legal Handover Contracts:** One-click assignment of PC + Dual Monitors + Peripherals with instant auto-generation of legally binding bilingual handover contracts and digital signatures.
+  - 📷 **Interactive QR Code Scanner:** Instant on-site asset auditing via camera scanner and QR barcode label generator.
+- **Enterprise Confidentiality & Masking:** To safeguard internal VNTT company infrastructure, confidential IPs, serial numbers, and employee credentials have been securely masked (Enterprise Data Masking) in an isolated client-side sandbox.
+
+👉 You can explore and test the live interactive demo right now at: [itam-demo.html](itam-demo.html) 🌐✨`;
+            }
+            return `**VNTT ITAM & EAM** (Hệ thống Quản lý Tài sản CNTT & Bản quyền Phần mềm Doanh nghiệp) là giải pháp toàn diện do anh **Nguyễn Viết Thành** thiết kế và triển khai thực tế 📦🚀:
+
+- **Các tính năng nổi bật:**
+  - 💻 **Quản trị vòng đời 550+ tài sản CNTT**: Quản lý tập trung Laptop, PC, Màn hình, Thiết bị mạng, chi tiết linh kiện (RAM, SSD, CPU, Serial, Năm cấp phát).
+  - 🔄 **Tích hợp Microsoft Intune MDM & Graph API**: Tự động đồng bộ thiết bị qua đám mây Microsoft Graph, kiểm tra tuân thủ chính sách bảo mật (Compliance) và trạng thái mã hóa ổ đĩa BitLocker.
+  - 📊 **Ma trận Quản trị Bản quyền Microsoft 365**: Theo dõi hạn mức sử dụng giấy phép (M365 Business Standard, Frontline F1, Windows 11 GGWA, Exchange Online P1), tránh lãng phí chi phí bản quyền.
+  - 📋 **Bàn giao Combo & Biên bản bàn giao pháp lý**: Bàn giao trọn bộ thiết bị kèm hợp đồng in chuẩn form pháp lý với điều khoản bảo mật và khối chữ ký số.
+  - 📷 **Quét mã QR Code bằng Camera**: Kiểm kê tài sản tại chỗ tức thì bằng camera hoặc in nhãn QR Code gắn lên thiết bị.
+- **Tiêu chuẩn bảo mật doanh nghiệp**: Nhằm tuyệt đối bảo mật hạ tầng và dữ liệu nội bộ của công ty (VNTT), toàn bộ số Serial, IP mạng và thông tin nhân sự thực tế đã được mặt nạ hóa an toàn (Enterprise Data Masking) trong môi trường Live Demo Sandbox độc lập.
+
+👉 Bạn có thể trải nghiệm trực tiếp đầy đủ các tính năng tại bản Demo Sandbox: [itam-demo.html](itam-demo.html) 🌐✨`;
+        }
+
+        // 6. Dự án trọng điểm: NetUptime Sentinel
         if (q.includes('netuptime') || q.includes('sentinel') || q.includes('giam sat') || q.includes('monitoring') || q.includes('noc')) {
             if (isEn) {
                 return `**NetUptime Sentinel** is an enterprise-grade 24/7 network infrastructure & NOC monitoring platform architected and developed by **Nguyen Viet Thanh** 🚀:

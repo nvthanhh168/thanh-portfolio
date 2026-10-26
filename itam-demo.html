@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNTT ITAM & EAM Enterprise - Quản Trị Vòng Đời Tài Sản CNTT 554 Thiết Bị</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        vntt: {
+                            blue: '#0066b3',
+                            darkblue: '#004b87',
+                            red: '#ed1c24',
+                            light: '#f4f8fc',
+                            border: '#e2e8f0'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; }
+        }
+        @keyframes scanLaser {
+            0% { top: 10%; opacity: 0.8; }
+            50% { top: 90%; opacity: 1; }
+            100% { top: 10%; opacity: 0.8; }
+        }
+        .scanner-laser {
+            animation: scanLaser 2.2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col h-full overflow-hidden text-xs">
+
+    <!-- 1. TOP ENTERPRISE SECURITY & DEMO SANDBOX BANNER -->
+    <header class="bg-gradient-to-r from-slate-950 via-blue-950 to-indigo-950 text-slate-200 px-4 py-2 border-b border-sky-500/30 text-xs flex flex-wrap items-center justify-between gap-3 shadow-md z-50 flex-shrink-0 no-print">
+        <div class="flex items-center space-x-3">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 text-[11px] flex items-center gap-1.5 shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>LIVE DEMO SANDBOX</span>
+            </span>
+            <div class="text-slate-300">
+                <span class="font-bold text-white">VNTT ITAM & EAM Platform</span> — 
+                <span class="text-sky-300">Dữ liệu 554 tài sản & nhân sự đã được <strong>mặt nạ hóa bảo mật (Enterprise Security Masking)</strong> theo tiêu chuẩn VNTT.</span>
+                <span class="hidden md:inline text-slate-400 ml-1">Toàn bộ tính năng (Kiểm kê, Intune MDM, License M365, In tem QR, Bàn giao) đều có thể tương tác thử an toàn.</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="openNewAssetModal()" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition flex items-center gap-1 shadow-xs cursor-pointer text-xs">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                <span>+ Thêm Tài Sản Mới</span>
+            </button>
+            <button onclick="resetDemoData()" title="Khôi phục trạng thái ban đầu" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold transition flex items-center gap-1 border border-slate-700 text-xs cursor-pointer">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                <span>Reset Data</span>
+            </button>
+            <a href="index.html#projects" class="px-3.5 py-1 rounded-lg bg-[#0066b3] hover:bg-sky-600 text-white font-bold transition flex items-center gap-1 shadow-xs text-xs">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                <span>Về Portfolio</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- 2. MAIN WORKSPACE WITH SIDEBAR -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0 shadow-xs no-print select-none">
+            <!-- Brand Logo -->
+            <div class="h-16 flex items-center px-4 border-b border-slate-100 justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#0066b3] to-sky-500 flex items-center justify-center text-white font-black text-sm shadow-sm">
+                        ITAM
+                    </div>
+                    <div>
+                        <div class="font-black text-slate-900 text-sm tracking-tight flex items-center gap-1">
+                            <span>VNTT ITAM</span>
+                            <span class="px-1.5 py-0.2 bg-blue-100 text-[#0066b3] rounded text-[9px] font-bold">v2.4</span>
+                        </div>
+                        <div class="text-[10px] text-slate-400 font-medium">Enterprise Asset & License</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current User Badge -->
+            <div class="p-3 mx-3 my-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-[#0066b3]/10 text-[#0066b3] flex items-center justify-center font-bold text-xs">
+                        NVT
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-800 text-xs">Nguyễn Viết Thành</div>
+                        <div class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            <span>Super Admin (Demo)</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="px-1.5 py-0.5 rounded text-[9px] bg-blue-100 text-[#0066b3] font-bold">M365 SSO</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 px-3 space-y-1 overflow-y-auto py-2">
+                <button onclick="switchTab('tab-dashboard')" id="nav-tab-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-slate-700 hover:bg-slate-100 transition active bg-blue-50 text-[#0066b3]">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Tổng Quan (Dashboard)</span>
+                </button>
+                <button onclick="switchTab('tab-assets')" id="nav-tab-assets" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="monitor" class="w-4 h-4"></i>
+                        <span>Danh Mục Tài Sản</span>
+                    </div>
+                    <span id="badgeAssetCount" class="px-2 py-0.5 bg-slate-200 text-slate-700 rounded-full text-[10px] font-bold">554</span>
+                </button>
+                <button onclick="switchTab('tab-intune')" id="nav-tab-intune" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="cloud" class="w-4 h-4"></i>
+                        <span>Microsoft Intune MDM</span>
+                    </div>
+                    <span class="px-2 py-0.5 bg-sky-100 text-sky-700 rounded-full text-[10px] font-bold">174 Sync</span>
+                </button>
+                <button onclick="switchTab('tab-m365')" id="nav-tab-m365" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="award" class="w-4 h-4"></i>
+                    <span>Bản Quyền Microsoft 365</span>
+                </button>
+                <button onclick="switchTab('tab-checkout')" id="nav-tab-checkout" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="package-check" class="w-4 h-4"></i>
+                    <span>Cấp Phát & In Biên Bản</span>
+                </button>
+                <button onclick="switchTab('tab-qrscan')" id="nav-tab-qrscan" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="qr-code" class="w-4 h-4"></i>
+                    <span>Quét Mã Tem QR Code</span>
+                </button>
+                <button onclick="switchTab('tab-audit')" id="nav-tab-audit" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Nhật Ký Kiểm Toán (Audit)</span>
+                </button>
+            </nav>
+
+            <!-- Bottom System Info -->
+            <div class="p-3 border-t border-slate-100 bg-slate-50 text-[10px] text-slate-400 space-y-1">
+                <div class="flex items-center justify-between">
+                    <span>Cơ sở dữ liệu:</span>
+                    <span class="font-bold text-slate-600">SQLite + Python</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span>Đồng bộ Graph API:</span>
+                    <span class="font-bold text-emerald-600">Active (MDM)</span>
+                </div>
+                <div class="text-[9px] text-slate-400 pt-1 border-t border-slate-200">
+                    Bản quyền thuộc VNTT • System Architect: Nguyễn Viết Thành
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto bg-slate-50 p-4 md:p-6 space-y-6">
+
+            <!-- TAB 1: DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content active space-y-6 max-w-7xl mx-auto">
+                
+                <!-- Welcome Bar -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0066b3] text-[11px] font-black uppercase tracking-wider border border-blue-200">
+                                VNTT IT Asset Governance
+                            </span>
+                            <span class="text-slate-400 text-xs">•</span>
+                            <span class="text-slate-500 text-xs font-medium">Quản lý vòng đời phần cứng & bản quyền doanh nghiệp</span>
+                        </div>
+                        <h1 class="text-xl md:text-2xl font-black text-slate-900 mt-1">
+                            Bảng Điều Khiển Tổng Quan Thiết Bị CNTT
+                        </h1>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="exportDemoExcel()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer">
+                            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                            <span>Xuất Excel CCDC</span>
+                        </button>
+                        <button onclick="switchTab('tab-checkout')" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#0066b3] hover:bg-[#004b87] text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            <span>Cấp Phát Combo</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4 KPI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Total Assets -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:border-blue-400 transition">
+                        <div class="flex items-center justify-between text-slate-500 mb-2">
+                            <span class="font-bold text-xs uppercase tracking-wider">Tổng Thiết Bị IT</span>
+                            <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0066b3] flex items-center justify-center">
+                                <i data-lucide="boxes" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-black text-slate-900" id="kpiTotal">554</div>
+                        <div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                            <span class="text-emerald-600 font-bold">100%</span> đã định danh mã tem QR
+                        </div>
+                    </div>
+
+                    <!-- Deployed -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:border-emerald-400 transition">
+                        <div class="flex items-center justify-between text-slate-500 mb-2">
+                            <span class="font-bold text-xs uppercase tracking-wider">Đang Cấp Phát Sử Dụng</span>
+                            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <i data-lucide="user-check" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-black text-emerald-600" id="kpiDeployed">486</div>
+                        <div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                            <span class="text-emerald-600 font-bold">87.7%</span> tỷ lệ khai thác vận hành
+                        </div>
+                    </div>
+
+                    <!-- In Stock -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:border-amber-400 transition">
+                        <div class="flex items-center justify-between text-slate-500 mb-2">
+                            <span class="font-bold text-xs uppercase tracking-wider">Trong Kho Sẵn Sàng</span>
+                            <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <i data-lucide="archive" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-black text-amber-600" id="kpiInStock">52</div>
+                        <div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                            <span class="text-amber-600 font-bold">9.4%</span> sẵn sàng cấp cho nhân sự mới
+                        </div>
+                    </div>
+
+                    <!-- Maintenance / Broken -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:border-rose-400 transition">
+                        <div class="flex items-center justify-between text-slate-500 mb-2">
+                            <span class="font-bold text-xs uppercase tracking-wider">Bảo Trì / Hỏng</span>
+                            <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                        <div class="text-3xl font-black text-rose-600" id="kpiBroken">16</div>
+                        <div class="text-xs text-slate-500 mt-1 flex items-center gap-1">
+                            <span class="text-rose-600 font-bold">2.9%</span> tỷ lệ khấu hao hỏng hóc thấp
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Hardware Category Distribution -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                        <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-[#0066b3]"></i>
+                            <span>Phân Bổ Theo Chủng Loại (Hardware)</span>
+                        </h3>
+                        <div class="h-60 flex items-center justify-center relative">
+                            <canvas id="chartCategory"></canvas>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-100 text-xs">
+                            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Màn hình: <strong>241 (43.5%)</strong></div>
+                            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> Máy tính bộ: <strong>179 (32.3%)</strong></div>
+                            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Laptop: <strong>133 (24.0%)</strong></div>
+                            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> iPad / Tablet: <strong>1 (0.2%)</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Department Distribution -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs lg:col-span-2">
+                        <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i data-lucide="bar-chart-3" class="w-4 h-4 text-[#0066b3]"></i>
+                            <span>Phân Bổ Thiết Bị Theo Khối Phòng Ban Trọng Yếu</span>
+                        </h3>
+                        <div class="h-60">
+                            <canvas id="chartDepartment"></canvas>
+                        </div>
+                        <div class="text-[11px] text-slate-400 mt-4 text-center">
+                            Tổng hợp trên 28 phòng ban & điểm trạm POP viễn thông toàn công ty VNTT
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities & Highlights -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="history" class="w-4 h-4 text-[#0066b3]"></i>
+                            <span>Hoạt Động & Giao Dịch Thiết Bị Mới Nhất</span>
+                        </h3>
+                        <span class="text-xs text-slate-400">Ghi nhận tự động từ Audit Log</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="text-slate-400 border-b border-slate-100 uppercase text-[10px] tracking-wider">
+                                    <th class="py-2.5 font-bold">Thời gian</th>
+                                    <th class="py-2.5 font-bold">Thao tác</th>
+                                    <th class="py-2.5 font-bold">Mã tài sản</th>
+                                    <th class="py-2.5 font-bold">Tên thiết bị</th>
+                                    <th class="py-2.5 font-bold">Người thụ hưởng</th>
+                                    <th class="py-2.5 font-bold">Người thực hiện</th>
+                                    <th class="py-2.5 font-bold">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="dashboardRecentLogs">
+                                <!-- Rendered via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- TAB 2: ASSETS INVENTORY TABLE -->
+            <div id="tab-assets" class="tab-content space-y-4 max-w-7xl mx-auto">
+                <!-- Search & Filters -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="layers" class="w-5 h-5 text-[#0066b3]"></i>
+                            <h2 class="text-base font-bold text-slate-900">Danh Mục Quản Trị 554 Tài Sản CNTT</h2>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openNewAssetModal()" class="px-3.5 py-1.5 bg-[#0066b3] hover:bg-[#004b87] text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center gap-1.5 cursor-pointer">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                <span>Thêm Tài Sản Mới</span>
+                            </button>
+                            <button onclick="exportDemoExcel()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center gap-1.5 cursor-pointer">
+                                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                                <span>Xuất Excel</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Controls Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2 border-t border-slate-100">
+                        <div class="lg:col-span-2 relative">
+                            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3"></i>
+                            <input type="text" id="assetSearchInput" oninput="applyAssetFilter()" placeholder="Tìm theo mã máy, tên thiết bị, serial, người dùng..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                        </div>
+                        <div>
+                            <select id="assetCategoryFilter" onchange="applyAssetFilter()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                                <option value="ALL">Tất cả kiểu (554)</option>
+                                <option value="MON">🖥️ Màn hình (241)</option>
+                                <option value="CPU">🖲️ Máy tính bộ (179)</option>
+                                <option value="LAP">💻 Laptop (133)</option>
+                                <option value="TAB">📱 iPad / Tablet (1)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="assetStatusFilter" onchange="applyAssetFilter()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                                <option value="ALL">Tất cả trạng thái</option>
+                                <option value="DEPLOYED">🟢 Đang sử dụng (486)</option>
+                                <option value="IN_STOCK">🟡 Trong kho (52)</option>
+                                <option value="BROKEN">🔴 Đang hỏng / Bảo trì (16)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="assetDeptFilter" onchange="applyAssetFilter()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                                <option value="ALL">Tất cả phòng ban</option>
+                                <option value="VHDC">Phòng Vận Hành TTDL (VHDC)</option>
+                                <option value="NOC">Phòng Vận Hành Mạng NOC</option>
+                                <option value="ICT">Phòng Dịch Vụ ICT</option>
+                                <option value="HR">Phòng Hành Chính Nhân Sự</option>
+                                <option value="FIN">Phòng Kế Toán - Tài Chính</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assets Table -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="py-3 px-4 font-bold">Mã tài sản</th>
+                                    <th class="py-3 px-4 font-bold">Tên thiết bị & Model</th>
+                                    <th class="py-3 px-4 font-bold">Chủng loại</th>
+                                    <th class="py-3 px-4 font-bold">Số Serial / Tag</th>
+                                    <th class="py-3 px-4 font-bold">Người sử dụng</th>
+                                    <th class="py-3 px-4 font-bold">Phòng ban</th>
+                                    <th class="py-3 px-4 font-bold">Trạng thái</th>
+                                    <th class="py-3 px-4 font-bold text-center">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="assetTableBody">
+                                <!-- Rendered via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination & Info -->
+                    <div class="p-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 bg-slate-50">
+                        <div id="assetTableCountInfo">Hiển thị 1 - 15 trên tổng số 554 thiết bị</div>
+                        <div class="flex items-center gap-1" id="assetPaginationButtons">
+                            <!-- Pagination generated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: MICROSOFT INTUNE MDM -->
+            <div id="tab-intune" class="tab-content space-y-6 max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-black uppercase tracking-wider border border-sky-200">
+                                Cloud Endpoint Management
+                            </span>
+                            <span class="text-slate-400 text-xs">•</span>
+                            <span class="text-slate-500 text-xs font-medium">Microsoft Graph API Telemetry</span>
+                        </div>
+                        <h2 class="text-xl font-black text-slate-900 mt-1">
+                            Phân Hệ Quản Lý Thiết Bị Microsoft Intune (MDM)
+                        </h2>
+                    </div>
+                    <button onclick="simulateIntuneSync()" id="btnIntuneSync" class="px-4 py-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center gap-2 cursor-pointer">
+                        <i data-lucide="refresh-cw" class="w-4 h-4" id="iconIntuneSync"></i>
+                        <span>Đồng Bộ Ngay (Graph API)</span>
+                    </button>
+                </div>
+
+                <!-- Sync Progress Indicator (Hidden by default) -->
+                <div id="intuneSyncProgress" class="hidden bg-white p-4 rounded-2xl border border-sky-300 shadow-xs space-y-2">
+                    <div class="flex items-center justify-between text-xs font-bold text-sky-900">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-sky-500 animate-ping"></span>
+                            <span>Đang kết nối Microsoft Graph Endpoint API...</span>
+                        </span>
+                        <span id="intuneProgressText">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div id="intuneProgressBar" class="bg-gradient-to-r from-sky-500 to-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Intune Summary Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1">Tổng Máy Đã Ghi Danh Intune</div>
+                        <div class="text-2xl font-black text-slate-900" id="intuneTotalCount">174</div>
+                        <div class="text-xs text-emerald-600 font-semibold mt-1">Đồng bộ tự động qua Entra ID</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1">Trạng Thái Tuân Thủ (Compliance)</div>
+                        <div class="text-2xl font-black text-emerald-600">168 / 174</div>
+                        <div class="text-xs text-slate-500 mt-1">96.5% đạt chuẩn bảo mật doanh nghiệp</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                        <div class="text-slate-400 text-[11px] font-bold uppercase tracking-wider mb-1">Mã Hóa Ổ Đĩa BitLocker</div>
+                        <div class="text-2xl font-black text-[#0066b3]">174 / 174</div>
+                        <div class="text-xs text-emerald-600 font-semibold mt-1">100% mã hóa bảo vệ chống rò rỉ dữ liệu</div>
+                    </div>
+                </div>
+
+                <!-- Intune Devices Table -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                    <div class="p-3.5 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="font-bold text-slate-800 text-xs">Danh Sách Máy Trạm Endpoint Đăng Ký MDM</h3>
+                        <span class="text-xs text-slate-400">Dữ liệu telemetry cập nhật gần nhất</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="py-3 px-4 font-bold">Tên thiết bị (Hostname)</th>
+                                    <th class="py-3 px-4 font-bold">Hệ điều hành</th>
+                                    <th class="py-3 px-4 font-bold">Người dùng chính (UPN)</th>
+                                    <th class="py-3 px-4 font-bold">Model & Hãng</th>
+                                    <th class="py-3 px-4 font-bold">Tuân thủ (Compliance)</th>
+                                    <th class="py-3 px-4 font-bold">Mã hóa BitLocker</th>
+                                    <th class="py-3 px-4 font-bold">Đồng bộ cuối</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="intuneTableBody">
+                                <!-- Rendered via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: MICROSOFT 365 LICENSES -->
+            <div id="tab-m365" class="tab-content space-y-6 max-w-7xl mx-auto">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[11px] font-black uppercase tracking-wider border border-purple-200">
+                            Cloud License Governance
+                        </span>
+                        <span class="text-slate-400 text-xs">•</span>
+                        <span class="text-slate-500 text-xs font-medium">Đối soát bản quyền Microsoft 365</span>
+                    </div>
+                    <h2 class="text-xl font-black text-slate-900 mt-1">
+                        Ma Trận Phân Bổ & Tối Ưu Chi Phí Bản Quyền Microsoft 365
+                    </h2>
+                </div>
+
+                <!-- License Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="m365PoolsContainer">
+                    <!-- Rendered via JS -->
+                </div>
+
+                <!-- License Allocation Table -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                    <div class="p-3.5 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="font-bold text-slate-800 text-xs">Chi Tiết Cấp Phát Bản Quyền Cho Nhân Sự Trọng Yếu</h3>
+                        <span class="text-xs text-emerald-600 font-bold">Tối ưu chi phí: Tiết kiệm 19.2 triệu/năm nhờ thu hồi license rác</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="py-3 px-4 font-bold">Nhân viên</th>
+                                    <th class="py-3 px-4 font-bold">Email UPN</th>
+                                    <th class="py-3 px-4 font-bold">Phòng ban</th>
+                                    <th class="py-3 px-4 font-bold">Gói M365 gán</th>
+                                    <th class="py-3 px-4 font-bold">Bản quyền Windows</th>
+                                    <th class="py-3 px-4 font-bold">Ngày gán</th>
+                                    <th class="py-3 px-4 font-bold">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="m365UserTableBody">
+                                <!-- Rendered via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: CHECKOUT & HANDOVER -->
+            <div id="tab-checkout" class="tab-content space-y-6 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                    <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <i data-lucide="file-check" class="w-5 h-5 text-[#0066b3]"></i>
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">Tạo Biên Bản Bàn Giao Thiết Bị CNTT (Combo Checkout)</h2>
+                            <p class="text-xs text-slate-500">Cấp phát tài sản combo (Case PC + Màn hình + Phụ kiện) có xuất biên bản bàn giao và chữ ký số</p>
+                        </div>
+                    </div>
+
+                    <form id="checkoutForm" onsubmit="handleGenerateHandover(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Người nhận thiết bị (*)</label>
+                                <select id="coEmployee" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                                    <option value="Trần Văn An - Kỹ sư Mạng NOC">Trần Văn An (Kỹ sư Mạng NOC)</option>
+                                    <option value="Lê Thị Bích - Kế toán Trưởng">Lê Thị Bích (Kế toán Trưởng)</option>
+                                    <option value="Phạm Hoàng Nam - Chuyên viên Cloud">Phạm Hoàng Nam (Chuyên viên Cloud)</option>
+                                    <option value="Đặng Minh Khôi - Vận Hành DC">Đặng Minh Khôi (Vận Hành DC)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Phòng ban tiếp nhận</label>
+                                <input type="text" id="coDepartment" value="Phòng Vận Hành Mạng NOC" class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-600" readonly>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Máy tính (Laptop hoặc Case PC) (*)</label>
+                                <select id="coPrimaryAsset" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                                    <option value="AST-LAP-001 | Laptop Dell Inspiron 7400 (SN: 90D7C63)">AST-LAP-001 | Laptop Dell Inspiron 7400</option>
+                                    <option value="AST-PC-014 | Máy tính bộ HP ProDesk 400 G7">AST-PC-014 | Case HP ProDesk 400 G7</option>
+                                    <option value="AST-LAP-042 | Apple MacBook Pro M1 2020">AST-LAP-042 | MacBook Pro M1 2020</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Màn hình đi kèm (Monitor)</label>
+                                <select id="coMonitor" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                                    <option value="AST-MON-082 | Màn hình Dell P2419H 23.8 inch IPS">AST-MON-082 | Dell P2419H 24" IPS</option>
+                                    <option value="AST-MON-104 | Màn hình HP E24 G4 FHD">AST-MON-104 | HP E24 G4 24" FHD</option>
+                                    <option value="NONE">-- Không kèm màn hình --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Gói Phụ kiện / CCDC kèm theo</label>
+                                <select id="coAccessories" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                                    <option value="Combo Bàn phím + Chuột quang Logitech MK120 + Balo Laptop">Combo Phím Chuột Logitech + Balo</option>
+                                    <option value="Bàn phím không dây Dell KM3322W + Chuột không dây">Combo Không Dây Dell KM3322W</option>
+                                    <option value="Chuột quang Dell MS116 + Lót chuột">Chuột quang Dell + Lót chuột</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Ghi chú & Cam kết trách nhiệm</label>
+                            <textarea id="coNotes" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">Máy hoạt động tốt, đã cài đặt phần mềm bản quyền Windows 11 Pro và gói Office M365 Business Standard. Bàn giao đầy đủ phụ kiện theo quy định công ty VNTT.</textarea>
+                        </div>
+
+                        <div class="flex justify-end gap-3 pt-2">
+                            <button type="submit" class="px-5 py-2.5 bg-[#0066b3] hover:bg-[#004b87] text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center gap-2 cursor-pointer">
+                                <i data-lucide="printer" class="w-4 h-4"></i>
+                                <span>Tạo & Xuất Biên Bản Bàn Giao</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Rendered Handover Protocol Contract (Dynamic preview) -->
+                <div id="handoverPreviewContainer" class="hidden bg-white p-8 rounded-2xl border border-slate-300 shadow-md space-y-6">
+                    <!-- Dynamic content injected by JS -->
+                </div>
+            </div>
+
+            <!-- TAB 6: QR SCANNER SIMULATOR -->
+            <div id="tab-qrscan" class="tab-content space-y-6 max-w-3xl mx-auto">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs text-center space-y-4">
+                    <div class="w-12 h-12 bg-blue-50 text-[#0066b3] rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">
+                        <i data-lucide="camera" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Mô Phỏng Quét Camera Tra Cứu Tem Nhãn QR Code</h2>
+                        <p class="text-xs text-slate-500">Dùng camera điện thoại hoặc máy quét mã vạch để đối soát tài sản trong kho và trạm kỹ thuật</p>
+                    </div>
+
+                    <!-- Viewfinder Mockup -->
+                    <div class="w-72 h-72 mx-auto bg-slate-900 rounded-3xl relative overflow-hidden flex items-center justify-center border-4 border-slate-700 shadow-inner">
+                        <!-- Corner Markers -->
+                        <div class="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-sky-400"></div>
+                        <div class="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-sky-400"></div>
+                        <div class="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-sky-400"></div>
+                        <div class="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-sky-400"></div>
+                        <!-- Laser Scan Line -->
+                        <div class="absolute left-6 right-6 h-0.5 bg-rose-500 shadow-[0_0_8px_#f43f5e] scanner-laser"></div>
+                        <div class="text-center text-slate-400 text-xs">
+                            <i data-lucide="qr-code" class="w-16 h-16 mx-auto mb-2 opacity-40"></i>
+                            <span>Hướng camera vào tem QR...</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Scan Trigger Buttons -->
+                    <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+                        <span class="text-xs text-slate-500 font-bold">Thử nghiệm quét nhanh:</span>
+                        <button onclick="simulateScanAsset('AST-LAP-001')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-[#0066b3] rounded-xl text-xs font-semibold border border-slate-200 transition cursor-pointer">
+                            Quét Laptop Dell (AST-LAP-001)
+                        </button>
+                        <button onclick="simulateScanAsset('AST-PC-014')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-[#0066b3] rounded-xl text-xs font-semibold border border-slate-200 transition cursor-pointer">
+                            Quét Case HP (AST-PC-014)
+                        </button>
+                        <button onclick="simulateScanAsset('AST-MON-082')" class="px-3 py-1.5 bg-slate-100 hover:bg-blue-50 hover:text-[#0066b3] rounded-xl text-xs font-semibold border border-slate-200 transition cursor-pointer">
+                            Quét Màn Hình Dell (AST-MON-082)
+                        </button>
+                    </div>
+
+                    <!-- Scanned Asset Result Box -->
+                    <div id="scanResultBox" class="hidden text-left p-4 bg-blue-50/70 border border-blue-200 rounded-2xl transition-all duration-300">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: IMMUTABLE AUDIT LOGS -->
+            <div id="tab-audit" class="tab-content space-y-6 max-w-7xl mx-auto">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-black uppercase tracking-wider border border-emerald-200">
+                                Immutable Audit Ledger
+                            </span>
+                            <span class="text-slate-400 text-xs">•</span>
+                            <span class="text-slate-500 text-xs font-medium">Bảo vệ tính toàn vẹn dữ liệu</span>
+                        </div>
+                        <h2 class="text-xl font-black text-slate-900 mt-1">
+                            Nhật Ký Kiểm Toán Bất Biến (Immutable Audit Logs)
+                        </h2>
+                    </div>
+                    <span class="text-xs text-slate-400">Ghi nhận 669 giao dịch lịch sử</span>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="py-3 px-4 font-bold">Mã log</th>
+                                    <th class="py-3 px-4 font-bold">Thời gian</th>
+                                    <th class="py-3 px-4 font-bold">Người thực hiện</th>
+                                    <th class="py-3 px-4 font-bold">Hành động</th>
+                                    <th class="py-3 px-4 font-bold">Thực thể (Entity)</th>
+                                    <th class="py-3 px-4 font-bold">Mô tả chi tiết giao dịch</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="auditTableBody">
+                                <!-- Rendered via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL 1: ASSET DETAIL -->
+    <div id="modalAssetDetail" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#0066b3] flex items-center justify-center font-bold text-sm">
+                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900" id="modalDetailTitle">Chi Tiết Hồ Sơ Tài Sản</h3>
+                        <div class="text-xs text-slate-400" id="modalDetailTag">AST-LAP-001</div>
+                    </div>
+                </div>
+                <button onclick="closeModal('modalAssetDetail')" class="p-1.5 hover:bg-slate-100 rounded-xl text-slate-400 hover:text-slate-700 transition cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div id="modalDetailBody" class="space-y-4 text-xs">
+                <!-- Injected by JS -->
+            </div>
+
+            <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button onclick="printCurrentModalQr()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold flex items-center gap-1.5 cursor-pointer">
+                    <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
+                    <span>In Tem QR</span>
+                </button>
+                <button onclick="closeModal('modalAssetDetail')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold cursor-pointer">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: QR CODE LABEL PRINT -->
+    <div id="modalQrLabel" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 text-center space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Mẫu Tem Nhãn QR Chuẩn VNTT</span>
+                <button onclick="closeModal('modalQrLabel')" class="text-slate-400 hover:text-slate-700 cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Printable Asset Label Box -->
+            <div id="printableLabelBox" class="border-2 border-slate-800 p-4 rounded-xl bg-white space-y-2 text-left shadow-xs">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-1.5">
+                    <span class="font-black text-[#0066b3] text-sm">VNTT IT ASSET</span>
+                    <span class="text-[9px] font-bold text-slate-500">HOTLINE: 1900 9400</span>
+                </div>
+                <div class="flex items-center gap-3 pt-1">
+                    <div id="qrCodeCanvas" class="w-24 h-24 flex-shrink-0 flex items-center justify-center bg-white p-1 border border-slate-200 rounded-lg"></div>
+                    <div class="space-y-1 text-[11px] leading-tight">
+                        <div class="font-bold text-slate-900" id="qrLabelName">Laptop Dell Inspiron 7400</div>
+                        <div class="text-slate-600 font-mono" id="qrLabelTag">AST-LAP-001</div>
+                        <div class="text-slate-500 font-mono" id="qrLabelSerial">SN: 90D7C63</div>
+                        <div class="text-slate-500" id="qrLabelDept">Phòng Mạng NOC</div>
+                    </div>
+                </div>
+                <div class="text-[9px] text-center text-slate-400 border-t border-slate-100 pt-1">
+                    Vui lòng không tự ý bóc hoặc làm rách tem tài sản này
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-2 pt-2">
+                <button onclick="window.print()" class="px-4 py-2 bg-[#0066b3] hover:bg-[#004b87] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs">
+                    <i data-lucide="printer" class="w-4 h-4"></i>
+                    <span>In Tem Ngay</span>
+                </button>
+                <button onclick="closeModal('modalQrLabel')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ADD NEW ASSET (DEMO) -->
+    <div id="modalNewAsset" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-[#0066b3]"></i>
+                    <h3 class="text-base font-bold text-slate-900">Thêm Mới Thiết Bị CNTT (Mô Phỏng Demo)</h3>
+                </div>
+                <button onclick="closeModal('modalNewAsset')" class="text-slate-400 hover:text-slate-700 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleCreateAsset(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Tên thiết bị (*)</label>
+                    <input type="text" id="newAssetName" required placeholder="Ví dụ: Laptop Dell Latitude 5420..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Chủng loại</label>
+                        <select id="newAssetCategory" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                            <option value="LAP">Laptop</option>
+                            <option value="CPU">Máy tính bộ (Case PC)</option>
+                            <option value="MON">Màn hình (Monitor)</option>
+                            <option value="TAB">Tablet / iPad</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Số Serial</label>
+                        <input type="text" id="newAssetSerial" placeholder="Ví dụ: SN-DLX-99214..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Phòng ban tiếp nhận</label>
+                        <select id="newAssetDept" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                            <option value="Phòng Vận Hành Mạng NOC">Phòng Vận Hành Mạng NOC</option>
+                            <option value="Phòng Vận Hành TTDL (VHDC)">Phòng Vận Hành TTDL (VHDC)</option>
+                            <option value="Phòng Dịch Vụ ICT">Phòng Dịch Vụ ICT</option>
+                            <option value="Phòng Hành Chính Nhân Sự">Phòng Hành Chính Nhân Sự</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Người nhận thiết bị</label>
+                        <input type="text" id="newAssetUser" placeholder="Ví dụ: Trần Văn An..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Trạng thái khởi tạo</label>
+                    <select id="newAssetStatus" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:outline-none focus:border-[#0066b3]">
+                        <option value="DEPLOYED">🟢 Đang sử dụng (DEPLOYED)</option>
+                        <option value="IN_STOCK">🟡 Lưu kho sẵn sàng (IN_STOCK)</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="submit" class="px-5 py-2.5 bg-[#0066b3] hover:bg-[#004b87] text-white rounded-xl font-bold transition shadow-xs cursor-pointer">
+                        Lưu & Tạo Tem QR Ngay
+                    </button>
+                    <button type="button" onclick="closeModal('modalNewAsset')" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold cursor-pointer">
+                        Hủy
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="demoToastContainer" class="fixed top-12 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // =================================================================
+        // VNTT ITAM & EAM - CLIENT-SIDE DEMO SANDBOX ENGINE
+        // (BẢO MẬT DỮ LIỆU CÔNG TY VNTT | MẶT NẠ HÓA AN TOÀN | INTERACTIVE)
+        // =================================================================
+
+        const STORAGE_KEY = 'vntt_itam_demo_state_v1';
+
+        function getInitialData() {
+            return {
+                assets: [
+                    { id: 1, tag: "AST-LAP-001", name: "Laptop Dell Inspiron 7400", category: "LAP", catName: "Laptop", serial: "90D7C63", user: "Trần Văn An", dept: "Phòng Vận Hành Mạng NOC", status: "DEPLOYED", os: "Windows 11 Pro 23H2", cpu: "Intel Core i7-1165G7", ram: "16 GB DDR4", disk: "512 GB NVMe SSD", ip: "10.240.10.155", mac: "8C:8D:28:2B:8E:37", date: "2023-06-15", cost: "24,500,000 đ" },
+                    { id: 2, tag: "AST-LAP-042", name: "Apple MacBook Pro M1 2020", category: "LAP", catName: "Laptop", serial: "C02F90A1MD6R", user: "Nguyễn Viết Thành", dept: "Phòng Vận Hành Mạng NOC", status: "DEPLOYED", os: "macOS Sonoma 14.4", cpu: "Apple M1 8-Core", ram: "16 GB Unified", disk: "512 GB Apple SSD", ip: "10.240.10.120", mac: "3C:22:FB:45:90:A1", date: "2023-12-28", cost: "32,000,000 đ" },
+                    { id: 3, tag: "AST-PC-014", name: "Máy tính bộ HP ProDesk 400 G7 MT", category: "CPU", catName: "Máy tính bộ", serial: "4CE1237XYZ", user: "Lê Thị Bích", dept: "Phòng Kế Toán - Tài Chính", status: "DEPLOYED", os: "Windows 11 Pro", cpu: "Intel Core i5-10500", ram: "16 GB DDR4", disk: "256 GB SSD + 1TB HDD", ip: "10.240.20.45", mac: "70:85:C2:A1:33:40", date: "2022-04-10", cost: "14,800,000 đ" },
+                    { id: 4, tag: "AST-MON-082", name: "Màn hình Dell P2419H 23.8 inch IPS", category: "MON", catName: "Màn hình", serial: "CN-08K901-74261", user: "Trần Văn An", dept: "Phòng Vận Hành Mạng NOC", status: "DEPLOYED", os: "--", cpu: "--", ram: "--", disk: "--", ip: "--", mac: "--", date: "2022-04-10", cost: "4,200,000 đ" },
+                    { id: 5, tag: "AST-MON-104", name: "Màn hình HP E24 G4 FHD IPS", category: "MON", catName: "Màn hình", serial: "3CQ1190ABC", user: "Lê Thị Bích", dept: "Phòng Kế Toán - Tài Chính", status: "DEPLOYED", os: "--", cpu: "--", ram: "--", disk: "--", ip: "--", mac: "--", date: "2022-04-10", cost: "3,950,000 đ" },
+                    { id: 6, tag: "AST-PC-055", name: "Máy tính trạm HP Z2 G5 Workstation", category: "CPU", catName: "Máy tính bộ", serial: "SGH1440KLP", user: "Phạm Hoàng Nam", dept: "Phòng Vận Hành TTDL (VHDC)", status: "DEPLOYED", os: "Windows 11 Pro Workstation", cpu: "Intel Xeon W-1250", ram: "32 GB ECC DDR4", disk: "1TB NVMe + 2TB SATA", ip: "10.240.10.88", mac: "A4:BB:6D:90:11:42", date: "2023-01-20", cost: "38,500,000 đ" },
+                    { id: 7, tag: "AST-LAP-089", name: "Laptop Lenovo ThinkPad T14 Gen 2", category: "LAP", catName: "Laptop", serial: "PF399120", user: "Đặng Minh Khôi", dept: "Phòng Dịch Vụ ICT", status: "DEPLOYED", os: "Windows 11 Pro", cpu: "AMD Ryzen 5 Pro 5650U", ram: "16 GB DDR4", disk: "512 GB SSD", ip: "10.240.30.95", mac: "54:05:DB:77:22:11", date: "2023-08-11", cost: "22,900,000 đ" },
+                    { id: 8, tag: "AST-TAB-001", name: "Apple iPad Pro 11 inch M2 (Wi-Fi)", category: "TAB", catName: "iPad / Tablet", serial: "DMPF8819Q", user: "Ban Điều Hành", dept: "Ban Điều Hành VNTT", status: "DEPLOYED", os: "iPadOS 17.4", cpu: "Apple M2", ram: "8 GB", disk: "256 GB Storage", ip: "10.240.5.12", mac: "B8:17:C2:55:77:90", date: "2023-11-05", cost: "21,500,000 đ" },
+                    { id: 9, tag: "AST-PC-102", name: "Máy tính bộ Dell OptiPlex 3080 SFF", category: "CPU", catName: "Máy tính bộ", serial: "9KLM221", user: "Kho Sẵn Sàng", dept: "Kho CNTT Trung Tâm", status: "IN_STOCK", os: "Windows 11 Pro", cpu: "Intel Core i5-10500", ram: "8 GB DDR4", disk: "256 GB SSD", ip: "--", mac: "--", date: "2023-09-01", cost: "12,500,000 đ" },
+                    { id: 10, tag: "AST-LAP-115", name: "Laptop Dell Vostro 3510", category: "LAP", catName: "Laptop", serial: "5578XYZ", user: "Kho Sẵn Sàng", dept: "Kho CNTT Trung Tâm", status: "IN_STOCK", os: "Windows 11 Pro", cpu: "Intel Core i5-1135G7", ram: "16 GB DDR4", disk: "512 GB SSD", ip: "--", mac: "--", date: "2023-09-01", cost: "16,800,000 đ" },
+                    { id: 11, tag: "AST-MON-190", name: "Màn hình LG 24MP60G-B 24 inch IPS", category: "MON", catName: "Màn hình", serial: "201NTSG441", user: "Kho Sẵn Sàng", dept: "Kho CNTT Trung Tâm", status: "IN_STOCK", os: "--", cpu: "--", ram: "--", disk: "--", ip: "--", mac: "--", date: "2023-09-01", cost: "3,100,000 đ" },
+                    { id: 12, tag: "AST-PC-009", name: "Máy tính bộ HP ProDesk 400 G4", category: "CPU", catName: "Máy tính bộ", serial: "CZC8190771", user: "Đang sửa chữa", dept: "Phòng Kỹ Thuật Bảo Trì", status: "BROKEN", os: "Windows 10 Pro", cpu: "Intel Core i3-7100", ram: "4 GB DDR4", disk: "500 GB HDD (Lỗi Bad Sector)", ip: "--", mac: "--", date: "2019-05-18", cost: "8,900,000 đ" }
+                ],
+                intuneDevices: [
+                    { name: "DESKTOP-TH4NNV", user: "thanhnv@vntt.com.vn", model: "MacBookPro17,1", mfg: "Apple Inc.", os: "macOS 14.4.1", compliant: true, bitlocker: true, sync: "Vừa xong" },
+                    { name: "DESKTOP-ANTR4N", user: "an.tran@vntt.com.vn", model: "Inspiron 7400", mfg: "Dell Inc.", os: "Windows 11 Pro 23H2", compliant: true, bitlocker: true, sync: "5 phút trước" },
+                    { name: "DESKTOP-B1CHLE", user: "bich.le@vntt.com.vn", model: "ProDesk 400 G7 MT", mfg: "HP", os: "Windows 11 Pro 23H2", compliant: true, bitlocker: true, sync: "12 phút trước" },
+                    { name: "DESKTOP-N4MPHAM", user: "nam.pham@vntt.com.vn", model: "Z2 G5 Workstation", mfg: "HP", os: "Windows 11 Pro", compliant: true, bitlocker: true, sync: "25 phút trước" },
+                    { name: "DESKTOP-KHO1DM", user: "khoi.dang@vntt.com.vn", model: "ThinkPad T14 Gen 2", mfg: "LENOVO", os: "Windows 11 Pro 23H2", compliant: true, bitlocker: true, sync: "1 giờ trước" },
+                    { name: "IPAD-B4NDIEUHANH", user: "bdh@vntt.com.vn", model: "iPad Pro 11-inch (4th Gen)", mfg: "Apple Inc.", os: "iPadOS 17.4", compliant: true, bitlocker: true, sync: "3 giờ trước" }
+                ],
+                m365Pools: [
+                    { code: "WIN11_GGWA", name: "Windows 11 Pro GGWA", cat: "Hệ điều hành bản quyền", total: 300, stock: 52, allocated: 184, cost: "3,800,000 đ", desc: "Bản quyền hợp pháp hóa Windows 11 Pro trọn đời theo thiết bị" },
+                    { code: "M365_BUS_STD", name: "M365 Business Standard", cat: "Năng suất & Office Apps", total: 300, stock: 50, allocated: 186, cost: "3,200,000 đ", desc: "Bộ ứng dụng Office 5 thiết bị (Word, Excel, Outlook, Teams, 1TB OneDrive)" },
+                    { code: "M365_F1", name: "Microsoft 365 Frontline F1", cat: "Nhân viên Tiền tuyến", total: 300, stock: 50, allocated: 167, cost: "650,000 đ", desc: "Gói công cụ đám mây cho kỹ thuật hiện trường và Teams Web" },
+                    { code: "EXO_P1", name: "Exchange Online (Plan 1)", cat: "Hộp thư Doanh nghiệp", total: 100, stock: 2, allocated: 77, cost: "1,050,000 đ", desc: "Hộp thư doanh nghiệp chuyên dụng dung lượng 50GB chống spam" }
+                ],
+                auditLogs: [
+                    { id: "LOG-669", time: "Hôm nay 10:15", user: "thanhnv (Super Admin)", action: "INTUNE_SYNC", entity: "Intune MDM", desc: "Đồng bộ thành công 174 máy trạm qua Microsoft Graph API." },
+                    { id: "LOG-668", time: "Hôm nay 09:30", user: "thanhnv (Super Admin)", action: "QR_LABEL_PRINT", entity: "AST-LAP-001", desc: "In nhãn tem mã QR dán trên thân máy Dell Inspiron 7400." },
+                    { id: "LOG-667", time: "Hôm qua 16:45", user: "sontt (Admin)", action: "CHECKOUT_COMBO", entity: "AST-PC-014", desc: "Bàn giao máy tính HP ProDesk cho nhân viên Lê Thị Bích (Phòng Kế Toán)." },
+                    { id: "LOG-666", time: "Hôm qua 14:10", user: "tinhdh (Admin)", action: "M365_ASSIGN", entity: "License M365", desc: "Gán bản quyền Business Standard cho nhân sự phòng NOC." },
+                    { id: "LOG-665", time: "22/10 11:20", user: "SYSTEM_ROBOT", action: "HEALTH_CHECK", entity: "Database", desc: "Tự động sao lưu và tối ưu hóa 554 bản ghi tài sản ITAM." }
+                ]
+            };
+        }
+
+        let DEMO_STATE = (function() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) return JSON.parse(raw);
+            } catch(e) {}
+            return getInitialData();
+        })();
+
+        function saveDemoState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(DEMO_STATE));
+            } catch(e) {}
+        }
+
+        function resetDemoData() {
+            if (confirm("Khôi phục toàn bộ dữ liệu ITAM về trạng thái chuẩn ban đầu?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('demoToastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            const bgClass = type === 'error' ? 'bg-rose-900/90 border-rose-500 text-rose-100' : 'bg-emerald-900/90 border-emerald-500 text-emerald-100';
+            toast.className = `p-3 rounded-xl border shadow-xl backdrop-blur-md text-xs font-medium max-w-sm pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0 flex items-start gap-2.5 ${bgClass}`;
+            toast.innerHTML = `
+                <span class="text-base leading-none">${type === 'error' ? '🚨' : '✅'}</span>
+                <div class="flex-1 whitespace-pre-line">${msg}</div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // ==========================================
+        // TAB SWITCHING
+        // ==========================================
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-blue-50', 'text-[#0066b3]');
+                el.classList.add('text-slate-600');
+            });
+
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) targetTab.classList.add('active');
+
+            const targetNav = document.getElementById('nav-' + tabId);
+            if (targetNav) {
+                targetNav.classList.add('bg-blue-50', 'text-[#0066b3]');
+                targetNav.classList.remove('text-slate-600');
+            }
+
+            if (tabId === 'tab-dashboard') {
+                renderCharts();
+            }
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // RENDER ASSET TABLE
+        // ==========================================
+        let currentFilteredAssets = [];
+        let currentPage = 1;
+        const PAGE_SIZE = 12;
+
+        function applyAssetFilter() {
+            const q = (document.getElementById('assetSearchInput')?.value || '').toLowerCase().trim();
+            const cat = document.getElementById('assetCategoryFilter')?.value || 'ALL';
+            const status = document.getElementById('assetStatusFilter')?.value || 'ALL';
+            const dept = document.getElementById('assetDeptFilter')?.value || 'ALL';
+
+            currentFilteredAssets = DEMO_STATE.assets.filter(a => {
+                const matchQ = !q || a.tag.toLowerCase().includes(q) || a.name.toLowerCase().includes(q) || (a.serial && a.serial.toLowerCase().includes(q)) || (a.user && a.user.toLowerCase().includes(q));
+                const matchCat = cat === 'ALL' || a.category === cat;
+                const matchStatus = status === 'ALL' || a.status === status;
+                const matchDept = dept === 'ALL' || a.dept.includes(dept);
+                return matchQ && matchCat && matchStatus && matchDept;
+            });
+
+            currentPage = 1;
+            renderAssetTable();
+        }
+
+        function renderAssetTable() {
+            const tbody = document.getElementById('assetTableBody');
+            if (!tbody) return;
+
+            const total = currentFilteredAssets.length;
+            const startIdx = (currentPage - 1) * PAGE_SIZE;
+            const endIdx = Math.min(startIdx + PAGE_SIZE, total);
+            const pageItems = currentFilteredAssets.slice(startIdx, endIdx);
+
+            if (pageItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-400">Không tìm thấy tài sản nào phù hợp với bộ lọc</td></tr>`;
+                document.getElementById('assetTableCountInfo').innerText = "0 kết quả";
+                document.getElementById('assetPaginationButtons').innerHTML = "";
+                return;
+            }
+
+            tbody.innerHTML = pageItems.map(a => {
+                let statusBadge = '';
+                if (a.status === 'DEPLOYED') statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🟢 Đang sử dụng</span>';
+                else if (a.status === 'IN_STOCK') statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">🟡 Trong kho</span>';
+                else statusBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">🔴 Bảo trì / Hỏng</span>';
+
+                let icon = a.category === 'MON' ? '🖥️' : a.category === 'LAP' ? '💻' : a.category === 'TAB' ? '📱' : '🖲️';
+
+                return `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="py-3 px-4 font-mono font-bold text-[#0066b3]">${a.tag}</td>
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-slate-800 flex items-center gap-1.5">${icon} ${a.name}</div>
+                            <div class="text-[10px] text-slate-400 font-mono">${a.os}</div>
+                        </td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold text-[10px]">${a.catName}</span></td>
+                        <td class="py-3 px-4 font-mono text-slate-500">${a.serial || '<span class="text-slate-300">N/A</span>'}</td>
+                        <td class="py-3 px-4 font-bold text-slate-700">${a.user || '<span class="text-slate-400 italic">Chưa cấp</span>'}</td>
+                        <td class="py-3 px-4 text-slate-600">${a.dept}</td>
+                        <td class="py-3 px-4">${statusBadge}</td>
+                        <td class="py-3 px-4 text-center">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <button onclick="viewAssetDetail(${a.id})" title="Xem chi tiết hồ sơ" class="p-1.5 rounded-lg bg-blue-50 text-[#0066b3] hover:bg-blue-100 transition cursor-pointer">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <button onclick="openQrLabelModal(${a.id})" title="In tem mã QR" class="p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">
+                                    <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('assetTableCountInfo').innerText = `Hiển thị ${startIdx + 1} - ${endIdx} trên tổng số ${total} thiết bị`;
+
+            // Pagination
+            const totalPages = Math.ceil(total / PAGE_SIZE);
+            let pageBtns = '';
+            for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+                const active = i === currentPage ? 'bg-[#0066b3] text-white font-bold' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100';
+                pageBtns += `<button onclick="goToPage(${i})" class="px-2.5 py-1 rounded-lg text-xs ${active} cursor-pointer">${i}</button>`;
+            }
+            document.getElementById('assetPaginationButtons').innerHTML = pageBtns;
+            lucide.createIcons();
+        }
+
+        function goToPage(p) {
+            currentPage = p;
+            renderAssetTable();
+        }
+
+        // ==========================================
+        // ASSET DETAIL & QR LABELS
+        // ==========================================
+        let currentInspectedAsset = null;
+
+        function viewAssetDetail(assetId) {
+            const asset = DEMO_STATE.assets.find(a => a.id === assetId);
+            if (!asset) return;
+            currentInspectedAsset = asset;
+
+            document.getElementById('modalDetailTitle').innerText = asset.name;
+            document.getElementById('modalDetailTag').innerText = `${asset.tag} • Serial: ${asset.serial || 'N/A'}`;
+
+            document.getElementById('modalDetailBody').innerHTML = `
+                <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+                    <div><span class="text-slate-400">Người sử dụng:</span> <strong class="text-slate-800">${asset.user}</strong></div>
+                    <div><span class="text-slate-400">Phòng ban:</span> <strong class="text-slate-800">${asset.dept}</strong></div>
+                    <div><span class="text-slate-400">Hệ điều hành:</span> <span class="font-mono">${asset.os}</span></div>
+                    <div><span class="text-slate-400">Địa chỉ IP:</span> <span class="font-mono text-blue-700">${asset.ip}</span></div>
+                    <div><span class="text-slate-400">Địa chỉ MAC:</span> <span class="font-mono">${asset.mac}</span></div>
+                    <div><span class="text-slate-400">Nguyên giá:</span> <strong class="text-emerald-700">${asset.cost}</strong></div>
+                </div>
+
+                <div class="border border-slate-200 p-3.5 rounded-2xl space-y-2">
+                    <h4 class="font-bold text-slate-800 flex items-center gap-1.5 text-xs">
+                        <i data-lucide="cpu" class="w-4 h-4 text-[#0066b3]"></i> Thông Số Phần Cứng (Hardware Telemetry)
+                    </h4>
+                    <div class="grid grid-cols-3 gap-2 text-[11px]">
+                        <div class="p-2 bg-slate-50 rounded-xl"><span class="text-slate-400 block text-[10px]">Vi xử lý (CPU)</span><strong>${asset.cpu}</strong></div>
+                        <div class="p-2 bg-slate-50 rounded-xl"><span class="text-slate-400 block text-[10px]">Bộ nhớ (RAM)</span><strong>${asset.ram}</strong></div>
+                        <div class="p-2 bg-slate-50 rounded-xl"><span class="text-slate-400 block text-[10px]">Ổ cứng (Storage)</span><strong>${asset.disk}</strong></div>
+                    </div>
+                </div>
+
+                <div class="border border-slate-200 p-3.5 rounded-2xl space-y-1.5">
+                    <h4 class="font-bold text-slate-800 flex items-center gap-1.5 text-xs">
+                        <i data-lucide="cloud-check" class="w-4 h-4 text-sky-600"></i> Quản Trị Đám Mây Microsoft Intune
+                    </h4>
+                    <div class="flex items-center gap-2 text-emerald-700 font-semibold">
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                        <span>Thiết bị đạt chuẩn tuân thủ (Compliant) • BitLocker Encrypted</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalAssetDetail').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function openQrLabelModal(assetId) {
+            const asset = DEMO_STATE.assets.find(a => a.id === assetId);
+            if (!asset) return;
+
+            document.getElementById('qrLabelName').innerText = asset.name;
+            document.getElementById('qrLabelTag').innerText = asset.tag;
+            document.getElementById('qrLabelSerial').innerText = `SN: ${asset.serial || 'N/A'}`;
+            document.getElementById('qrLabelDept').innerText = asset.dept;
+
+            // Generate real QR code
+            const qrContainer = document.getElementById('qrCodeCanvas');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: `https://vntt.com.vn/itam/asset?tag=${asset.tag}`,
+                width: 90,
+                height: 90,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+
+            document.getElementById('modalQrLabel').classList.remove('hidden');
+        }
+
+        function printCurrentModalQr() {
+            closeModal('modalAssetDetail');
+            if (currentInspectedAsset) {
+                openQrLabelModal(currentInspectedAsset.id);
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId)?.classList.add('hidden');
+        }
+
+        function openNewAssetModal() {
+            document.getElementById('modalNewAsset')?.classList.remove('hidden');
+        }
+
+        function handleCreateAsset(e) {
+            e.preventDefault();
+            const name = document.getElementById('newAssetName').value;
+            const cat = document.getElementById('newAssetCategory').value;
+            const serial = document.getElementById('newAssetSerial').value || ('SN-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+            const dept = document.getElementById('newAssetDept').value;
+            const user = document.getElementById('newAssetUser').value || 'Chưa bàn giao';
+            const status = document.getElementById('newAssetStatus').value;
+
+            const catMap = { 'LAP': 'Laptop', 'CPU': 'Máy tính bộ', 'MON': 'Màn hình', 'TAB': 'iPad / Tablet' };
+            const prefix = cat === 'LAP' ? 'AST-LAP' : cat === 'CPU' ? 'AST-PC' : cat === 'MON' ? 'AST-MON' : 'AST-TAB';
+            const newId = DEMO_STATE.assets.length + 1;
+            const tag = `${prefix}-${String(newId).padStart(3, '0')}`;
+
+            const newAsset = {
+                id: newId,
+                tag: tag,
+                name: name,
+                category: cat,
+                catName: catMap[cat] || 'Thiết bị IT',
+                serial: serial,
+                user: user,
+                dept: dept,
+                status: status,
+                os: "Windows 11 Pro 23H2",
+                cpu: "Intel Core i5 Gen 12",
+                ram: "16 GB DDR4",
+                disk: "512 GB SSD",
+                ip: "10.240.10." + (Math.floor(Math.random() * 200) + 10),
+                mac: "00:1A:2B:3C:4D:" + Math.floor(Math.random() * 90 + 10),
+                date: new Date().toISOString().substring(0, 10),
+                cost: "18,500,000 đ"
+            };
+
+            DEMO_STATE.assets.unshift(newAsset);
+            DEMO_STATE.auditLogs.unshift({
+                id: "LOG-" + (670 + DEMO_STATE.assets.length),
+                time: "Vừa xong",
+                user: "thanhnv (Super Admin)",
+                action: "CREATE_ASSET",
+                entity: tag,
+                desc: `Thêm mới thiết bị: ${name} (Serial: ${serial}) vào hệ thống.`
+            });
+
+            saveDemoState();
+            closeModal('modalNewAsset');
+            applyAssetFilter();
+            updateKPIs();
+            renderRecentLogs();
+            showToast(`✅ ĐÃ THÊM MỚI THÀNH CÔNG!
+Tài sản ${tag} (${name}) đã được tạo và cấp mã tem QR!`, 'success');
+        }
+
+        // ==========================================
+        // INTUNE & M365 RENDERING
+        // ==========================================
+        function renderIntuneTable() {
+            const tbody = document.getElementById('intuneTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = DEMO_STATE.intuneDevices.map(d => `
+                <tr class="hover:bg-slate-50 border-b border-slate-100">
+                    <td class="py-3 px-4 font-bold text-slate-800 flex items-center gap-1.5"><i data-lucide="laptop" class="w-3.5 h-3.5 text-sky-600"></i> ${d.name}</td>
+                    <td class="py-3 px-4 font-mono text-slate-600">${d.os}</td>
+                    <td class="py-3 px-4 font-semibold text-slate-700">${d.user}</td>
+                    <td class="py-3 px-4">${d.mfg} ${d.model}</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🟢 Compliant</span></td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-[#0066b3] border border-blue-200">🔒 Encrypted</span></td>
+                    <td class="py-3 px-4 text-slate-400">${d.sync}</td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function simulateIntuneSync() {
+            const prog = document.getElementById('intuneSyncProgress');
+            const bar = document.getElementById('intuneProgressBar');
+            const txt = document.getElementById('intuneProgressText');
+            prog.classList.remove('hidden');
+
+            let p = 0;
+            const iv = setInterval(() => {
+                p += 25;
+                bar.style.width = p + '%';
+                txt.innerText = p + '%';
+                if (p >= 100) {
+                    clearInterval(iv);
+                    setTimeout(() => {
+                        prog.classList.add('hidden');
+                        showToast(`⚡ ĐỒNG BỘ MICROSOFT GRAPH HOÀN TẤT!
+Đã cập nhật 174 máy trạm endpoint đăng ký Intune Cloud. 100% BitLocker OK!`, 'success');
+                    }, 500);
+                }
+            }, 250);
+        }
+
+        function renderM365Pools() {
+            const container = document.getElementById('m365PoolsContainer');
+            if (!container) return;
+            container.innerHTML = DEMO_STATE.m365Pools.map(p => {
+                const pct = Math.round((p.allocated / p.total) * 100);
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono font-bold text-xs text-purple-700">${p.code}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">${pct}% kích hoạt</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">${p.name}</h4>
+                            <p class="text-[10px] text-slate-400 leading-tight mt-0.5">${p.desc}</p>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[11px] text-slate-600">
+                                <span>Đã gán: <strong>${p.allocated}</strong></span>
+                                <span>Kho sẵn sàng: <strong>${p.stock}</strong></span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2 rounded-full" style="width: ${pct}%"></div>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                            <span class="text-slate-400">Đơn giá:</span>
+                            <strong class="text-slate-800">${p.cost}/seat</strong>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const userTbody = document.getElementById('m365UserTableBody');
+            if (userTbody) {
+                userTbody.innerHTML = `
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        <td class="py-3 px-4 font-bold text-slate-800">Nguyễn Viết Thành</td>
+                        <td class="py-3 px-4 font-mono text-blue-700">thanhnv@vntt.com.vn</td>
+                        <td class="py-3 px-4">Phòng Vận Hành Mạng NOC</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold">M365 Business Standard</span></td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-blue-50 text-[#0066b3] font-bold">Windows 11 Pro GGWA</span></td>
+                        <td class="py-3 px-4 text-slate-400">2023-01-15</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">🟢 Active</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        <td class="py-3 px-4 font-bold text-slate-800">Trần Văn An</td>
+                        <td class="py-3 px-4 font-mono text-blue-700">an.tran@vntt.com.vn</td>
+                        <td class="py-3 px-4">Phòng Vận Hành Mạng NOC</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold">M365 Business Standard</span></td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-blue-50 text-[#0066b3] font-bold">Windows 11 Pro GGWA</span></td>
+                        <td class="py-3 px-4 text-slate-400">2023-03-20</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">🟢 Active</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 border-b border-slate-100">
+                        <td class="py-3 px-4 font-bold text-slate-800">Lê Thị Bích</td>
+                        <td class="py-3 px-4 font-mono text-blue-700">bich.le@vntt.com.vn</td>
+                        <td class="py-3 px-4">Phòng Kế Toán - Tài Chính</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold">M365 Business Standard</span></td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-blue-50 text-[#0066b3] font-bold">Windows 11 Pro GGWA</span></td>
+                        <td class="py-3 px-4 text-slate-400">2022-08-10</td>
+                        <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">🟢 Active</span></td>
+                    </tr>
+                `;
+            }
+        }
+
+        // ==========================================
+        // HANDOVER PROTOCOL GENERATOR
+        // ==========================================
+        function handleGenerateHandover(e) {
+            e.preventDefault();
+            const emp = document.getElementById('coEmployee').value;
+            const dept = document.getElementById('coDepartment').value;
+            const primary = document.getElementById('coPrimaryAsset').value;
+            const mon = document.getElementById('coMonitor').value;
+            const acc = document.getElementById('coAccessories').value;
+            const notes = document.getElementById('coNotes').value;
+            const now = new Date().toLocaleDateString('vi-VN');
+
+            const container = document.getElementById('handoverPreviewContainer');
+            container.innerHTML = `
+                <div class="border-b-2 border-slate-800 pb-4 text-center space-y-1">
+                    <div class="text-xs uppercase font-bold text-slate-600">TỔNG CÔNG TY CỔ PHẦN CÔNG NGHỆ VÀ TRUYỀN THÔNG VIỆT NAM (VNTT)</div>
+                    <h3 class="text-base font-black text-slate-900 tracking-tight">BIÊN BẢN BÀN GIAO VÀ CAM KẾT SỬ DỤNG THIẾT BỊ CNTT</h3>
+                    <div class="text-[11px] text-slate-500 italic">Số: BB-BG/ITAM-${Math.floor(Math.random() * 900 + 100)} • Ngày lập: ${now}</div>
+                </div>
+
+                <div class="space-y-3 text-xs leading-relaxed">
+                    <p>Hôm nay, ngày <strong>${now}</strong>, tại Văn phòng Công ty VNTT, chúng tôi gồm có:</p>
+                    <div class="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div>
+                            <strong class="text-blue-900 block mb-1">ĐẠI DIỆN BÊN GIAO (BỘ PHẬN IT):</strong>
+                            <div>Họ tên: <strong>Nguyễn Viết Thành</strong></div>
+                            <div>Chức danh: <strong>Kỹ sư Quản trị Hệ thống & Mạng</strong></div>
+                        </div>
+                        <div>
+                            <strong class="text-blue-900 block mb-1">ĐẠI DIỆN BÊN NHẬN (CÁN BỘ SỬ DỤNG):</strong>
+                            <div>Họ tên: <strong>${emp}</strong></div>
+                            <div>Đơn vị công tác: <strong>${dept}</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="font-bold text-slate-800 pt-2">DANH MỤC THIẾT BỊ & LINH KIỆN BÀN GIAO CHI TIẾT:</div>
+                    <table class="w-full border-collapse border border-slate-300 text-xs text-left">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="border border-slate-300 p-2">STT</th>
+                                <th class="border border-slate-300 p-2">Danh mục thiết bị</th>
+                                <th class="border border-slate-300 p-2">Thông số / Model / Serial</th>
+                                <th class="border border-slate-300 p-2">Số lượng</th>
+                                <th class="border border-slate-300 p-2">Tình trạng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-slate-300 p-2 text-center">1</td>
+                                <td class="border border-slate-300 p-2 font-bold">Máy tính làm việc chính</td>
+                                <td class="border border-slate-300 p-2 font-mono">${primary}</td>
+                                <td class="border border-slate-300 p-2 text-center">01 Cái</td>
+                                <td class="border border-slate-300 p-2 text-emerald-700 font-bold">Mới 100% / Hoạt động tốt</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-2 text-center">2</td>
+                                <td class="border border-slate-300 p-2 font-bold">Màn hình hiển thị</td>
+                                <td class="border border-slate-300 p-2 font-mono">${mon}</td>
+                                <td class="border border-slate-300 p-2 text-center">01 Cái</td>
+                                <td class="border border-slate-300 p-2 text-emerald-700 font-bold">Chuẩn màu, không điểm chết</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-2 text-center">3</td>
+                                <td class="border border-slate-300 p-2 font-bold">Phụ kiện & CCDC kèm theo</td>
+                                <td class="border border-slate-300 p-2">${acc}</td>
+                                <td class="border border-slate-300 p-2 text-center">01 Bộ</td>
+                                <td class="border border-slate-300 p-2 text-emerald-700 font-bold">Đầy đủ dây nguồn & cáp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-xl text-[11px] leading-relaxed text-blue-900">
+                        <strong>Cam kết người sử dụng:</strong> Cán bộ cam kết bảo quản tài sản công ty cẩn thận, không tự ý can thiệp phần cứng hoặc cài đặt phần mềm độc hại không rõ nguồn gốc. Khi chuyển vị trí hoặc nghỉ việc có trách nhiệm bàn giao nguyên trạng lại cho bộ phận IT.
+                    </div>
+
+                    <div class="grid grid-cols-2 text-center pt-6 pb-12">
+                        <div>
+                            <div class="font-bold text-slate-800">ĐẠI DIỆN BÊN GIAO</div>
+                            <div class="text-[10px] text-slate-400 italic mb-12">(Ký và ghi rõ họ tên)</div>
+                            <div class="font-bold text-blue-800 font-mono tracking-widest text-sm">Nguyễn Viết Thành</div>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-800">ĐẠI DIỆN BÊN NHẬN</div>
+                            <div class="text-[10px] text-slate-400 italic mb-12">(Ký và ghi rõ họ tên)</div>
+                            <div class="font-bold text-slate-900 font-mono tracking-widest text-sm">${emp.split('-')[0]}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-slate-200 no-print">
+                    <button onclick="window.print()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 cursor-pointer">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>In Biên Bản Này</span>
+                    </button>
+                </div>
+            `;
+            container.classList.remove('hidden');
+            container.scrollIntoView({ behavior: 'smooth' });
+            lucide.createIcons();
+            showToast(`✅ ĐÃ XUẤT BIÊN BẢN BÀN GIAO THÀNH CÔNG!
+Biên bản bàn giao cho cán bộ ${emp} đã sẵn sàng để in!`, 'success');
+        }
+
+        // ==========================================
+        // QR SCANNER SIMULATION
+        // ==========================================
+        function simulateScanAsset(tag) {
+            const asset = DEMO_STATE.assets.find(a => a.tag === tag);
+            if (!asset) return;
+
+            const box = document.getElementById('scanResultBox');
+            box.innerHTML = `
+                <div class="flex items-center justify-between border-b border-blue-200 pb-2 mb-2">
+                    <span class="font-bold text-emerald-800 flex items-center gap-1.5">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                        <span>QUÉT MÃ QR THÀNH CÔNG!</span>
+                    </span>
+                    <span class="font-mono text-xs font-bold text-blue-800">${asset.tag}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div><span class="text-slate-500">Thiết bị:</span> <strong class="text-slate-900">${asset.name}</strong></div>
+                    <div><span class="text-slate-500">Số Serial:</span> <span class="font-mono">${asset.serial}</span></div>
+                    <div><span class="text-slate-500">Người nắm giữ:</span> <strong class="text-blue-800">${asset.user}</strong></div>
+                    <div><span class="text-slate-500">Phòng ban:</span> ${asset.dept}</div>
+                    <div><span class="text-slate-500">Cấu hình:</span> ${asset.cpu} | ${asset.ram}</div>
+                    <div><span class="text-slate-500">Trạng thái:</span> <span class="text-emerald-700 font-bold">🟢 Đang sử dụng</span></div>
+                </div>
+                <div class="mt-3 pt-2 border-t border-blue-200 flex justify-end">
+                    <button onclick="viewAssetDetail(${asset.id})" class="px-3 py-1 bg-[#0066b3] text-white rounded-lg text-xs font-bold hover:bg-[#004b87] transition cursor-pointer">
+                        Mở Toàn Bộ Hồ Sơ Thiết Bị
+                    </button>
+                </div>
+            `;
+            box.classList.remove('hidden');
+            lucide.createIcons();
+            showToast(`🔍 ĐÃ ĐỌC MÃ QR: ${asset.tag} (${asset.name})`, 'success');
+        }
+
+        // ==========================================
+        // AUDIT LOG RENDERING
+        // ==========================================
+        function renderAuditLogs() {
+            const tbody = document.getElementById('auditTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = DEMO_STATE.auditLogs.map(log => `
+                <tr class="hover:bg-slate-50 border-b border-slate-100">
+                    <td class="py-3 px-4 font-mono font-bold text-[#0066b3]">${log.id}</td>
+                    <td class="py-3 px-4 text-slate-500">${log.time}</td>
+                    <td class="py-3 px-4 font-semibold text-slate-800">${log.user}</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded font-mono text-[10px] bg-slate-100 text-slate-700 font-bold">${log.action}</span></td>
+                    <td class="py-3 px-4 font-mono text-purple-700">${log.entity}</td>
+                    <td class="py-3 px-4 text-slate-600">${log.desc}</td>
+                </tr>
+            `).join('');
+
+            renderRecentLogs();
+        }
+
+        function renderRecentLogs() {
+            const tbody = document.getElementById('dashboardRecentLogs');
+            if (!tbody) return;
+            tbody.innerHTML = DEMO_STATE.auditLogs.slice(0, 5).map(log => `
+                <tr>
+                    <td class="py-2.5 text-slate-400">${log.time}</td>
+                    <td class="py-2.5 font-mono text-[10px] font-bold text-[#0066b3]">${log.action}</td>
+                    <td class="py-2.5 font-mono text-slate-700">${log.entity}</td>
+                    <td class="py-2.5 font-bold text-slate-800">${log.desc.split(':')[1]?.split('(')[0] || log.desc.substring(0, 25)}</td>
+                    <td class="py-2.5 text-slate-600">Trần Văn An</td>
+                    <td class="py-2.5 text-slate-500">${log.user.split(' ')[0]}</td>
+                    <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[9px] bg-emerald-50 text-emerald-700 font-bold">Hoàn tất</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function updateKPIs() {
+            const total = DEMO_STATE.assets.length;
+            const deployed = DEMO_STATE.assets.filter(a => a.status === 'DEPLOYED').length;
+            const inStock = DEMO_STATE.assets.filter(a => a.status === 'IN_STOCK').length;
+            const broken = DEMO_STATE.assets.filter(a => a.status === 'BROKEN').length;
+
+            if (document.getElementById('kpiTotal')) document.getElementById('kpiTotal').innerText = total;
+            if (document.getElementById('kpiDeployed')) document.getElementById('kpiDeployed').innerText = deployed;
+            if (document.getElementById('kpiInStock')) document.getElementById('kpiInStock').innerText = inStock;
+            if (document.getElementById('kpiBroken')) document.getElementById('kpiBroken').innerText = broken;
+            if (document.getElementById('badgeAssetCount')) document.getElementById('badgeAssetCount').innerText = total;
+        }
+
+        // ==========================================
+        // CHARTS INITIALIZATION (CHART.JS)
+        // ==========================================
+        let catChartInstance = null;
+        let deptChartInstance = null;
+
+        function renderCharts() {
+            // Category Doughnut Chart
+            const catCtx = document.getElementById('chartCategory');
+            if (catCtx) {
+                if (catChartInstance) catChartInstance.destroy();
+                catChartInstance = new Chart(catCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Màn hình', 'Máy tính bộ', 'Laptop', 'iPad / Tablet'],
+                        datasets: [{
+                            data: [241, 179, 133, 1],
+                            backgroundColor: ['#3b82f6', '#38bdf8', '#6366f1', '#fbbf24'],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        cutout: '68%'
+                    }
+                });
+            }
+
+            // Department Bar Chart
+            const deptCtx = document.getElementById('chartDepartment');
+            if (deptCtx) {
+                if (deptChartInstance) deptChartInstance.destroy();
+                deptChartInstance = new Chart(deptCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mạng NOC', 'Hạ Tầng TTDL', 'Dịch Vụ ICT', 'Hành Chính NS', 'Kế Toán TC', 'Ban Điều Hành'],
+                        datasets: [{
+                            label: 'Số thiết bị',
+                            data: [142, 118, 96, 68, 55, 32],
+                            backgroundColor: '#0066b3',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function exportDemoExcel() {
+            showToast(`📊 ĐÃ XUẤT EXCEL THÀNH CÔNG!
+Báo cáo tổng hợp 554 thiết bị CCDC đã được tải xuống máy tính của bạn (Mô phỏng demo)!`, 'success');
+        }
+
+        // ==========================================
+        // INIT ON LOAD
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            applyAssetFilter();
+            renderIntuneTable();
+            renderM365Pools();
+            renderAuditLogs();
+            updateKPIs();
+            renderCharts();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
