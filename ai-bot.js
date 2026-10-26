@@ -53,11 +53,14 @@ THÔNG TIN VỀ NGUYỄN VIẾT THÀNH (PROFILE CONTEXT):
   + Facebook: https://www.facebook.com/nvthanhhhhh
   + GitHub: https://github.com/nvthanhh168
   + File CV có sẵn trên web: "System & Network Engineer VN.pdf" (bản Việt) và "System & Network Engineer EN.pdf" (bản Anh).
+- Dự án nổi bật (Flagship Project):
+  + NetUptime Sentinel: Hệ thống phần mềm giám sát hạ tầng mạng, trạm viễn thông (POP), máy chủ, camera và thiết bị chấm công thời gian thực 24/7 (C#, .NET, Raw Socket ICMP, SNMP v2c/v3, Sơ đồ mạng động Topology Canvas, cảnh báo Telegram/Email/Zalo, Entra ID SSO). Triển khai thực tế tại VNTT, đã được mặt nạ hóa an toàn và có bản Live Demo Sandbox tại netuptime-demo.html.
 - Các trang tính năng trên website:
   + Trang nghe nhạc trực tuyến: music.html
   + Kho lưu trữ tài liệu: storage.html
   + Blog chia sẻ kiến thức: blog.html
   + Cổng quản trị: admin.html
+  + Bản Demo Giám sát Mạng 24/7: netuptime-demo.html
 
 NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 1. Trả lời chi tiết, chính xác các câu hỏi về Nguyễn Viết Thành (tiểu sử, kỹ năng, kinh nghiệm, 10 chứng chỉ, cách liên hệ hoặc xin CV).
@@ -71,6 +74,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
     // 2. CÂU HỎI / LỜI CHÀO NGẪU NHIÊN CỦA BOT KHI ĐI DẠO ("LÂU LÂU NÓ HỎI")
     const RANDOM_PROMPTS_VN = [
         "Chào bạn! Cần mình giúp gì không? Mình là AI của anh Thành nè! 🤖✨",
+        "Bạn có muốn trải nghiệm thử bản Live Demo hệ thống giám sát mạng NetUptime Sentinel 24/7 của anh Thành không? 🚀",
         "Bạn có muốn xem nhanh danh sách 10 chứng chỉ quốc tế của anh Thành không? 🏆",
         "Cần lấy số điện thoại, email hay tải CV của anh Thành không bạn? 📄",
         "Bạn cần tư vấn giải pháp mạng, Firewall Sophos hay Peplink không? Hỏi mình nhé! 🌐",
@@ -732,6 +736,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 
                 <!-- Suggestion Chips -->
                 <div class="ai-chat-chips" id="aiChatChips">
+                    <button class="ai-chip" data-question="NetUptime Sentinel là gì? Giới thiệu hệ thống giám sát mạng 24/7 của anh Thành.">🖥️ Demo NetUptime Sentinel</button>
                     <button class="ai-chip" data-question="Nguyễn Viết Thành là ai? Hãy giới thiệu chi tiết.">👨‍💻 Anh Thành là ai?</button>
                     <button class="ai-chip" data-question="Anh Thành có những chứng chỉ quốc tế nào? Hãy liệt kê chi tiết đầy đủ 10 chứng chỉ.">📜 Danh sách 10 chứng chỉ</button>
                     <button class="ai-chip" data-question="Kỹ năng chuyên môn nổi bật của anh Thành là gì?">🛠️ Kỹ năng & Kinh nghiệm</button>
@@ -1323,7 +1328,35 @@ Tất cả kỹ năng đều được chứng minh qua 10 chứng chỉ quốc t
 Anh Thành luôn sẵn sàng trao đổi các cơ hội nghề nghiệp và hợp tác dự án! 🤝✨`;
         }
 
-        // 5. Tính năng trang web: nhạc, lưu trữ, blog, admin
+        // 5. Dự án trọng điểm: NetUptime Sentinel
+        if (q.includes('netuptime') || q.includes('sentinel') || q.includes('giam sat') || q.includes('monitoring') || q.includes('noc')) {
+            if (isEn) {
+                return `**NetUptime Sentinel** is an enterprise-grade 24/7 network infrastructure & NOC monitoring platform architected and developed by **Nguyen Viet Thanh** 🚀:
+
+- **Key Capabilities:**
+  - 📡 **Multithreaded Raw Socket ICMP Engine:** Probes hundreds of network endpoints with sub-second response times.
+  - 🌐 **Interactive SVG Topology Canvas:** Visual drag-and-drop network topology with animated traffic wires and instant failure detection.
+  - 📊 **SNMP v2c/v3 Telemetry:** Real-time CPU, RAM, temperature, and uptime polling across Cisco and Sophos equipment.
+  - 🚨 **Instant Multi-Channel Alerts:** Urgent incident notifications via Telegram Bot, SMTP Email, Zalo Webhook, and NOC sirens.
+  - 🔐 **Microsoft 365 Entra ID SSO:** Enterprise single sign-on with strict Role-Based Access Control (Admin / Operator).
+- **Enterprise Security Compliance:** To strictly protect VNTT corporate infrastructure, all production IPs and confidential configurations have been securely masked in this isolated demo sandbox.
+
+👉 You can experience the full interactive live demo right now at: [netuptime-demo.html](netuptime-demo.html) 🌐✨`;
+            }
+            return `**NetUptime Sentinel** là hệ thống phần mềm giám sát hạ tầng mạng, trạm viễn thông (POP), máy chủ và camera 24/7 do chính anh **Nguyễn Viết Thành** nghiên cứu và phát triển 🚀:
+
+- **Các tính năng nổi bật:**
+  - 📡 **Động cơ Ping ICMP & Cổng dịch vụ bất đồng bộ**: Quét hàng trăm trạm mạng đa luồng với độ trễ tính bằng mili-giây.
+  - 🌐 **Sơ đồ mạng động (Interactive Topology Canvas)**: Vẽ và kéo thả sơ đồ trạm, liên kết cáp quang/đồng, mô phỏng luồng dữ liệu và cảnh báo nhấp nháy trực quan.
+  - 📊 **Giám sát phần cứng SNMP v2c/v3**: Đọc thông số CPU, RAM, Nhiệt độ và Uptime thực tế của Core Switch Cisco & Firewall Sophos.
+  - 🚨 **Cảnh báo tức thì đa kênh**: Bắn alert khẩn cấp qua Telegram Bot, Email SMTP, Webhook Zalo và còi báo động NOC.
+  - 🔐 **Xác thực Microsoft 365 Entra ID SSO**: Đăng nhập một chạm bảo mật cao và phân quyền Quản trị (Admin) / Giám sát (Operator).
+- **Tiêu chuẩn bảo mật doanh nghiệp**: Để bảo mật thông tin hạ tầng nội bộ của công ty (VNTT), toàn bộ IP và cấu hình thực tế đã được mặt nạ hóa an toàn (Enterprise Security Masking).
+
+👉 Bạn có thể trải nghiệm trực tiếp đầy đủ tính năng của hệ thống tại bản Demo Sandbox: [netuptime-demo.html](netuptime-demo.html) 🌐✨`;
+        }
+
+        // 6. Tính năng trang web: nhạc, lưu trữ, blog, admin
         if (q.includes('nhac') || q.includes('music')) {
             return `Trang nghe nhạc trực tuyến đã có sẵn trên Portfolio! Bạn có thể nhấn vào menu **Nghe nhạc** hoặc truy cập [music.html](music.html) để thưởng thức các bản nhạc chọn lọc nhé! 🎵🎧`;
         }
