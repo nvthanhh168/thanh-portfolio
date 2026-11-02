@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -1245,10 +1245,12 @@
                 const cachedHero = localStorage.getItem('portfolio_hero');
                 if (cachedHero) {
                     currentHero = JSON.parse(cachedHero);
+                    if (currentHero.descVN) currentHero.descVN = currentHero.descVN.replace(/môi trườn\b/g, 'môi trường');
                 }
                 const heroDoc = await getDoc(doc(db, "portfolioData", "heroSection"));
                 if (heroDoc.exists()) {
                     currentHero = { ...currentHero, ...heroDoc.data() };
+                    if (currentHero.descVN) currentHero.descVN = currentHero.descVN.replace(/môi trườn\b/g, 'môi trường');
                     localStorage.setItem('portfolio_hero', JSON.stringify(currentHero));
                 }
             } catch (err) {

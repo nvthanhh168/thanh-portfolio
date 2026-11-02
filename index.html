@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -1214,7 +1214,9 @@
                     const h = JSON.parse(localHero);
                     if (h.name && document.getElementById('dynamic-name')) document.getElementById('dynamic-name').innerText = h.name;
                     if ((h.titleVN || h.title) && document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = h.titleVN || h.title;
-                    if (h.descVN && document.getElementById('dynamic-desc')) document.getElementById('dynamic-desc').innerText = h.descVN;
+                    if (h.descVN && document.getElementById('dynamic-desc')) {
+                        document.getElementById('dynamic-desc').innerText = h.descVN.replace(/môi trườn\b/g, 'môi trường');
+                    }
                     if (h.facebook && document.getElementById('dynamic-facebook')) document.getElementById('dynamic-facebook').href = h.facebook;
                     if (h.github && document.getElementById('dynamic-github')) document.getElementById('dynamic-github').href = h.github;
                     if (h.linkedin && document.getElementById('dynamic-linkedin')) document.getElementById('dynamic-linkedin').href = h.linkedin;
@@ -1225,7 +1227,9 @@
                     const data = heroSnap.data();
                     if (data.name && document.getElementById('dynamic-name')) document.getElementById('dynamic-name').innerText = data.name;
                     if ((data.titleVN || data.title) && document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = data.titleVN || data.title;
-                    if (data.descVN && document.getElementById('dynamic-desc')) document.getElementById('dynamic-desc').innerText = data.descVN;
+                    if (data.descVN && document.getElementById('dynamic-desc')) {
+                        document.getElementById('dynamic-desc').innerText = data.descVN.replace(/môi trườn\b/g, 'môi trường');
+                    }
                     if (data.facebook && document.getElementById('dynamic-facebook')) document.getElementById('dynamic-facebook').href = data.facebook;
                     if (data.github && document.getElementById('dynamic-github')) document.getElementById('dynamic-github').href = data.github;
                     if (data.linkedin && document.getElementById('dynamic-linkedin')) document.getElementById('dynamic-linkedin').href = data.linkedin;
