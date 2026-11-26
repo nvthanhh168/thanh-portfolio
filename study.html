@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 Học Tập & Ôn Luyện Kiến Thức | Nguyễn Viết Thành</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF.js for client-side PDF document ingestion -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        (function() {
+            try {
+                const t = JSON.parse(localStorage.getItem('portfolio_theme') || '{}');
+                if (t.fontFamily) document.documentElement.style.fontFamily = "'" + t.fontFamily + "', sans-serif";
+            } catch(e) {}
+        })();
+    </script>
+    <style>
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .text-gradient { background: linear-gradient(135deg, #f59e0b, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .glass-card { background: rgba(30, 41, 59, 0.55); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.07); transition: all 0.25s ease; }
+        .glass-card:hover { border-color: rgba(245, 158, 11, 0.35); }
+        .font-terminal { font-family: 'Fira Code', monospace; }
+        .option-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .option-btn:hover:not(:disabled) { transform: translateX(4px); border-color: rgba(56, 189, 248, 0.6); background: rgba(56, 189, 248, 0.08); }
+        .option-btn.opt-correct { background: rgba(16, 185, 129, 0.16) !important; border-color: rgba(16, 185, 129, 0.8) !important; color: #ecfdf5 !important; }
+        .option-btn.opt-wrong { background: rgba(244, 63, 94, 0.16) !important; border-color: rgba(244, 63, 94, 0.8) !important; color: #fff1f2 !important; }
+        .option-btn.opt-dim { opacity: 0.55; }
+        .toast { transform: translateX(130%); transition: transform 0.3s ease; }
+        .toast.show { transform: translateX(0); }
+        .dropzone-active { border-color: #f59e0b !important; background: rgba(245, 158, 11, 0.08) !important; }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-500 selection:text-white min-h-screen flex flex-col justify-between">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast fixed top-20 right-5 z-[200] glass-card rounded-xl px-4 py-3 flex items-center gap-3 border border-amber-500/40 shadow-2xl">
+        <i class="fas fa-check-circle text-emerald-400 text-lg" id="toastIcon"></i>
+        <span id="toastMsg" class="text-xs sm:text-sm font-medium text-white">Thao tác thành công!</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-slate-900/85 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center gap-3">
+            <div class="flex items-center gap-3 overflow-x-auto no-scrollbar">
+                <a href="index.html" class="text-sm sm:text-base font-bold text-slate-300 hover:text-white transition flex items-center gap-2 whitespace-nowrap shrink-0">
+                    <i class="fas fa-arrow-left text-amber-400"></i> Trang chủ
+                </a>
+                <div class="flex items-center gap-2 pl-3 border-l border-slate-700 whitespace-nowrap shrink-0">
+                    <a href="blog.html" class="text-xs text-sky-400 hover:text-white font-medium px-3 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center gap-1.5"><i class="fas fa-book-open"></i> Tài liệu</a>
+                    <a href="study.html" class="text-xs text-white font-bold px-3 py-1.5 rounded-full bg-amber-500/25 border border-amber-500/50 flex items-center gap-1.5 shadow-sm shadow-amber-500/20"><i class="fas fa-graduation-cap text-amber-400"></i> Học tập</a>
+                    <a href="music.html" class="text-xs text-emerald-400 hover:text-white font-medium px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-1.5"><i class="fas fa-music"></i> Nhạc</a>
+                    <a href="storage.html" class="text-xs text-violet-400 hover:text-white font-medium px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center gap-1.5"><i class="fas fa-folder"></i> Lưu Trữ</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button id="navAddDocBtn" class="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition shadow-md shadow-amber-500/20 cursor-pointer">
+                    <i class="fas fa-plus-circle"></i> <span class="hidden sm:inline">Thêm Tài Liệu</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="flex-1 pt-24 pb-16 px-4 sm:px-6 relative overflow-hidden">
+        <div class="absolute top-12 left-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-20 right-1/4 w-96 h-96 bg-sky-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+
+            <!-- Page Header -->
+            <div id="heroHeader" class="text-center mb-8">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-terminal uppercase tracking-widest mb-3">
+                    <i class="fas fa-brain"></i> Interactive Self-Testing & AI Study Lab
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-bold mb-3 tracking-tight">Học Tập & <span class="text-gradient">Kiểm Tra Kiến Thức</span></h1>
+                <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">Ôn luyện bộ câu hỏi chuẩn hóa có sẵn hoặc tải lên tài liệu của riêng bạn để hệ thống tự động tạo bài kiểm tra định kỳ, chấm điểm và giải đáp chi tiết từng đáp án đúng – sai.</p>
+            </div>
+
+            <!-- Stats Dashboard -->
+            <div id="statsBar" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="glass-card rounded-2xl p-4 flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-white" id="statDecks">1</p>
+                        <p class="text-xs text-slate-400">Bộ tài liệu ôn tập</p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-4 flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fas fa-list-ol"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-white" id="statQuestions">80</p>
+                        <p class="text-xs text-slate-400">Tổng số câu hỏi</p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-4 flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-white" id="statMastered">0</p>
+                        <p class="text-xs text-slate-400">Câu đã nắm vững</p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-4 flex items-center justify-between gap-2 border border-rose-500/20">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center text-lg shrink-0">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-white" id="statWrong">0</p>
+                            <p class="text-xs text-slate-400">Câu cần ôn lại</p>
+                        </div>
+                    </div>
+                    <button id="reviewAllWrongBtn" class="hidden px-2.5 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white text-[11px] font-bold border border-rose-500/30 transition cursor-pointer shrink-0">
+                        Ôn ngay
+                    </button>
+                </div>
+            </div>
+
+            <!-- View Tabs Switcher (Hidden when actively inside quiz/summary) -->
+            <div id="mainTabBar" class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-800/80">
+                <div class="flex flex-wrap items-center gap-2">
+                    <button id="tabBtnLibrary" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 flex items-center gap-2 cursor-pointer transition">
+                        <i class="fas fa-book-reader"></i> Thư Viện Tài Liệu & Bộ Đề
+                    </button>
+                    <button id="tabBtnAdd" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold glass-card text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition">
+                        <i class="fas fa-file-medical"></i> Thêm Tài Liệu & Tạo Quiz
+                    </button>
+                    <button id="tabBtnReader" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold glass-card text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition">
+                        <i class="fas fa-glasses"></i> Đọc Nhanh Tài Liệu Có Sẵn
+                    </button>
+                </div>
+                <div id="cloudSyncBadge" class="text-[11px] font-terminal text-slate-400 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800">
+                    <i class="fas fa-cloud text-sky-400"></i> <span>Đang đồng bộ Cloud...</span>
+                </div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- VIEW 1: LIBRARY (BUILT-IN DECK + USER UPLOADED DOCS)      -->
+            <!-- ========================================================= -->
+            <section id="viewLibrary" class="space-y-8">
+                <!-- Built-in Featured Deck Container -->
+                <div id="builtInDeckContainer"></div>
+
+                <!-- Custom User Study Documents -->
+                <div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                        <div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fas fa-folder-plus text-amber-400"></i> Tài Liệu Bạn Đã Thêm (Kiểm Tra Định Kỳ)
+                            </h2>
+                            <p class="text-xs text-slate-400 mt-0.5">Mỗi tài liệu bạn thêm được lưu giữ lâu dài để bất cứ lúc nào cũng có thể mở lại làm bài kiểm tra.</p>
+                        </div>
+                        <button id="emptyAddTriggerBtn" class="px-4 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500 text-amber-400 hover:text-slate-950 font-bold text-xs border border-amber-500/30 transition flex items-center gap-1.5 self-start sm:self-auto cursor-pointer">
+                            <i class="fas fa-plus"></i> Thêm tài liệu mới
+                        </button>
+                    </div>
+                    <div id="customDecksGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- VIEW 2: ADD DOCUMENT & GENERATE QUESTIONS                 -->
+            <!-- ========================================================= -->
+            <section id="viewAddDoc" class="hidden">
+                <div class="glass-card rounded-3xl p-6 sm:p-8 border border-amber-500/25 max-w-4xl mx-auto">
+                    <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-6 border-b border-slate-800">
+                        <div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                <i class="fas fa-magic text-amber-400"></i> Thêm Tài Liệu Mới Để Tự Tạo Đề Kiểm Tra
+                            </h2>
+                            <p class="text-xs text-slate-400 mt-1">Hỗ trợ tải file <strong>.PDF / .TXT / .MD</strong> hoặc dán trực tiếp ghi chú học tập. Web sẽ phân tích tài liệu thành câu hỏi trắc nghiệm và lưu lại để bạn kiểm tra định kỳ.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Tiêu đề tài liệu / Chủ đề cần ôn *</label>
+                                <input type="text" id="docTitleInput" placeholder="VD: Tài liệu Sophos Firewall XGS, Ghi chú OSPF & VLAN, CCNA Review..." class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nhóm kiến thức</label>
+                                <select id="docCategoryInput" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+                                    <option value="Security">🛡️ Security / Firewall</option>
+                                    <option value="Network">🌐 Network / Routing</option>
+                                    <option value="Microsoft 365">☁️ Microsoft 365 / AD</option>
+                                    <option value="Linux">🐧 Linux / Server</option>
+                                    <option value="Tổng hợp">📘 Kiến thức Tổng hợp</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- File Upload Dropzone -->
+                        <div id="fileDropzone" class="border-2 border-dashed border-slate-700 rounded-2xl p-5 text-center bg-slate-950/50 hover:border-amber-500/60 transition cursor-pointer">
+                            <input type="file" id="docFileInput" accept=".pdf,.txt,.md,.csv,.json" class="hidden">
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-400 flex items-center justify-center text-xl">
+                                    <i class="fas fa-file-upload"></i>
+                                </div>
+                                <div class="text-sm font-semibold text-white">Kéo thả hoặc nhấn chọn file tài liệu (.PDF, .TXT, .MD)</div>
+                                <p id="fileStatusText" class="text-xs text-slate-400">Hỗ trợ bóc tách toàn bộ chữ từ file PDF ngay trên trình duyệt</p>
+                            </div>
+                        </div>
+
+                        <!-- Raw Material Content -->
+                        <div>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="text-xs font-semibold text-slate-300">Nội dung tài liệu nguồn * <span class="text-slate-500 font-normal">(có thể chỉnh sửa hoặc dán trực tiếp vào đây)</span></label>
+                                <span id="docCharCount" class="text-[11px] font-terminal text-slate-400">0 ký tự</span>
+                            </div>
+                            <textarea id="docContentInput" rows="9" placeholder="Dán tài liệu lý thuyết, ghi chú kỹ thuật, tài liệu PDF đã copy, hoặc danh sách Câu hỏi – Đáp án vào đây..." class="w-full bg-slate-950/80 border border-slate-700 rounded-2xl p-4 text-xs sm:text-sm text-slate-200 leading-relaxed focus:outline-none focus:border-amber-500"></textarea>
+                        </div>
+
+                        <!-- Generator Options -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Số câu hỏi muốn tạo (nếu dùng AI / tự động)</label>
+                                <select id="genCountSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                                    <option value="5">5 câu hỏi (Kiểm tra nhanh)</option>
+                                    <option value="10" selected>10 câu hỏi (Chuẩn ôn tập)</option>
+                                    <option value="15">15 câu hỏi (Chuyên sâu)</option>
+                                    <option value="20">20 câu hỏi (Tổng ôn)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Phương thức trích xuất câu hỏi</label>
+                                <select id="genModeSelect" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                                    <option value="auto" selected>Tự động thông minh (Nhận diện đề có sẵn hoặc AI tạo mới)</option>
+                                    <option value="ai">Dùng Google Gemini AI tạo câu hỏi mới từ tài liệu</option>
+                                    <option value="parse">Chỉ tách các câu hỏi có sẵn (Câu 1... A/B/C/D)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Progress / Error Notice -->
+                        <div id="genProgressBox" class="hidden p-4 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-300 text-xs flex items-center gap-3">
+                            <i class="fas fa-spinner fa-spin text-base"></i>
+                            <span id="genProgressText">Đang phân tích tài liệu và tạo bộ câu hỏi kiểm tra...</span>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-end gap-3 pt-2">
+                            <button id="cancelAddDocBtn" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs sm:text-sm font-semibold transition cursor-pointer">
+                                Hủy
+                            </button>
+                            <button id="generateDeckBtn" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs sm:text-sm transition shadow-lg shadow-amber-500/20 flex items-center gap-2 cursor-pointer">
+                                <i class="fas fa-wand-magic-sparkles"></i> Lưu Tài Liệu & Tạo Bộ Câu Hỏi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- VIEW 3: BUILT-IN STUDY GUIDE READER (READ & SEARCH ALL)   -->
+            <!-- ========================================================= -->
+            <section id="viewReader" class="hidden space-y-5">
+                <div class="glass-card rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div class="relative flex-1">
+                        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input type="text" id="readerSearchInput" placeholder="Tìm nhanh từ khóa (VD: DMZ, VLAN, Nmap, TCP, IPS, CIA, XSS...)" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="readerSectionSelect" class="bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                            <option value="all">Tất cả 8 Phần (80 câu)</option>
+                        </select>
+                        <button id="toggleReaderAnswersBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold border border-amber-500/30 transition cursor-pointer">
+                            <i class="fas fa-eye-slash mr-1"></i> Ẩn đáp án để tự nhẩm
+                        </button>
+                    </div>
+                </div>
+                <div id="readerListContainer" class="space-y-4"></div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- VIEW 4: INTERACTIVE QUIZ RUNNER & LIVE EXPLANATION        -->
+            <!-- ========================================================= -->
+            <section id="viewQuiz" class="hidden max-w-4xl mx-auto">
+                <!-- Quiz Top Controls -->
+                <div class="glass-card rounded-2xl p-4 mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <button id="exitQuizBtn" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition">
+                            <i class="fas fa-times"></i> Thoát
+                        </button>
+                        <div>
+                            <div id="quizDeckTitle" class="text-xs sm:text-sm font-bold text-white line-clamp-1">Tên bộ đề</div>
+                            <div id="quizSectionLabel" class="text-[11px] font-terminal text-amber-400">Phần 1</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <button id="toggleBilingualBtn" class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-sky-400 font-semibold hover:bg-slate-700 transition cursor-pointer" title="Bật/tắt hiển thị câu hỏi Tiếng Anh + Tiếng Việt">
+                            <i class="fas fa-language mr-1"></i> <span id="bilingualLabel">Song ngữ EN+VI</span>
+                        </button>
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-terminal font-bold">
+                            Đúng: <span id="quizScoreRight">0</span>
+                        </span>
+                        <span class="px-2.5 py-1 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-400 font-terminal font-bold">
+                            Sai: <span id="quizScoreWrong">0</span>
+                        </span>
+                        <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 font-terminal font-bold" id="quizCounter">
+                            1 / 10
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-6">
+                    <div id="quizProgressBar" class="h-full bg-gradient-to-r from-amber-400 via-sky-400 to-emerald-400 transition-all duration-300" style="width: 10%"></div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl">
+                    <div class="flex items-center justify-between gap-2 mb-4">
+                        <span id="qBadgeNum" class="px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-terminal font-bold">
+                            Câu 1
+                        </span>
+                        <span id="qHistoryTag" class="hidden px-2.5 py-0.5 rounded-full text-[11px] font-semibold"></span>
+                    </div>
+
+                    <!-- Question Prompt (EN + VI) -->
+                    <div id="qTextContainer" class="mb-6 space-y-2.5">
+                        <h3 id="qTextPrimary" class="text-lg sm:text-xl font-bold text-white leading-relaxed"></h3>
+                        <p id="qTextSecondary" class="text-sm sm:text-base text-sky-300/95 leading-relaxed bg-sky-500/5 border-l-2 border-sky-500/50 pl-3.5 py-1.5 rounded-r-lg"></p>
+                    </div>
+
+                    <!-- Options Container (Multiple Choice) -->
+                    <div id="qOptionsContainer" class="space-y-3 mb-6"></div>
+
+                    <!-- Open / Short-Answer Container (for non-MCQ questions like Q2 VLAN) -->
+                    <div id="qOpenAnswerContainer" class="hidden space-y-3 mb-6">
+                        <label class="block text-xs text-slate-400">Câu hỏi tự luận / Active Recall — Nhập câu trả lời của bạn:</label>
+                        <div class="flex flex-col sm:flex-row gap-2.5">
+                            <input type="text" id="qOpenInput" placeholder="Gõ đáp án ngắn gọn (VD: VLAN)..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500">
+                            <button id="qOpenSubmitBtn" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-sm hover:opacity-90 transition cursor-pointer shrink-0">
+                                Kiểm Tra Đáp Án
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- INSTANT FEEDBACK & EXPLANATION PANEL -->
+                    <div id="qFeedbackBox" class="hidden rounded-2xl p-5 sm:p-6 border mt-4 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
+                            <div class="flex items-center gap-2.5">
+                                <i id="fbIcon" class="text-2xl"></i>
+                                <div>
+                                    <h4 id="fbTitle" class="text-base sm:text-lg font-bold"></h4>
+                                    <p id="fbSub" class="text-xs text-slate-300"></p>
+                                </div>
+                            </div>
+                            <span id="fbCorrectChip" class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold"></span>
+                        </div>
+
+                        <!-- Explanation of right answer -->
+                        <div class="space-y-2 text-xs sm:text-sm leading-relaxed">
+                            <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                                <div class="font-bold text-emerald-400 mb-1 flex items-center gap-1.5">
+                                    <i class="fas fa-lightbulb"></i> Giải thích đáp án đúng:
+                                </div>
+                                <p id="fbExplainRight" class="text-slate-200"></p>
+                            </div>
+
+                            <div id="fbWrongBlock" class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800">
+                                <div id="fbExplainWrongLabel" class="font-bold text-amber-400 mb-1 flex items-center gap-1.5">
+                                    <i class="fas fa-balance-scale"></i> Vì sao các đáp án còn lại sai:
+                                </div>
+                                <p id="fbExplainWrong" class="text-slate-300"></p>
+                            </div>
+
+                            <div id="fbSourceExcerptBlock" class="hidden p-3 rounded-xl bg-violet-500/10 border border-violet-500/20 text-xs">
+                                <span class="font-bold text-violet-400"><i class="fas fa-quote-left mr-1"></i> Trích dẫn trong tài liệu bạn đã tải lên:</span>
+                                <p id="fbSourceExcerpt" class="text-slate-300 italic mt-1"></p>
+                            </div>
+                        </div>
+
+                        <!-- Interactive AI Tutor Follow-up -->
+                        <div class="pt-3 border-t border-white/10 space-y-3">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button id="askAiDeepExplainBtn" class="px-3.5 py-2 rounded-xl bg-sky-500/15 hover:bg-sky-500 text-sky-300 hover:text-white border border-sky-500/30 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer">
+                                    <i class="fas fa-robot"></i> Nhờ AI giải đáp chi tiết hơn vì sao đúng/sai
+                                </button>
+                                <div class="flex-1 flex items-center gap-2 min-w-[220px]">
+                                    <input type="text" id="aiFollowUpInput" placeholder="Hỏi thêm AI về câu này (VD: Cho ví dụ thực tế)..." class="flex-1 bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
+                                    <button id="aiFollowUpSendBtn" class="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition cursor-pointer">
+                                        Hỏi AI
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="aiTutorOutput" class="hidden p-4 rounded-xl bg-slate-950/90 border border-sky-500/30 text-xs sm:text-sm text-slate-200 leading-relaxed space-y-2"></div>
+                        </div>
+
+                        <!-- Next Question Footer -->
+                        <div class="flex items-center justify-end pt-2">
+                            <button id="nextQuestionBtn" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-sky-500/20 transition cursor-pointer">
+                                <span id="nextQuestionLabel">Câu tiếp theo</span> <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- VIEW 5: QUIZ SUMMARY REPORT                               -->
+            <!-- ========================================================= -->
+            <section id="viewSummary" class="hidden max-w-4xl mx-auto">
+                <div class="glass-card rounded-3xl p-6 sm:p-10 text-center border border-amber-500/30 mb-6">
+                    <div id="summaryMedalIcon" class="w-20 h-20 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg shadow-amber-500/20">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-4xl font-bold text-white mb-2">Hoàn Thành Bài Kiểm Tra!</h2>
+                    <p id="summarySubtitle" class="text-sm text-slate-400 mb-6"></p>
+
+                    <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto mb-8">
+                        <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
+                            <p class="text-2xl sm:text-3xl font-bold text-amber-400" id="sumAccuracy">0%</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Điểm chính xác</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/25">
+                            <p class="text-2xl sm:text-3xl font-bold text-emerald-400" id="sumRight">0</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Trả lời đúng</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/25">
+                            <p class="text-2xl sm:text-3xl font-bold text-rose-400" id="sumWrong">0</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Trả lời sai</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        <button id="retryWrongSessionBtn" class="hidden px-5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm flex items-center gap-2 transition cursor-pointer">
+                            <i class="fas fa-redo"></i> Làm lại các câu vừa sai
+                        </button>
+                        <button id="retryRandomBtn" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm flex items-center gap-2 transition cursor-pointer">
+                            <i class="fas fa-dice"></i> Làm lượt kiểm tra khác
+                        </button>
+                        <button id="backToLibraryBtn" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm border border-slate-700 flex items-center gap-2 transition cursor-pointer">
+                            <i class="fas fa-arrow-left"></i> Về thư viện tài liệu
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Review List of Session Questions -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fas fa-clipboard-check text-sky-400"></i> Chi Tiết Bài Làm & Giải Đáp
+                    </h3>
+                    <div id="summaryDetailsList" class="space-y-3"></div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- View Source Document Modal -->
+    <div id="sourceModal" class="fixed inset-0 z-[150] hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+        <div class="glass-card bg-slate-900/95 border border-slate-700 rounded-3xl max-w-3xl w-full p-6 max-h-[88vh] flex flex-col">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+                <div>
+                    <h3 id="sourceModalTitle" class="text-base sm:text-lg font-bold text-white">Nội dung tài liệu gốc</h3>
+                    <p id="sourceModalMeta" class="text-xs text-amber-400 font-terminal"></p>
+                </div>
+                <button id="closeSourceModalBtn" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <pre id="sourceModalText" class="my-4 flex-1 overflow-y-auto bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-xs text-slate-300 whitespace-pre-wrap leading-relaxed font-sans"></pre>
+            <div class="flex justify-end pt-2 border-t border-slate-800 shrink-0">
+                <button id="closeSourceModalFooterBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold cursor-pointer">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 pt-8 pb-6 text-center">
+        <p class="text-slate-500 text-sm font-medium">© 2026 Nguyễn Viết Thành · Interactive Study & Self-Assessment Hub.</p>
+    </footer>
+
+    <!-- Load Built-in CNSF 80-Question Bank -->
+    <script src="study-data.js"></script>
+    <script src="ai-bot.js"></script>
+
+    <!-- Main Application & Cloud Sync Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAM4gySkHXU1jUPXlYsQ51Z7PZjcta3qXw",
+            authDomain: "thanh-portfolio-8c122.firebaseapp.com",
+            projectId: "thanh-portfolio-8c122",
+            storageBucket: "thanh-portfolio-8c122.firebasestorage.app",
+            messagingSenderId: "386068468225",
+            appId: "1:386068468225:web:36dfe8ac2b3b4e1249a600",
+            measurementId: "G-E31NYY0Q07"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Configure PDF.js worker
+        if (window.pdfjsLib) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        }
+
+        // Gemini AI Key & Verified Working Models
+        const DEFAULT_API_KEY = typeof atob === "function" ? atob("QVEuQWI4Uk42THNBNDhrT2JkZnRFOW1MVFV0YVdIdVdrWVZ6eEVqeGhybllQbGFmOWhLTFE=") : "";
+        const getGeminiKey = () => localStorage.getItem('portfolio_gemini_api_key') || DEFAULT_API_KEY;
+        const GEMINI_MODELS = [
+            "gemini-3-flash-preview",
+            "gemini-3.5-flash-lite",
+            "gemini-flash-lite-latest",
+            "gemini-flash-latest"
+        ];
+
+        // State
+        const LOCAL_DECKS_KEY = "portfolio_study_custom_decks_v1";
+        const LOCAL_PROGRESS_KEY = "portfolio_study_progress_v1";
+
+        let builtInDecks = Array.isArray(window.DEFAULT_STUDY_DECKS) ? window.DEFAULT_STUDY_DECKS : [];
+        let customDecks = [];
+        let progressState = {
+            masteredIds: [],   // e.g., ["cnsf-q1", ...]
+            wrongIds: [],      // e.g., ["cnsf-q5", ...]
+            deckStats: {}      // { [deckId]: { attempts: 0, bestPct: 0, lastTestedAt: "..." } }
+        };
+
+        // Active Quiz State
+        let activeSession = {
+            deckId: null,
+            deckTitle: "",
+            sourceText: "",
+            questions: [],
+            currentIndex: 0,
+            rightCount: 0,
+            wrongCount: 0,
+            results: [], // { question, selectedKey, selectedText, isCorrect }
+            answeredCurrent: false,
+            bilingual: true,
+            lastModeConfig: null
+        };
+
+        // Toast Helper
+        function showToast(msg, type = "success") {
+            const t = document.getElementById("toast");
+            const ic = document.getElementById("toastIcon");
+            document.getElementById("toastMsg").textContent = msg;
+            if (type === "error") {
+                ic.className = "fas fa-exclamation-circle text-rose-400 text-lg";
+            } else if (type === "info") {
+                ic.className = "fas fa-info-circle text-sky-400 text-lg";
+            } else {
+                ic.className = "fas fa-check-circle text-emerald-400 text-lg";
+            }
+            t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), 3200);
+        }
+
+        function escapeHtml(str) {
+            return String(str || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function getAllDecks() {
+            return [...builtInDecks, ...customDecks];
+        }
+
+        function loadLocalState() {
+            try {
+                const rawDecks = localStorage.getItem(LOCAL_DECKS_KEY);
+                if (rawDecks) {
+                    const parsed = JSON.parse(rawDecks);
+                    if (Array.isArray(parsed)) customDecks = parsed;
+                }
+            } catch (e) {}
+            try {
+                const rawProg = localStorage.getItem(LOCAL_PROGRESS_KEY);
+                if (rawProg) {
+                    const p = JSON.parse(rawProg);
+                    progressState = {
+                        masteredIds: Array.isArray(p.masteredIds) ? p.masteredIds : [],
+                        wrongIds: Array.isArray(p.wrongIds) ? p.wrongIds : [],
+                        deckStats: p.deckStats || {}
+                    };
+                }
+            } catch (e) {}
+        }
+
+        async function saveProgress() {
+            localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify(progressState));
+            try {
+                await setDoc(doc(db, "studyProgress", "defaultUser"), progressState, { merge: true });
+            } catch (e) {
+                console.warn("Firestore progress save skipped:", e.message);
+            }
+        }
+
+        async function saveCustomDeckToCloud(deck) {
+            localStorage.setItem(LOCAL_DECKS_KEY, JSON.stringify(customDecks));
+            try {
+                await setDoc(doc(db, "studyDecks", deck.id), deck);
+            } catch (e) {
+                console.warn("Firestore deck save skipped:", e.message);
+            }
+        }
+
+        async function syncFromCloud() {
+            const badge = document.getElementById("cloudSyncBadge");
+            try {
+                // Load Study Decks
+                const snap = await getDocs(collection(db, "studyDecks"));
+                const cloudDecks = [];
+                snap.forEach(d => cloudDecks.push({ id: d.id, ...d.data() }));
+                if (cloudDecks.length > 0) {
+                    // Merge cloud + local without duplicates
+                    const map = new Map();
+                    customDecks.forEach(d => map.set(d.id, d));
+                    cloudDecks.forEach(d => map.set(d.id, d));
+                    customDecks = Array.from(map.values()).sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+                    localStorage.setItem(LOCAL_DECKS_KEY, JSON.stringify(customDecks));
+                } else if (customDecks.length > 0) {
+                    // Push local decks up to cloud on first sync
+                    for (const d of customDecks) {
+                        await setDoc(doc(db, "studyDecks", d.id), d);
+                    }
+                }
+
+                // Load Study Progress
+                const pSnap = await getDoc(doc(db, "studyProgress", "defaultUser"));
+                if (pSnap.exists()) {
+                    const cp = pSnap.data();
+                    const mSet = new Set([...(progressState.masteredIds || []), ...(cp.masteredIds || [])]);
+                    const wSet = new Set([...(progressState.wrongIds || []), ...(cp.wrongIds || [])]);
+                    // If already mastered cleanly later, let current local/cloud reconcile safely
+                    progressState.masteredIds = Array.from(mSet);
+                    progressState.wrongIds = Array.from(wSet);
+                    progressState.deckStats = { ...(cp.deckStats || {}), ...(progressState.deckStats || {}) };
+                    localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify(progressState));
+                }
+
+                if (badge) {
+                    badge.innerHTML = `<i class="fas fa-cloud-check text-emerald-400"></i> <span>Đã đồng bộ Cloud</span>`;
+                }
+            } catch (e) {
+                console.warn("Cloud sync error:", e.message);
+                if (badge) {
+                    badge.innerHTML = `<i class="fas fa-hdd text-amber-400"></i> <span>Lưu cục bộ (Local)</span>`;
+                }
+            }
+            updateAllStats();
+            renderLibrary();
+        }
+
+        // View Navigation
+        function switchView(viewName) {
+            const views = ["viewLibrary", "viewAddDoc", "viewReader", "viewQuiz", "viewSummary"];
+            views.forEach(v => document.getElementById(v).classList.add("hidden"));
+
+            const isStudyMode = (viewName === "quiz" || viewName === "summary");
+            document.getElementById("heroHeader").classList.toggle("hidden", isStudyMode);
+            document.getElementById("statsBar").classList.toggle("hidden", isStudyMode);
+            document.getElementById("mainTabBar").classList.toggle("hidden", isStudyMode);
+
+            // Reset tab buttons
+            const tabBtns = {
+                library: "tabBtnLibrary",
+                add: "tabBtnAdd",
+                reader: "tabBtnReader"
+            };
+            Object.entries(tabBtns).forEach(([k, btnId]) => {
+                const el = document.getElementById(btnId);
+                if (k === viewName) {
+                    el.className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 flex items-center gap-2 cursor-pointer transition";
+                } else {
+                    el.className = "px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold glass-card text-slate-300 hover:text-white flex items-center gap-2 cursor-pointer transition";
+                }
+            });
+
+            if (viewName === "library") {
+                document.getElementById("viewLibrary").classList.remove("hidden");
+                renderLibrary();
+            } else if (viewName === "add") {
+                document.getElementById("viewAddDoc").classList.remove("hidden");
+            } else if (viewName === "reader") {
+                document.getElementById("viewReader").classList.remove("hidden");
+                renderReader();
+            } else if (viewName === "quiz") {
+                document.getElementById("viewQuiz").classList.remove("hidden");
+            } else if (viewName === "summary") {
+                document.getElementById("viewSummary").classList.remove("hidden");
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        document.getElementById("tabBtnLibrary").addEventListener("click", () => switchView("library"));
+        document.getElementById("tabBtnAdd").addEventListener("click", () => switchView("add"));
+        document.getElementById("tabBtnReader").addEventListener("click", () => switchView("reader"));
+        document.getElementById("navAddDocBtn").addEventListener("click", () => switchView("add"));
+        document.getElementById("emptyAddTriggerBtn").addEventListener("click", () => switchView("add"));
+        document.getElementById("cancelAddDocBtn").addEventListener("click", () => switchView("library"));
+        document.getElementById("backToLibraryBtn").addEventListener("click", () => switchView("library"));
+
+        // Stats Updater
+        function updateAllStats() {
+            const all = getAllDecks();
+            const totalQ = all.reduce((s, d) => s + (d.questions ? d.questions.length : 0), 0);
+            document.getElementById("statDecks").textContent = all.length;
+            document.getElementById("statQuestions").textContent = totalQ;
+            document.getElementById("statMastered").textContent = progressState.masteredIds.length;
+            document.getElementById("statWrong").textContent = progressState.wrongIds.length;
+
+            const revBtn = document.getElementById("reviewAllWrongBtn");
+            if (progressState.wrongIds.length > 0) {
+                revBtn.classList.remove("hidden");
+            } else {
+                revBtn.classList.add("hidden");
+            }
+        }
+
+        // Render Library
+        function renderLibrary() {
+            updateAllStats();
+
+            // 1. Built-in CNSF 80 Deck
+            const builtInContainer = document.getElementById("builtInDeckContainer");
+            const cnsf = builtInDecks[0];
+            if (cnsf) {
+                const total = cnsf.questions.length;
+                const masteredCount = cnsf.questions.filter(q => progressState.masteredIds.includes(q.id)).length;
+                const wrongCount = cnsf.questions.filter(q => progressState.wrongIds.includes(q.id)).length;
+                const pct = total > 0 ? Math.round((masteredCount / total) * 100) : 0;
+                const stats = progressState.deckStats[cnsf.id] || {};
+                const sections = [...new Set(cnsf.questions.map(q => q.section))];
+
+                builtInContainer.innerHTML = `
+                <div class="glass-card rounded-3xl p-6 sm:p-8 border border-sky-500/35 bg-gradient-to-br from-slate-900/95 via-slate-900/85 to-sky-950/30 relative overflow-hidden shadow-2xl">
+                    <div class="absolute -top-24 -right-24 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="flex flex-wrap items-start justify-between gap-4 mb-5">
+                        <div class="flex items-start gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-rose-500 text-slate-950 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/20 shrink-0">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                    <span class="px-3 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+                                        ⭐ TÀI LIỆU ÔN TẬP CÓ SẴN · CNSF
+                                    </span>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-terminal bg-sky-500/15 text-sky-300 border border-sky-500/30">
+                                        80 Câu Song Ngữ Anh – Việt
+                                    </span>
+                                    ${wrongCount > 0 ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">${wrongCount} câu từng sai</span>` : ''}
+                                </div>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-white">${escapeHtml(cnsf.title)}</h2>
+                                <p class="text-xs sm:text-sm text-slate-400 mt-1">${escapeHtml(cnsf.subtitle)}</p>
+                            </div>
+                        </div>
+                        <div class="text-left sm:text-right font-terminal text-xs">
+                            <div class="text-emerald-400 font-bold">Đã nắm: ${masteredCount} / ${total} câu (${pct}%)</div>
+                            ${stats.lastTestedAt ? `<div class="text-slate-400 text-[11px] mt-0.5">Kiểm tra gần nhất: ${escapeHtml(stats.lastTestedAt)} · Cao nhất: ${stats.bestPct || 0}%</div>` : `<div class="text-slate-500 text-[11px] mt-0.5">Chưa kiểm tra lần nào</div>`}
+                        </div>
+                    </div>
+
+                    <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-5">
+                        <div class="h-full bg-gradient-to-r from-emerald-500 to-sky-400 transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+
+                    <!-- Part Selector & Launch Actions -->
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pt-4 border-t border-slate-800/80">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-xs text-slate-400 font-semibold mr-1">Chọn phần:</span>
+                            <select id="cnsfSectionSelect" class="bg-slate-950/90 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                                <option value="all">Toàn bộ 80 câu (Phần 1 – 8)</option>
+                                ${sections.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)} (10 câu)</option>`).join("")}
+                            </select>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <button onclick="window.startQuizFromDeck('${cnsf.id}', { mode: 'random10' })" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition cursor-pointer">
+                                <i class="fas fa-bolt"></i> Kiểm Tra Nhanh (10 Câu Ngẫu Nhiên)
+                            </button>
+                            <button onclick="window.startCnsfSelectedPart()" class="px-4 py-2.5 rounded-xl bg-sky-500/20 hover:bg-sky-500 text-sky-300 hover:text-white font-bold text-xs border border-sky-500/30 flex items-center gap-1.5 transition cursor-pointer">
+                                <i class="fas fa-play"></i> Làm Theo Phần Đã Chọn
+                            </button>
+                            ${wrongCount > 0 ? `
+                            <button onclick="window.startQuizFromDeck('${cnsf.id}', { mode: 'wrongOnly' })" class="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-bold text-xs border border-rose-500/30 flex items-center gap-1.5 transition cursor-pointer">
+                                <i class="fas fa-exclamation-circle"></i> Ôn Lại ${wrongCount} Câu Sai
+                            </button>` : ''}
+                            <button onclick="window.openReaderView()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 flex items-center gap-1.5 transition cursor-pointer">
+                                <i class="fas fa-book-open"></i> Đọc Tài Liệu (80 câu)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }
+
+            // 2. Custom Decks Grid
+            const grid = document.getElementById("customDecksGrid");
+            if (customDecks.length === 0) {
+                grid.innerHTML = `
+                <div class="col-span-full glass-card rounded-3xl p-8 text-center border border-dashed border-slate-700">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl mx-auto mb-3">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-1">Chưa có tài liệu tự thêm nào</h3>
+                    <p class="text-xs text-slate-400 max-w-md mx-auto mb-4">Bạn có thể tải lên file PDF / TXT hoặc dán ghi chú học tập để hệ thống tự sinh bộ câu hỏi trắc nghiệm và kiểm tra lại kiến thức định kỳ.</p>
+                    <button onclick="window.switchToAdd()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs cursor-pointer hover:opacity-95 transition">
+                        <i class="fas fa-plus-circle mr-1"></i> Thêm Tài Liệu Đầu Tiên Ngay
+                    </button>
+                </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = customDecks.map(deck => {
+                const qList = deck.questions || [];
+                const mastered = qList.filter(q => progressState.masteredIds.includes(q.id)).length;
+                const wrong = qList.filter(q => progressState.wrongIds.includes(q.id)).length;
+                const stats = progressState.deckStats[deck.id] || {};
+                const pct = qList.length > 0 ? Math.round((mastered / qList.length) * 100) : 0;
+
+                return `
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border border-slate-800">
+                    <div>
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">${escapeHtml(deck.category || "Tổng hợp")}</span>
+                            <div class="flex items-center gap-1.5 text-[11px] font-terminal text-slate-400">
+                                <span><i class="fas fa-question-circle text-sky-400 mr-1"></i>${qList.length} câu</span>
+                                ${wrong > 0 ? `<span class="px-2 py-0.5 rounded bg-rose-500/15 text-rose-400">${wrong} sai</span>` : ''}
+                            </div>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-1 line-clamp-2">${escapeHtml(deck.title)}</h3>
+                        <p class="text-xs text-slate-400 line-clamp-2 mb-3">${escapeHtml((deck.sourceText || "").slice(0, 140))}${deck.sourceText && deck.sourceText.length > 140 ? "..." : ""}</p>
+
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 font-terminal mb-2">
+                            <span>Nắm vững: ${mastered}/${qList.length} (${pct}%)</span>
+                            <span>${stats.lastTestedAt ? `Ôn gần nhất: ${escapeHtml(stats.lastTestedAt)}` : `Tạo: ${escapeHtml((deck.createdAt || "").slice(0, 10))}`}</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-amber-400 to-emerald-400" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-800/80">
+                        <button onclick="window.startQuizFromDeck('${deck.id}', { mode: 'all' })" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 hover:opacity-95 transition cursor-pointer">
+                            <i class="fas fa-play"></i> Kiểm Tra Ngay
+                        </button>
+                        ${wrong > 0 ? `
+                        <button onclick="window.startQuizFromDeck('${deck.id}', { mode: 'wrongOnly' })" class="py-2 px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white text-xs font-bold border border-rose-500/30 transition cursor-pointer" title="Ôn lại câu đã làm sai">
+                            <i class="fas fa-redo"></i> (${wrong})
+                        </button>` : ''}
+                        <button onclick="window.generateMoreQuestionsForDeck('${deck.id}')" class="py-2 px-3 rounded-xl bg-sky-500/15 hover:bg-sky-500 text-sky-300 hover:text-white text-xs font-semibold border border-sky-500/30 transition cursor-pointer" title="Tạo thêm câu hỏi mới từ tài liệu này">
+                            <i class="fas fa-sparkles"></i> +Câu AI
+                        </button>
+                        <button onclick="window.openSourceModal('${deck.id}')" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs transition cursor-pointer" title="Xem tài liệu gốc">
+                            <i class="fas fa-file-alt"></i>
+                        </button>
+                        <button onclick="window.deleteCustomDeck('${deck.id}')" class="py-2 px-3 rounded-xl bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white text-xs transition cursor-pointer" title="Xóa tài liệu">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join("");
+        }
+
+        window.switchToAdd = () => switchView("add");
+        window.openReaderView = () => switchView("reader");
+
+        window.openSourceModal = function(deckId) {
+            const deck = getAllDecks().find(d => d.id === deckId);
+            if (!deck) return;
+            document.getElementById("sourceModalTitle").textContent = deck.title;
+            document.getElementById("sourceModalMeta").textContent = `${deck.category || ""} · ${deck.questions.length} câu hỏi`;
+            document.getElementById("sourceModalText").textContent = deck.sourceText || "(Tài liệu trắc nghiệm chuẩn)";
+            document.getElementById("sourceModal").classList.remove("hidden");
+            document.getElementById("sourceModal").classList.add("flex");
+        };
+
+        const closeSourceModal = () => {
+            document.getElementById("sourceModal").classList.add("hidden");
+            document.getElementById("sourceModal").classList.remove("flex");
+        };
+        document.getElementById("closeSourceModalBtn").addEventListener("click", closeSourceModal);
+        document.getElementById("closeSourceModalFooterBtn").addEventListener("click", closeSourceModal);
+
+        window.deleteCustomDeck = async function(deckId) {
+            const deck = customDecks.find(d => d.id === deckId);
+            if (!deck) return;
+            if (!confirm(`Bạn chắc chắn muốn xóa tài liệu "${deck.title}" cùng bộ câu hỏi ôn tập?`)) return;
+            customDecks = customDecks.filter(d => d.id !== deckId);
+            localStorage.setItem(LOCAL_DECKS_KEY, JSON.stringify(customDecks));
+            try {
+                await deleteDoc(doc(db, "studyDecks", deckId));
+            } catch (e) {}
+            showToast("Đã xóa tài liệu!");
+            renderLibrary();
+        };
+
+        // =========================================================
+        // READER MODE (80 BUILT-IN QUESTIONS)
+        // =========================================================
+        let hideReaderAnswers = false;
+        const readerSelect = document.getElementById("readerSectionSelect");
+        if (builtInDecks[0]) {
+            const secs = [...new Set(builtInDecks[0].questions.map(q => q.section))];
+            secs.forEach(s => {
+                const opt = document.createElement("option");
+                opt.value = s;
+                opt.textContent = s;
+                readerSelect.appendChild(opt);
+            });
+        }
+
+        function renderReader() {
+            const deck = builtInDecks[0];
+            if (!deck) return;
+            const query = (document.getElementById("readerSearchInput").value || "").toLowerCase().trim();
+            const sec = document.getElementById("readerSectionSelect").value;
+            const container = document.getElementById("readerListContainer");
+
+            const filtered = deck.questions.filter(q => {
+                if (sec !== "all" && q.section !== sec) return false;
+                if (!query) return true;
+                const hay = `${q.num} ${q.questionEn} ${q.questionVi} ${q.correctAnswer} ${q.explainRight}`.toLowerCase();
+                return hay.includes(query);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="glass-card rounded-2xl p-8 text-center text-slate-400 text-sm">Không tìm thấy câu hỏi nào khớp từ khóa "${escapeHtml(query)}".</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(q => `
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 text-xs font-terminal font-bold">Câu ${q.num}</span>
+                        <span class="text-[11px] font-terminal text-slate-400">${escapeHtml(q.section)}</span>
+                    </div>
+                    <p class="text-sm sm:text-base font-bold text-white">${escapeHtml(q.questionEn)}</p>
+                    <p class="text-xs sm:text-sm text-sky-300/90">${escapeHtml(q.questionVi)}</p>
+                    ${q.options && q.options.length > 0 ? `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        ${q.options.map(o => `
+                            <div class="px-3 py-2 rounded-xl text-xs border ${!hideReaderAnswers && o.key === q.correctKey ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300 font-bold' : 'bg-slate-950/60 border-slate-800 text-slate-300'}">
+                                <span class="font-terminal font-bold mr-1">${o.key}.</span> ${escapeHtml(o.text)}
+                            </div>
+                        `).join("")}
+                    </div>` : ""}
+                    <div class="${hideReaderAnswers ? 'hidden' : ''} pt-3 border-t border-slate-800/80 space-y-2 text-xs">
+                        <div class="text-emerald-400 font-bold">✅ Đáp án đúng: ${q.correctKey ? q.correctKey + ". " : ""}${escapeHtml(q.correctAnswer)}</div>
+                        <p class="text-slate-300"><strong class="text-emerald-300">Giải thích:</strong> ${escapeHtml(q.explainRight)}</p>
+                        <p class="text-slate-400"><strong class="text-amber-300">${escapeHtml(q.explainWrongLabel || "Lưu ý các lựa chọn khác")}:</strong> ${escapeHtml(q.explainWrong)}</p>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        document.getElementById("readerSearchInput").addEventListener("input", renderReader);
+        document.getElementById("readerSectionSelect").addEventListener("change", renderReader);
+        document.getElementById("toggleReaderAnswersBtn").addEventListener("click", (e) => {
+            hideReaderAnswers = !hideReaderAnswers;
+            e.currentTarget.innerHTML = hideReaderAnswers
+                ? `<i class="fas fa-eye mr-1"></i> Hiện lại đáp án & giải thích`
+                : `<i class="fas fa-eye-slash mr-1"></i> Ẩn đáp án để tự nhẩm`;
+            renderReader();
+        });
+
+        // =========================================================
+        // FILE UPLOAD (.PDF / .TXT / .MD) & QUESTION GENERATION
+        // =========================================================
+        const fileDropzone = document.getElementById("fileDropzone");
+        const docFileInput = document.getElementById("docFileInput");
+        const docContentInput = document.getElementById("docContentInput");
+        const docCharCount = document.getElementById("docCharCount");
+
+        docContentInput.addEventListener("input", () => {
+            docCharCount.textContent = `${docContentInput.value.length.toLocaleString()} ký tự`;
+        });
+
+        fileDropzone.addEventListener("click", () => docFileInput.click());
+        fileDropzone.addEventListener("dragover", (e) => { e.preventDefault(); fileDropzone.classList.add("dropzone-active"); });
+        fileDropzone.addEventListener("dragleave", () => fileDropzone.classList.remove("dropzone-active"));
+        fileDropzone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            fileDropzone.classList.remove("dropzone-active");
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) handleUploadedFile(e.dataTransfer.files[0]);
+        });
+        docFileInput.addEventListener("change", (e) => {
+            if (e.target.files && e.target.files[0]) handleUploadedFile(e.target.files[0]);
+        });
+
+        async function handleUploadedFile(file) {
+            const statusEl = document.getElementById("fileStatusText");
+            const titleEl = document.getElementById("docTitleInput");
+            if (!titleEl.value.trim()) {
+                titleEl.value = file.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ");
+            }
+
+            if (file.name.toLowerCase().endsWith(".pdf")) {
+                if (!window.pdfjsLib) {
+                    showToast("Thư viện đọc PDF chưa tải xong, vui lòng thử lại sau vài giây.", "error");
+                    return;
+                }
+                statusEl.innerHTML = `<i class="fas fa-spinner fa-spin text-amber-400 mr-1"></i> Đang đọc nội dung file PDF (${file.name})...`;
+                try {
+                    const buf = await file.arrayBuffer();
+                    const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+                    let textParts = [];
+                    const maxPages = Math.min(pdf.numPages, 60);
+                    for (let p = 1; p <= maxPages; p++) {
+                        const page = await pdf.getPage(p);
+                        const tc = await page.getTextContent();
+                        const pageStr = tc.items.map(it => it.str).join(" ");
+                        textParts.push(pageStr);
+                        statusEl.textContent = `Đang trích xuất PDF: trang ${p}/${maxPages}...`;
+                    }
+                    const full = textParts.join("\n\n").trim();
+                    if (!full) {
+                        statusEl.textContent = "PDF dạng ảnh scan không có text ẩn — hãy dán nội dung ghi chú vào ô bên dưới nhé.";
+                        showToast("File PDF này là ảnh scan, không có text để trích xuất tự động.", "error");
+                        return;
+                    }
+                    docContentInput.value = full;
+                    docCharCount.textContent = `${full.length.toLocaleString()} ký tự`;
+                    statusEl.innerHTML = `<span class="text-emerald-400 font-bold">✅ Đã đọc xong ${maxPages} trang PDF (${full.length.toLocaleString()} ký tự)!</span>`;
+                    showToast(`Đã trích xuất văn bản từ ${file.name}!`);
+                } catch (err) {
+                    console.error(err);
+                    statusEl.textContent = "Lỗi đọc PDF: " + err.message;
+                    showToast("Không đọc được file PDF này!", "error");
+                }
+            } else {
+                const txt = await file.text();
+                docContentInput.value = txt;
+                docCharCount.textContent = `${txt.length.toLocaleString()} ký tự`;
+                statusEl.innerHTML = `<span class="text-emerald-400 font-bold">✅ Đã nạp ${file.name} (${txt.length.toLocaleString()} ký tự)!</span>`;
+                showToast(`Đã tải nội dung từ ${file.name}!`);
+            }
+        }
+
+        // 1) Local Structured Q&A Parser (handles PDFs/notes that already have Câu X / A/B/C/D / Đáp án đúng)
+        function parseStructuredQuestions(rawText) {
+            const text = rawText.replace(/\r/g, "").replace(/\u00a0/g, " ");
+            const regex = /(?:^|\n)\s*(?:Câu|Question|Q)\s*(\d+)[\s.:]*([\s\S]*?)(?=(?:\n\s*(?:Câu|Question|Q)\s*\d+\b)|$)/gi;
+            const parsed = [];
+            let match;
+
+            while ((match = regex.exec(text)) !== null) {
+                const num = parseInt(match[1], 10);
+                const block = match[2].trim();
+                if (!block) continue;
+
+                // Look for options A. ... B. ... C. ... D. ...
+                const optMatch = block.match(/A\.\s*([^\n|]+?)[\n|]+\s*B\.\s*([^\n|]+?)[\n|]+\s*C\.\s*([^\n|]+?)[\n|]+\s*D\.\s*([^\n|•]+)/i);
+                const ansMatch = block.match(/(?:Đáp án đúng|Đáp án|Correct Answer|Answer)\s*[:\-]\s*([^\n]+)/i);
+                if (!ansMatch) continue;
+
+                const expRightMatch = block.match(/(?:Giải thích đáp án đúng|Giải thích|Explanation)\s*[:\-]\s*([^\n]+(?:\n(?!(?:Vì sao|Giải thích|Đáp án|Câu)\b)[^\n]+)*)/i);
+                const expWrongMatch = block.match(/(?:Vì sao các đáp án còn lại sai|Vì sao các hướng hiểu sai thường gặp|Wrong options)\s*[:\-]\s*([\s\S]+)$/i);
+
+                let qPrompt = optMatch ? block.slice(0, optMatch.index).trim() : block.slice(0, ansMatch.index).trim();
+                qPrompt = qPrompt.replace(/\s+/g, " ");
+                if (qPrompt.length < 8) continue;
+
+                let qEn = qPrompt, qVi = "";
+                if (qPrompt.includes(" — VI: ")) {
+                    [qEn, qVi] = qPrompt.split(" — VI: ", 2);
+                }
+
+                let options = [];
+                if (optMatch) {
+                    options = [
+                        { key: "A", text: optMatch[1].trim() },
+                        { key: "B", text: optMatch[2].trim() },
+                        { key: "C", text: optMatch[3].trim() },
+                        { key: "D", text: optMatch[4].trim() }
+                    ];
+                }
+
+                let ansLine = ansMatch[1].trim().replace(/\.$/, "");
+                let correctKey = null;
+                let correctAnswer = ansLine;
+                const keyMatch = ansLine.match(/^([A-D])\.\s*(.+)$/i);
+                if (keyMatch) {
+                    correctKey = keyMatch[1].toUpperCase();
+                    correctAnswer = keyMatch[2].trim();
+                }
+
+                parsed.push({
+                    id: `custom-q${num}-${Date.now().toString(36)}`,
+                    num: parsed.length + 1,
+                    section: "Từ tài liệu đã thêm",
+                    questionEn: qVi ? qEn.trim() : "",
+                    questionVi: qVi ? qVi.trim() : qEn.trim(),
+                    options: options,
+                    correctKey: correctKey,
+                    correctAnswer: correctAnswer,
+                    explainRight: expRightMatch ? expRightMatch[1].trim() : `Đáp án chính xác là "${correctAnswer}" theo nội dung tài liệu gốc.`,
+                    explainWrongLabel: "Phân tích các lựa chọn khác",
+                    explainWrong: expWrongMatch ? expWrongMatch[1].trim() : "Các đáp án còn lại không khớp với khái niệm/thông số trong tài liệu."
+                });
+            }
+            return parsed;
+        }
+
+        // 2) Call Gemini API Helper
+        async function callGemini(promptText, maxTokens = 4096) {
+            const apiKey = getGeminiKey();
+            for (const model of GEMINI_MODELS) {
+                try {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+                    const genCfg = { temperature: 0.45, maxOutputTokens: maxTokens };
+                    if (!model.includes("lite")) {
+                        genCfg.thinkingConfig = { thinkingBudget: 0 };
+                    }
+                    const res = await fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: promptText }] }],
+                            generationConfig: genCfg
+                        })
+                    });
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text && text.trim()) return text.trim();
+                } catch (err) {
+                    console.warn("Gemini call failed on", model, err.message);
+                }
+            }
+            return null;
+        }
+
+        // 3) AI Question Generator from arbitrary study notes/PDF text
+        async function generateQuestionsWithAI(title, rawText, count = 10) {
+            // Trim safely to stay crisp within prompt budget (~22,000 chars)
+            const chunk = rawText.length > 22000 ? rawText.slice(0, 22000) : rawText;
+            const prompt = `Bạn là giảng viên chuyên môn IT & An ninh mạng. Dựa HOÀN TOÀN vào tài liệu học tập bên dưới (Tiêu đề: "${title}"), hãy tạo đúng ${count} câu hỏi trắc nghiệm 4 lựa chọn (A, B, C, D) bằng Tiếng Việt (giữ nguyên thuật ngữ kỹ thuật Tiếng Anh quan trọng trong ngoặc hoặc trực tiếp) để giúp người học kiểm tra kiến thức và ghi nhớ lâu dài.
+
+YÊU CẦU ĐỊNH DẠNG BẮT BUỘC — CHỈ TRẢ VỀ MỘT MẢNG JSON HỢP LỆ (không kèm markdown thừa ngoài JSON):
+[
+  {
+    "section": "Tên phần/chủ đề ngắn",
+    "questionVi": "Câu hỏi rõ ràng kiểm tra khả năng hiểu thực tế dựa trên tài liệu?",
+    "options": [
+      {"key": "A", "text": "Lựa chọn A"},
+      {"key": "B", "text": "Lựa chọn B"},
+      {"key": "C", "text": "Lựa chọn C"},
+      {"key": "D", "text": "Lựa chọn D"}
+    ],
+    "correctKey": "B",
+    "explainRight": "Giải thích chi tiết và dễ hiểu tại sao đáp án đúng là đúng dựa trên tài liệu.",
+    "explainWrong": "Phân tích ngắn gọn vì sao từng đáp án sai (A, C, D...) đều chưa đúng để người học hiểu rõ bản chất.",
+    "sourceExcerpt": "Trích dẫn nguyên văn 1 câu ngắn từ tài liệu chứng minh đáp án."
+  }
+]
+
+LƯU Ý: Hãy phân bổ vị trí đáp án đúng ngẫu nhiên giữa A, B, C, D (không chỉ toàn chọn A).
+
+NỘI DUNG TÀI LIỆU:
+"""
+${chunk}
+"""`;
+
+            const rawReply = await callGemini(prompt, 4500);
+            if (!rawReply) return null;
+
+            // Extract JSON array cleanly
+            let jsonStr = rawReply.replace(/^```json\s*/i, "").replace(/^```\s*/i, "").replace(/\s*```$/i, "").trim();
+            const firstBracket = jsonStr.indexOf("[");
+            const lastBracket = jsonStr.lastIndexOf("]");
+            if (firstBracket === -1 || lastBracket === -1) return null;
+            jsonStr = jsonStr.slice(firstBracket, lastBracket + 1);
+
+            try {
+                const arr = JSON.parse(jsonStr);
+                if (!Array.isArray(arr) || arr.length === 0) return null;
+                const stamp = Date.now().toString(36);
+                return arr.map((item, idx) => {
+                    const opts = Array.isArray(item.options) ? item.options.slice(0, 4) : [];
+                    const ck = (item.correctKey || "A").toUpperCase();
+                    const matched = opts.find(o => o.key === ck) || opts[0];
+                    return {
+                        id: `ai-${stamp}-${idx + 1}`,
+                        num: idx + 1,
+                        section: item.section || title,
+                        questionEn: item.questionEn || "",
+                        questionVi: item.questionVi || item.question || "Câu hỏi ôn tập",
+                        options: opts,
+                        correctKey: matched ? matched.key : ck,
+                        correctAnswer: matched ? matched.text : (item.correctAnswer || ""),
+                        explainRight: item.explainRight || "Dựa theo nội dung tài liệu bạn đã tải lên.",
+                        explainWrongLabel: "Vì sao các đáp án còn lại sai",
+                        explainWrong: item.explainWrong || "Các phương án khác không chính xác theo tài liệu.",
+                        sourceExcerpt: item.sourceExcerpt || ""
+                    };
+                }).filter(q => q.options.length === 4);
+            } catch (e) {
+                console.warn("JSON parse error from Gemini:", e);
+                return null;
+            }
+        }
+
+        // 4) Local Fallback Concept Quiz Builder (runs 100% offline if Gemini quota unavailable)
+        function generateOfflineConceptQuestions(title, rawText, count = 8) {
+            const lines = rawText
+                .split(/[\n.!?]+/)
+                .map(s => s.trim())
+                .filter(s => s.length >= 35 && s.length <= 240);
+
+            const kvCandidates = [];
+            for (const line of lines) {
+                const m = line.match(/^([A-Za-z0-9À-ỹ\s\/\-()]{3,42})\s*(?::|là|means|refers to|—|-)\s+(.{18,180})$/i);
+                if (m) {
+                    kvCandidates.push({ term: m[1].trim(), def: m[2].trim(), full: line });
+                }
+            }
+
+            const pool = kvCandidates.length >= 4 ? kvCandidates : lines.slice(0, 30).map((ln, idx) => {
+                const words = ln.split(/\s+/).filter(w => w.length >= 4);
+                const keyword = words[Math.floor(words.length / 2)] || `Khái niệm ${idx + 1}`;
+                return { term: keyword.replace(/[,.;:()]/g, ""), def: ln, full: ln };
+            });
+
+            const picked = pool.slice(0, Math.min(count, pool.length));
+            const stamp = Date.now().toString(36);
+            const fallbackDistractors = [
+                "Một giao thức chỉ dùng để cấu hình địa chỉ vật lý trên tầng liên kết dữ liệu.",
+                "Một phương pháp vô hiệu hóa tường lửa và mở toàn bộ cổng dịch vụ công cộng.",
+                "Một cơ chế lưu trữ tạm thời chỉ hoạt động ngoại tuyến không liên quan đến hệ thống.",
+                "Một công cụ tạo bản sao dự phòng phần cứng thay thế cho định tuyến mạng."
+            ];
+
+            return picked.map((item, idx) => {
+                const otherDefs = pool.filter((_, j) => j !== idx).map(x => x.def);
+                const wrongPool = [...otherDefs, ...fallbackDistractors].slice(0, 3);
+                const keys = ["A", "B", "C", "D"];
+                const correctPos = idx % 4;
+                const orderedTexts = [...wrongPool];
+                orderedTexts.splice(correctPos, 0, item.def);
+
+                return {
+                    id: `loc-${stamp}-${idx + 1}`,
+                    num: idx + 1,
+                    section: title,
+                    questionEn: "",
+                    questionVi: `Theo tài liệu "${title}", mô tả nào sau đây chính xác nhất về "${item.term}"?`,
+                    options: keys.map((k, kIdx) => ({ key: k, text: orderedTexts[kIdx] })),
+                    correctKey: keys[correctPos],
+                    correctAnswer: item.def,
+                    explainRight: `Trong tài liệu bạn đã cung cấp có nêu rõ: "${item.full}".`,
+                    explainWrongLabel: "Lưu ý các lựa chọn sai",
+                    explainWrong: "Các lựa chọn còn lại thuộc về khái niệm khác hoặc sai lệch so với định nghĩa trong tài liệu.",
+                    sourceExcerpt: item.full
+                };
+            });
+        }
+
+        // Handle "Lưu Tài Liệu & Tạo Bộ Câu Hỏi"
+        document.getElementById("generateDeckBtn").addEventListener("click", async () => {
+            const title = document.getElementById("docTitleInput").value.trim();
+            const category = document.getElementById("docCategoryInput").value;
+            const rawText = document.getElementById("docContentInput").value.trim();
+            const count = parseInt(document.getElementById("genCountSelect").value, 10) || 10;
+            const mode = document.getElementById("genModeSelect").value;
+
+            if (!title || rawText.length < 30) {
+                showToast("Vui lòng nhập Tiêu đề và Nội dung tài liệu (tối thiểu 30 ký tự)!", "error");
+                return;
+            }
+
+            const btn = document.getElementById("generateDeckBtn");
+            const progBox = document.getElementById("genProgressBox");
+            const progText = document.getElementById("genProgressText");
+            btn.disabled = true;
+            progBox.classList.remove("hidden");
+
+            try {
+                let questions = [];
+                if (mode === "parse" || mode === "auto") {
+                    progText.textContent = "Đang kiểm tra xem tài liệu có sẵn định dạng Câu hỏi – Đáp án không...";
+                    questions = parseStructuredQuestions(rawText);
+                }
+
+                if (questions.length === 0 && (mode === "ai" || mode === "auto")) {
+                    progText.textContent = `Đang dùng AI đọc tài liệu và biên soạn ${count} câu hỏi kiểm tra kèm giải thích chi tiết...`;
+                    const aiQs = await generateQuestionsWithAI(title, rawText, count);
+                    if (aiQs && aiQs.length > 0) questions = aiQs;
+                }
+
+                if (questions.length === 0) {
+                    progText.textContent = "Đang tạo bộ câu hỏi từ khóa trực tiếp từ văn bản gốc...";
+                    questions = generateOfflineConceptQuestions(title, rawText, count);
+                }
+
+                if (!questions || questions.length === 0) {
+                    showToast("Không trích xuất được câu hỏi từ văn bản quá ngắn. Hãy thêm nhiều chi tiết hơn!", "error");
+                    return;
+                }
+
+                const newDeck = {
+                    id: "deck_" + Date.now().toString(36),
+                    title: title,
+                    category: category,
+                    createdAt: new Date().toISOString().slice(0, 10),
+                    sourceText: rawText.slice(0, 45000),
+                    questions: questions
+                };
+
+                customDecks.unshift(newDeck);
+                await saveCustomDeckToCloud(newDeck);
+
+                // Reset form
+                document.getElementById("docTitleInput").value = "";
+                document.getElementById("docContentInput").value = "";
+                document.getElementById("docCharCount").textContent = "0 ký tự";
+                document.getElementById("fileStatusText").textContent = "Hỗ trợ bóc tách toàn bộ chữ từ file PDF ngay trên trình duyệt";
+
+                showToast(`Đã tạo thành công bộ đề "${title}" với ${questions.length} câu hỏi!`);
+                switchView("library");
+            } catch (err) {
+                console.error(err);
+                showToast("Có lỗi khi xử lý tài liệu: " + err.message, "error");
+            } finally {
+                btn.disabled = false;
+                progBox.classList.add("hidden");
+            }
+        });
+
+        window.generateMoreQuestionsForDeck = async function(deckId) {
+            const deck = customDecks.find(d => d.id === deckId);
+            if (!deck || !deck.sourceText) {
+                showToast("Không tìm thấy nội dung gốc để tạo thêm câu hỏi.", "error");
+                return;
+            }
+            showToast("🤖 AI đang tạo thêm 5 câu hỏi mới từ tài liệu của bạn...", "info");
+            const extra = await generateQuestionsWithAI(deck.title, deck.sourceText, 5);
+            if (!extra || extra.length === 0) {
+                showToast("Google Gemini đang bận hoặc hết lượt tạm thời, thử lại sau chút nhé!", "error");
+                return;
+            }
+            const startNum = deck.questions.length;
+            extra.forEach((q, idx) => { q.num = startNum + idx + 1; });
+            deck.questions.push(...extra);
+            await saveCustomDeckToCloud(deck);
+            renderLibrary();
+            showToast(`Đã bổ sung thêm ${extra.length} câu hỏi mới vào "${deck.title}"!`);
+        };
+
+        // =========================================================
+        // QUIZ LAUNCHER & RUNNER
+        // =========================================================
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        window.startCnsfSelectedPart = function() {
+            const cnsf = builtInDecks[0];
+            const sec = document.getElementById("cnsfSectionSelect").value;
+            window.startQuizFromDeck(cnsf.id, { mode: "section", section: sec });
+        };
+
+        window.startQuizFromDeck = function(deckId, opts = { mode: "all" }) {
+            const deck = getAllDecks().find(d => d.id === deckId);
+            if (!deck) return;
+
+            let pool = [...deck.questions];
+            if (opts.mode === "section" && opts.section && opts.section !== "all") {
+                pool = pool.filter(q => q.section === opts.section);
+            } else if (opts.mode === "wrongOnly") {
+                pool = pool.filter(q => progressState.wrongIds.includes(q.id));
+            } else if (opts.mode === "random10") {
+                pool = shuffleArray(pool).slice(0, Math.min(10, pool.length));
+            }
+
+            if (opts.customQuestions) {
+                pool = opts.customQuestions;
+            }
+
+            if (pool.length === 0) {
+                showToast("Không có câu hỏi nào phù hợp lựa chọn này!", "info");
+                return;
+            }
+
+            activeSession = {
+                deckId: deck.id,
+                deckTitle: deck.title + (opts.section && opts.section !== "all" ? ` · ${opts.section}` : ""),
+                sourceText: deck.sourceText || "",
+                questions: pool,
+                currentIndex: 0,
+                rightCount: 0,
+                wrongCount: 0,
+                results: [],
+                answeredCurrent: false,
+                bilingual: activeSession.bilingual,
+                lastModeConfig: { deckId, opts }
+            };
+
+            switchView("quiz");
+            renderCurrentQuestion();
+        };
+
+        document.getElementById("reviewAllWrongBtn").addEventListener("click", () => {
+            const allQs = getAllDecks().flatMap(d => d.questions || []);
+            const wrongQs = allQs.filter(q => progressState.wrongIds.includes(q.id));
+            if (wrongQs.length === 0) return;
+
+            activeSession = {
+                deckId: "mixed-wrong-review",
+                deckTitle: `Tổng Ôn ${wrongQs.length} Câu Hay Sai`,
+                sourceText: "",
+                questions: shuffleArray(wrongQs),
+                currentIndex: 0,
+                rightCount: 0,
+                wrongCount: 0,
+                results: [],
+                answeredCurrent: false,
+                bilingual: activeSession.bilingual,
+                lastModeConfig: null
+            };
+            switchView("quiz");
+            renderCurrentQuestion();
+        });
+
+        document.getElementById("exitQuizBtn").addEventListener("click", () => {
+            if (activeSession.results.length > 0 && activeSession.currentIndex < activeSession.questions.length) {
+                if (!confirm("Bạn đang làm dở bài kiểm tra. Quay về Thư viện?")) return;
+            }
+            switchView("library");
+        });
+
+        document.getElementById("toggleBilingualBtn").addEventListener("click", () => {
+            activeSession.bilingual = !activeSession.bilingual;
+            document.getElementById("bilingualLabel").textContent = activeSession.bilingual ? "Song ngữ EN+VI" : "Chỉ Tiếng Việt";
+            renderCurrentQuestion();
+        });
+
+        function renderCurrentQuestion() {
+            const q = activeSession.questions[activeSession.currentIndex];
+            if (!q) return;
+
+            activeSession.answeredCurrent = false;
+            const total = activeSession.questions.length;
+            const idx = activeSession.currentIndex;
+
+            document.getElementById("quizDeckTitle").textContent = activeSession.deckTitle;
+            document.getElementById("quizSectionLabel").textContent = q.section || "Ôn tập";
+            document.getElementById("quizCounter").textContent = `${idx + 1} / ${total}`;
+            document.getElementById("quizScoreRight").textContent = activeSession.rightCount;
+            document.getElementById("quizScoreWrong").textContent = activeSession.wrongCount;
+            document.getElementById("quizProgressBar").style.width = `${Math.round(((idx + 1) / total) * 100)}%`;
+
+            document.getElementById("qBadgeNum").textContent = q.num ? `Câu ${q.num}` : `Câu #${idx + 1}`;
+            const histTag = document.getElementById("qHistoryTag");
+            if (progressState.wrongIds.includes(q.id)) {
+                histTag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30";
+                histTag.textContent = "Từng làm sai — Lưu ý!";
+                histTag.classList.remove("hidden");
+            } else if (progressState.masteredIds.includes(q.id)) {
+                histTag.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30";
+                histTag.textContent = "Đã từng trả lời đúng";
+                histTag.classList.remove("hidden");
+            } else {
+                histTag.classList.add("hidden");
+            }
+
+            // Question Bilingual Display
+            const primaryEl = document.getElementById("qTextPrimary");
+            const secondaryEl = document.getElementById("qTextSecondary");
+            if (q.questionEn && q.questionVi) {
+                if (activeSession.bilingual) {
+                    primaryEl.textContent = q.questionEn;
+                    secondaryEl.textContent = "VI: " + q.questionVi;
+                    secondaryEl.classList.remove("hidden");
+                } else {
+                    primaryEl.textContent = q.questionVi;
+                    secondaryEl.classList.add("hidden");
+                }
+            } else {
+                primaryEl.textContent = q.questionVi || q.questionEn || "";
+                secondaryEl.classList.add("hidden");
+            }
+
+            // Hide feedback & AI panel cleanly
+            document.getElementById("qFeedbackBox").classList.add("hidden");
+            const aiOut = document.getElementById("aiTutorOutput");
+            aiOut.classList.add("hidden");
+            aiOut.innerHTML = "";
+            document.getElementById("aiFollowUpInput").value = "";
+
+            const optsContainer = document.getElementById("qOptionsContainer");
+            const openContainer = document.getElementById("qOpenAnswerContainer");
+
+            if (q.options && q.options.length > 0) {
+                openContainer.classList.add("hidden");
+                optsContainer.classList.remove("hidden");
+                optsContainer.innerHTML = q.options.map(opt => `
+                    <button type="button" data-key="${opt.key}" class="option-btn w-full text-left p-4 rounded-2xl bg-slate-900/75 border border-slate-700/80 flex items-start gap-3.5 cursor-pointer">
+                        <span class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 text-sky-400 font-terminal font-bold text-sm flex items-center justify-center shrink-0">${opt.key}</span>
+                        <span class="text-sm sm:text-base text-slate-200 leading-snug pt-0.5">${escapeHtml(opt.text)}</span>
+                    </button>
+                `).join("");
+
+                optsContainer.querySelectorAll(".option-btn").forEach(btn => {
+                    btn.addEventListener("click", () => handleMcqAnswer(btn.dataset.key));
+                });
+            } else {
+                optsContainer.classList.add("hidden");
+                openContainer.classList.remove("hidden");
+                const openIn = document.getElementById("qOpenInput");
+                openIn.value = "";
+                openIn.disabled = false;
+                document.getElementById("qOpenSubmitBtn").disabled = false;
+                setTimeout(() => openIn.focus(), 50);
+            }
+        }
+
+        function handleMcqAnswer(selectedKey) {
+            if (activeSession.answeredCurrent) return;
+            activeSession.answeredCurrent = true;
+
+            const q = activeSession.questions[activeSession.currentIndex];
+            const isCorrect = (selectedKey === q.correctKey);
+            const selectedOpt = (q.options || []).find(o => o.key === selectedKey);
+            const selectedText = selectedOpt ? `${selectedOpt.key}. ${selectedOpt.text}` : selectedKey;
+
+            // Highlight Option Buttons
+            document.querySelectorAll("#qOptionsContainer .option-btn").forEach(btn => {
+                btn.disabled = true;
+                const k = btn.dataset.key;
+                if (k === q.correctKey) {
+                    btn.classList.add("opt-correct");
+                } else if (k === selectedKey && !isCorrect) {
+                    btn.classList.add("opt-wrong");
+                } else {
+                    btn.classList.add("opt-dim");
+                }
+            });
+
+            finalizeQuestionFeedback(q, isCorrect, selectedKey, selectedText);
+        }
+
+        document.getElementById("qOpenSubmitBtn").addEventListener("click", handleOpenAnswer);
+        document.getElementById("qOpenInput").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") { e.preventDefault(); handleOpenAnswer(); }
+        });
+
+        function handleOpenAnswer() {
+            if (activeSession.answeredCurrent) return;
+            const q = activeSession.questions[activeSession.currentIndex];
+            const val = document.getElementById("qOpenInput").value.trim();
+            if (!val) {
+                showToast("Hãy nhập câu trả lời của bạn trước nhé!", "info");
+                return;
+            }
+            activeSession.answeredCurrent = true;
+            document.getElementById("qOpenInput").disabled = true;
+            document.getElementById("qOpenSubmitBtn").disabled = true;
+
+            const normUser = val.toLowerCase();
+            const normTarget = (q.correctAnswer || "").toLowerCase();
+            const keywords = normTarget.split(/[^a-z0-9]+/).filter(w => w.length >= 3);
+            const isCorrect = normTarget.includes(normUser) || normUser.includes(normTarget) || keywords.some(kw => normUser.includes(kw));
+
+            finalizeQuestionFeedback(q, isCorrect, null, val);
+        }
+
+        function finalizeQuestionFeedback(q, isCorrect, selectedKey, selectedText) {
+            if (isCorrect) {
+                activeSession.rightCount++;
+                if (!progressState.masteredIds.includes(q.id)) progressState.masteredIds.push(q.id);
+                progressState.wrongIds = progressState.wrongIds.filter(id => id !== q.id);
+            } else {
+                activeSession.wrongCount++;
+                if (!progressState.wrongIds.includes(q.id)) progressState.wrongIds.push(q.id);
+            }
+
+            activeSession.results.push({
+                question: q,
+                selectedKey,
+                selectedText,
+                isCorrect
+            });
+
+            document.getElementById("quizScoreRight").textContent = activeSession.rightCount;
+            document.getElementById("quizScoreWrong").textContent = activeSession.wrongCount;
+
+            // Render Explanation Card
+            const fbBox = document.getElementById("qFeedbackBox");
+            const fbIcon = document.getElementById("fbIcon");
+            const fbTitle = document.getElementById("fbTitle");
+            const fbSub = document.getElementById("fbSub");
+            const fbChip = document.getElementById("fbCorrectChip");
+
+            if (isCorrect) {
+                fbBox.className = "rounded-2xl p-5 sm:p-6 border mt-4 space-y-4 bg-emerald-950/35 border-emerald-500/40";
+                fbIcon.className = "fas fa-check-circle text-2xl text-emerald-400";
+                fbTitle.className = "text-base sm:text-lg font-bold text-emerald-300";
+                fbTitle.textContent = "Chính xác! Làm tốt lắm 🎉";
+                fbSub.textContent = `Bạn đã chọn đúng: ${selectedText}`;
+            } else {
+                fbBox.className = "rounded-2xl p-5 sm:p-6 border mt-4 space-y-4 bg-rose-950/30 border-rose-500/40";
+                fbIcon.className = "fas fa-times-circle text-2xl text-rose-400";
+                fbTitle.className = "text-base sm:text-lg font-bold text-rose-300";
+                fbTitle.textContent = "Chưa chính xác! Hãy xem giải thích bên dưới";
+                fbSub.textContent = `Bạn chọn: "${selectedText}" (Hệ thống đã lưu vào mục Cần ôn lại)`;
+            }
+
+            fbChip.textContent = `Đáp án đúng: ${q.correctKey ? q.correctKey + ". " : ""}${q.correctAnswer}`;
+            document.getElementById("fbExplainRight").textContent = q.explainRight;
+            document.getElementById("fbExplainWrongLabel").innerHTML = `<i class="fas fa-balance-scale"></i> ${escapeHtml(q.explainWrongLabel || "Vì sao các đáp án còn lại sai")}:`;
+            document.getElementById("fbExplainWrong").textContent = q.explainWrong;
+
+            const excerptBlock = document.getElementById("fbSourceExcerptBlock");
+            if (q.sourceExcerpt) {
+                document.getElementById("fbSourceExcerpt").textContent = q.sourceExcerpt;
+                excerptBlock.classList.remove("hidden");
+            } else {
+                excerptBlock.classList.add("hidden");
+            }
+
+            const isLast = (activeSession.currentIndex >= activeSession.questions.length - 1);
+            document.getElementById("nextQuestionLabel").textContent = isLast ? "Xem Kết Quả Tổng Kết" : "Câu tiếp theo";
+            fbBox.classList.remove("hidden");
+            saveProgress();
+        }
+
+        // Interactive AI Tutor on Current Question
+        async function askAiAboutCurrentQuestion(customFollowUp = "") {
+            const lastRes = activeSession.results[activeSession.results.length - 1];
+            const q = activeSession.questions[activeSession.currentIndex];
+            if (!q) return;
+
+            const out = document.getElementById("aiTutorOutput");
+            out.classList.remove("hidden");
+            out.innerHTML = `<div class="flex items-center gap-2 text-sky-400"><i class="fas fa-spinner fa-spin"></i> AI Gia sư đang phân tích và giải đáp cho bạn...</div>`;
+
+            const userChoiceInfo = lastRes
+                ? `Người học đã trả lời ${lastRes.isCorrect ? "ĐÚNG" : "SAI"} (lựa chọn của họ: "${lastRes.selectedText}"). Đáp án đúng là: "${q.correctKey ? q.correctKey + ". " : ""}${q.correctAnswer}".`
+                : `Đáp án đúng là: "${q.correctAnswer}".`;
+
+            const extraDoc = activeSession.sourceText ? `\nNgữ cảnh tài liệu gốc:\n${activeSession.sourceText.slice(0, 3000)}` : "";
+            const userPrompt = customFollowUp
+                ? `Câu hỏi của người học muốn hỏi thêm: "${customFollowUp}"`
+                : (lastRes && !lastRes.isCorrect
+                    ? `Hãy giải thích cặn kẽ bằng Tiếng Việt dễ hiểu: tại sao lựa chọn "${lastRes.selectedText}" lại sai, và tại sao "${q.correctAnswer}" mới đúng? Kèm theo 1 ví dụ thực tế ngắn gọn.`
+                    : `Hãy củng cố kiến thức thêm về câu hỏi này kèm 1 ví dụ thực tế trong vận hành mạng/bảo mật để nhớ lâu.`);
+
+            const fullPrompt = `Bạn là Gia sư Mạng & Bảo mật CNTT nhiệt tình.
+Câu hỏi đang ôn tập:
+- EN: ${q.questionEn || "(Không có)"}
+- VI: ${q.questionVi || ""}
+${q.options && q.options.length ? "Các lựa chọn:\n" + q.options.map(o => `${o.key}. ${o.text}`).join("\n") : ""}
+Tình huống: ${userChoiceInfo}
+${userPrompt}${extraDoc}
+
+Hãy trả lời súc tích, thân thiện, rõ ràng bằng tiếng Việt (3–6 câu, dùng gạch đầu dòng nếu cần).`;
+
+            const reply = await callGemini(fullPrompt, 1000);
+            if (reply) {
+                const safeHtml = escapeHtml(reply)
+                    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                    .replace(/\n/g, "<br>");
+                out.innerHTML = `<div class="text-sky-400 font-bold mb-1"><i class="fas fa-robot mr-1"></i> Gia sư AI giải đáp:</div><div>${safeHtml}</div>`;
+            } else {
+                out.innerHTML = `<div class="text-amber-300"><i class="fas fa-info-circle mr-1"></i> Google Gemini tạm thời bận. Bạn hãy đọc kỹ phần <strong>Giải thích đáp án đúng</strong> & <strong>Vì sao đáp án sai</strong> ngay phía trên nhé — đáp án đúng là <strong>${escapeHtml(q.correctAnswer)}</strong>.</div>`;
+            }
+        }
+
+        document.getElementById("askAiDeepExplainBtn").addEventListener("click", () => askAiAboutCurrentQuestion(""));
+        document.getElementById("aiFollowUpSendBtn").addEventListener("click", () => {
+            const val = document.getElementById("aiFollowUpInput").value.trim();
+            askAiAboutCurrentQuestion(val);
+        });
+        document.getElementById("aiFollowUpInput").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                askAiAboutCurrentQuestion(e.target.value.trim());
+            }
+        });
+
+        // Next Question / Summary
+        document.getElementById("nextQuestionBtn").addEventListener("click", advanceQuiz);
+        function advanceQuiz() {
+            if (activeSession.currentIndex < activeSession.questions.length - 1) {
+                activeSession.currentIndex++;
+                renderCurrentQuestion();
+            } else {
+                showQuizSummary();
+            }
+        }
+
+        // Keyboard shortcuts during Quiz
+        window.addEventListener("keydown", (e) => {
+            if (document.getElementById("viewQuiz").classList.contains("hidden")) return;
+            if (document.activeElement && ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
+
+            const keyMap = { "1": "A", "2": "B", "3": "C", "4": "D", "a": "A", "b": "B", "c": "C", "d": "D" };
+            const mapped = keyMap[e.key.toLowerCase()];
+            if (mapped && !activeSession.answeredCurrent) {
+                const btn = document.querySelector(`#qOptionsContainer .option-btn[data-key="${mapped}"]`);
+                if (btn) btn.click();
+            } else if ((e.key === "Enter" || e.key === " ") && activeSession.answeredCurrent) {
+                e.preventDefault();
+                advanceQuiz();
+            }
+        });
+
+        function showQuizSummary() {
+            const total = activeSession.questions.length;
+            const pct = total > 0 ? Math.round((activeSession.rightCount / total) * 100) : 0;
+
+            if (activeSession.deckId && activeSession.deckId !== "mixed-wrong-review") {
+                const prev = progressState.deckStats[activeSession.deckId] || { attempts: 0, bestPct: 0 };
+                progressState.deckStats[activeSession.deckId] = {
+                    attempts: (prev.attempts || 0) + 1,
+                    bestPct: Math.max(prev.bestPct || 0, pct),
+                    lastTestedAt: new Date().toLocaleDateString("vi-VN")
+                };
+                saveProgress();
+            }
+
+            document.getElementById("sumAccuracy").textContent = `${pct}%`;
+            document.getElementById("sumRight").textContent = activeSession.rightCount;
+            document.getElementById("sumWrong").textContent = activeSession.wrongCount;
+            document.getElementById("summarySubtitle").textContent = `${activeSession.deckTitle} · Hoàn thành ${total} câu hỏi`;
+
+            const medal = document.getElementById("summaryMedalIcon");
+            if (pct >= 80) {
+                medal.className = "w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg shadow-emerald-500/20";
+                medal.innerHTML = '<i class="fas fa-trophy"></i>';
+            } else if (pct >= 50) {
+                medal.className = "w-20 h-20 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg shadow-amber-500/20";
+                medal.innerHTML = '<i class="fas fa-medal"></i>';
+            } else {
+                medal.className = "w-20 h-20 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg shadow-rose-500/20";
+                medal.innerHTML = '<i class="fas fa-dumbbell"></i>';
+            }
+
+            const wrongSessionQs = activeSession.results.filter(r => !r.isCorrect).map(r => r.question);
+            const retryWrongBtn = document.getElementById("retryWrongSessionBtn");
+            if (wrongSessionQs.length > 0) {
+                retryWrongBtn.classList.remove("hidden");
+                retryWrongBtn.onclick = () => {
+                    window.startQuizFromDeck(activeSession.deckId === "mixed-wrong-review" ? builtInDecks[0].id : activeSession.deckId, {
+                        mode: "custom",
+                        customQuestions: wrongSessionQs
+                    });
+                };
+            } else {
+                retryWrongBtn.classList.add("hidden");
+            }
+
+            const retryRandBtn = document.getElementById("retryRandomBtn");
+            retryRandBtn.onclick = () => {
+                if (activeSession.lastModeConfig) {
+                    window.startQuizFromDeck(activeSession.lastModeConfig.deckId, activeSession.lastModeConfig.opts);
+                } else {
+                    switchView("library");
+                }
+            };
+
+            const listEl = document.getElementById("summaryDetailsList");
+            listEl.innerHTML = activeSession.results.map((r, i) => {
+                const q = r.question;
+                return `
+                <div class="glass-card rounded-2xl p-4 border ${r.isCorrect ? 'border-emerald-500/30' : 'border-rose-500/40 bg-rose-950/15'}">
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <span class="text-xs font-terminal font-bold ${r.isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+                            ${r.isCorrect ? '✅ ĐÚNG' : '❌ SAI'} · Câu ${i + 1}${q.num ? ` (Gốc #${q.num})` : ''}
+                        </span>
+                    </div>
+                    <p class="text-sm font-bold text-white mb-1">${escapeHtml(q.questionVi || q.questionEn)}</p>
+                    <p class="text-xs text-slate-300 mb-1">Bạn chọn: <span class="${r.isCorrect ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}">${escapeHtml(r.selectedText)}</span> · Đáp án đúng: <span class="text-emerald-400 font-bold">${q.correctKey ? q.correctKey + ". " : ""}${escapeHtml(q.correctAnswer)}</span></p>
+                    <p class="text-xs text-slate-400 mt-2"><strong>Giải thích:</strong> ${escapeHtml(q.explainRight)}</p>
+                </div>
+                `;
+            }).join("");
+
+            switchView("summary");
+        }
+
+        // Boot
+        loadLocalState();
+        renderLibrary();
+        syncFromCloud();
+    </script>
+</body>
+</html>

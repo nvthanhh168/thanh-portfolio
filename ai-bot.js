@@ -61,6 +61,7 @@ THÔNG TIN VỀ NGUYỄN VIẾT THÀNH (PROFILE CONTEXT):
   + Trang nghe nhạc trực tuyến: music.html
   + Kho lưu trữ tài liệu: storage.html
   + Blog chia sẻ kiến thức: blog.html
+  + Trang Học tập & Kiểm tra kiến thức (80 câu CNSF + Tự tải tài liệu tạo quiz AI & giải thích đúng/sai): study.html
   + Cổng quản trị: admin.html
   + Bản Demo Giám sát Mạng 24/7: netuptime-demo.html
   + Bản Demo Quản lý Tài sản CNTT (ITAM): itam-demo.html
@@ -1393,7 +1394,13 @@ Anh Thành luôn sẵn sàng trao đổi các cơ hội nghề nghiệp và hợ
 👉 Bạn có thể trải nghiệm trực tiếp đầy đủ tính năng của hệ thống tại bản Demo Sandbox: [netuptime-demo.html](netuptime-demo.html) 🌐✨`;
         }
 
-        // 6. Tính năng trang web: nhạc, lưu trữ, blog, admin
+        // 6. Tính năng trang web: nhạc, lưu trữ, học tập, blog, admin
+        if (q.includes('hoc tap') || q.includes('on tap') || q.includes('study') || q.includes('quiz') || q.includes('bai tap') || q.includes('80 cau')) {
+            if (isEn) {
+                return `Explore the **Interactive Study & Self-Assessment Hub** at [study.html](study.html) 🎓✨!\n\n- Practice the complete **80 CNSF Networking & Security Questions** (bilingual EN/VI with detailed explanations).\n- **Upload PDF/TXT or paste your own study notes** to auto-generate quizzes, check answers, and get AI explanations whenever you get a question right or wrong! 🚀`;
+            }
+            return `Trang **Học Tập & Kiểm Tra Kiến Thức** đã sẵn sàng tại [study.html](study.html) 🎓✨!\n\n- Ôn luyện ngay **Trọn Bộ 80 Câu Hỏi Mạng & Bảo Mật (CNSF)** song ngữ Anh – Việt kèm giải thích chi tiết đúng/sai.\n- **Tải lên file PDF/TXT hoặc dán tài liệu riêng** để hệ thống tự động tạo câu hỏi kiểm tra định kỳ, chấm điểm tức thì và giải đáp cặn kẽ từng đáp án nhé! 🚀`;
+        }
         if (q.includes('nhac') || q.includes('music')) {
             return `Trang nghe nhạc trực tuyến đã có sẵn trên Portfolio! Bạn có thể nhấn vào menu **Nghe nhạc** hoặc truy cập [music.html](music.html) để thưởng thức các bản nhạc chọn lọc nhé! 🎵🎧`;
         }
