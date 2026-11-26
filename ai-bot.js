@@ -61,7 +61,7 @@ THÔNG TIN VỀ NGUYỄN VIẾT THÀNH (PROFILE CONTEXT):
   + Trang nghe nhạc trực tuyến: music.html
   + Kho lưu trữ tài liệu: storage.html
   + Blog chia sẻ kiến thức: blog.html
-  + Trang Học tập & Kiểm tra kiến thức (80 câu CNSF + Tự tải tài liệu tạo quiz AI & giải thích đúng/sai): study.html
+  + Trang Học tập & Kiểm tra kiến thức (3 bộ tài liệu có sẵn gồm 341 câu: 80 CNSF + 200 Mạng/Bảo mật + 61 M365 SOP, kèm tính năng tự tải tài liệu tạo quiz AI & giải thích đúng/sai): study.html
   + Cổng quản trị: admin.html
   + Bản Demo Giám sát Mạng 24/7: netuptime-demo.html
   + Bản Demo Quản lý Tài sản CNTT (ITAM): itam-demo.html
@@ -1395,11 +1395,11 @@ Anh Thành luôn sẵn sàng trao đổi các cơ hội nghề nghiệp và hợ
         }
 
         // 6. Tính năng trang web: nhạc, lưu trữ, học tập, blog, admin
-        if (q.includes('hoc tap') || q.includes('on tap') || q.includes('study') || q.includes('quiz') || q.includes('bai tap') || q.includes('80 cau')) {
+        if (q.includes('hoc tap') || q.includes('on tap') || q.includes('study') || q.includes('quiz') || q.includes('bai tap') || q.includes('80 cau') || q.includes('200 cau') || q.includes('61 cau') || q.includes('m365 sop')) {
             if (isEn) {
-                return `Explore the **Interactive Study & Self-Assessment Hub** at [study.html](study.html) 🎓✨!\n\n- Practice the complete **80 CNSF Networking & Security Questions** (bilingual EN/VI with detailed explanations).\n- **Upload PDF/TXT or paste your own study notes** to auto-generate quizzes, check answers, and get AI explanations whenever you get a question right or wrong! 🚀`;
+                return `Explore the **Interactive Study & Self-Assessment Hub** at [study.html](study.html) 🎓✨!\n\n- **3 Built-in Bilingual Study Decks (341 Questions total)**: **80 CNSF Security Questions**, **200 Networking/Firewall/System Interview & Ops Questions** (TCP/IP, OSPF, EIGRP, BGP, Palo Alto, Zscaler), and **61 Microsoft 365 Admin SOP Scenarios**.\n- **Upload PDF/TXT or paste your own study notes** to auto-generate quizzes, check answers, and get AI explanations whenever you get a question right or wrong! 🚀`;
             }
-            return `Trang **Học Tập & Kiểm Tra Kiến Thức** đã sẵn sàng tại [study.html](study.html) 🎓✨!\n\n- Ôn luyện ngay **Trọn Bộ 80 Câu Hỏi Mạng & Bảo Mật (CNSF)** song ngữ Anh – Việt kèm giải thích chi tiết đúng/sai.\n- **Tải lên file PDF/TXT hoặc dán tài liệu riêng** để hệ thống tự động tạo câu hỏi kiểm tra định kỳ, chấm điểm tức thì và giải đáp cặn kẽ từng đáp án nhé! 🚀`;
+            return `Trang **Học Tập & Kiểm Tra Kiến Thức** đã sẵn sàng tại [study.html](study.html) 🎓✨!\n\n- Ôn luyện ngay **3 Bộ Đề Chuẩn Hóa Có Sẵn (Tổng 341 Câu Song Ngữ Anh – Việt)**: **80 Câu CNSF Security**, **200 Câu Mạng/Bảo Mật/Hệ Thống** (TCP/IP, OSPF, EIGRP, BGP, Palo Alto, Zscaler) và **61 Tình Huống Microsoft 365 Admin SOP** kèm giải thích đúng – sai chi tiết.\n- **Tải lên file PDF/TXT hoặc dán tài liệu riêng** để hệ thống tự động tạo câu hỏi kiểm tra định kỳ, chấm điểm tức thì và giải đáp cặn kẽ từng đáp án nhé! 🚀`;
         }
         if (q.includes('nhac') || q.includes('music')) {
             return `Trang nghe nhạc trực tuyến đã có sẵn trên Portfolio! Bạn có thể nhấn vào menu **Nghe nhạc** hoặc truy cập [music.html](music.html) để thưởng thức các bản nhạc chọn lọc nhé! 🎵🎧`;

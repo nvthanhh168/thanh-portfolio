@@ -88,7 +88,7 @@
                         <i class="fas fa-layer-group"></i>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-white" id="statDecks">1</p>
+                        <p class="text-2xl font-bold text-white" id="statDecks">3</p>
                         <p class="text-xs text-slate-400">Bộ tài liệu ôn tập</p>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                         <i class="fas fa-list-ol"></i>
                     </div>
                     <div>
-                        <p class="text-2xl font-bold text-white" id="statQuestions">80</p>
+                        <p class="text-2xl font-bold text-white" id="statQuestions">341</p>
                         <p class="text-xs text-slate-400">Tổng số câu hỏi</p>
                     </div>
                 </div>
@@ -148,8 +148,8 @@
             <!-- VIEW 1: LIBRARY (BUILT-IN DECK + USER UPLOADED DOCS)      -->
             <!-- ========================================================= -->
             <section id="viewLibrary" class="space-y-8">
-                <!-- Built-in Featured Deck Container -->
-                <div id="builtInDeckContainer"></div>
+                <!-- Built-in Featured Decks Container -->
+                <div id="builtInDeckContainer" class="space-y-6"></div>
 
                 <!-- Custom User Study Documents -->
                 <div>
@@ -266,15 +266,17 @@
             <!-- VIEW 3: BUILT-IN STUDY GUIDE READER (READ & SEARCH ALL)   -->
             <!-- ========================================================= -->
             <section id="viewReader" class="hidden space-y-5">
-                <div class="glass-card rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div class="glass-card rounded-2xl p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                     <div class="relative flex-1">
                         <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                        <input type="text" id="readerSearchInput" placeholder="Tìm nhanh từ khóa (VD: DMZ, VLAN, Nmap, TCP, IPS, CIA, XSS...)" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500">
+                        <input type="text" id="readerSearchInput" placeholder="Tìm nhanh từ khóa (VD: DMZ, OSPF, BGP, Palo Alto, Zscaler, Block sign-in, Intune...)" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500">
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
-                        <select id="readerSectionSelect" class="bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
-                            <option value="all">Tất cả 8 Phần (80 câu)</option>
+                        <select id="readerDeckSelect" class="bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2 text-xs text-amber-300 font-semibold focus:outline-none focus:border-amber-500 max-w-[260px]"></select>
+                        <select id="readerSectionSelect" class="bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500 max-w-[260px]">
+                            <option value="all">Tất cả các phần</option>
                         </select>
+                        <span id="readerMatchCount" class="text-[11px] font-terminal text-slate-400 px-2.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800">0 câu</span>
                         <button id="toggleReaderAnswersBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold border border-amber-500/30 transition cursor-pointer">
                             <i class="fas fa-eye-slash mr-1"></i> Ẩn đáp án để tự nhẩm
                         </button>
@@ -734,78 +736,115 @@
         function renderLibrary() {
             updateAllStats();
 
-            // 1. Built-in CNSF 80 Deck
+            // 1. Built-in Official Study Decks (CNSF 80 + Net/Sec 200 + M365 SOP 61)
             const builtInContainer = document.getElementById("builtInDeckContainer");
-            const cnsf = builtInDecks[0];
-            if (cnsf) {
-                const total = cnsf.questions.length;
-                const masteredCount = cnsf.questions.filter(q => progressState.masteredIds.includes(q.id)).length;
-                const wrongCount = cnsf.questions.filter(q => progressState.wrongIds.includes(q.id)).length;
-                const pct = total > 0 ? Math.round((masteredCount / total) * 100) : 0;
-                const stats = progressState.deckStats[cnsf.id] || {};
-                const sections = [...new Set(cnsf.questions.map(q => q.section))];
+            const deckThemes = [
+                {
+                    border: "border-sky-500/35",
+                    bgGrad: "from-slate-900/95 via-slate-900/85 to-sky-950/30",
+                    glow: "bg-amber-500/10",
+                    iconBg: "from-amber-500 to-rose-500",
+                    icon: "fa-shield-alt",
+                    tag: "⭐ TÀI LIỆU CÓ SẴN · CNSF",
+                    tagClass: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+                    barClass: "from-emerald-500 to-sky-400"
+                },
+                {
+                    border: "border-indigo-500/35",
+                    bgGrad: "from-slate-900/95 via-slate-900/85 to-indigo-950/35",
+                    glow: "bg-sky-500/10",
+                    iconBg: "from-sky-400 to-indigo-500",
+                    icon: "fa-network-wired",
+                    tag: "🌐 TÀI LIỆU CÓ SẴN · MẠNG & BẢO MẬT",
+                    tagClass: "bg-sky-500/20 text-sky-300 border-sky-500/30",
+                    barClass: "from-sky-400 to-indigo-400"
+                },
+                {
+                    border: "border-emerald-500/35",
+                    bgGrad: "from-slate-900/95 via-slate-900/85 to-emerald-950/30",
+                    glow: "bg-emerald-500/10",
+                    iconBg: "from-emerald-400 to-teal-500",
+                    icon: "fa-cubes",
+                    tag: "☁️ TÀI LIỆU CÓ SẴN · M365 ADMIN SOP",
+                    tagClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+                    barClass: "from-emerald-400 to-teal-400"
+                }
+            ];
 
-                builtInContainer.innerHTML = `
-                <div class="glass-card rounded-3xl p-6 sm:p-8 border border-sky-500/35 bg-gradient-to-br from-slate-900/95 via-slate-900/85 to-sky-950/30 relative overflow-hidden shadow-2xl">
-                    <div class="absolute -top-24 -right-24 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            builtInContainer.innerHTML = builtInDecks.map((deck, idx) => {
+                const theme = deckThemes[idx % deckThemes.length];
+                const total = deck.questions.length;
+                const masteredCount = deck.questions.filter(q => progressState.masteredIds.includes(q.id)).length;
+                const wrongCount = deck.questions.filter(q => progressState.wrongIds.includes(q.id)).length;
+                const pct = total > 0 ? Math.round((masteredCount / total) * 100) : 0;
+                const stats = progressState.deckStats[deck.id] || {};
+                const sections = [...new Set(deck.questions.map(q => q.section))];
+                const secCounts = {};
+                deck.questions.forEach(q => {
+                    secCounts[q.section] = (secCounts[q.section] || 0) + 1;
+                });
+
+                return `
+                <div class="glass-card rounded-3xl p-6 sm:p-8 border ${theme.border} bg-gradient-to-br ${theme.bgGrad} relative overflow-hidden shadow-2xl">
+                    <div class="absolute -top-24 -right-24 w-72 h-72 ${theme.glow} rounded-full blur-3xl pointer-events-none"></div>
                     <div class="flex flex-wrap items-start justify-between gap-4 mb-5">
                         <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-rose-500 text-slate-950 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/20 shrink-0">
-                                <i class="fas fa-shield-alt"></i>
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr ${theme.iconBg} text-slate-950 flex items-center justify-center text-2xl shadow-lg shrink-0">
+                                <i class="fas ${theme.icon}"></i>
                             </div>
                             <div>
                                 <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                    <span class="px-3 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
-                                        ⭐ TÀI LIỆU ÔN TẬP CÓ SẴN · CNSF
+                                    <span class="px-3 py-0.5 rounded-full text-[11px] font-bold ${theme.tagClass} border uppercase tracking-wider">
+                                        ${theme.tag}
                                     </span>
                                     <span class="px-2.5 py-0.5 rounded-full text-[11px] font-terminal bg-sky-500/15 text-sky-300 border border-sky-500/30">
-                                        80 Câu Song Ngữ Anh – Việt
+                                        ${total} Câu Song Ngữ Anh – Việt
                                     </span>
                                     ${wrongCount > 0 ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">${wrongCount} câu từng sai</span>` : ''}
                                 </div>
-                                <h2 class="text-xl sm:text-2xl font-extrabold text-white">${escapeHtml(cnsf.title)}</h2>
-                                <p class="text-xs sm:text-sm text-slate-400 mt-1">${escapeHtml(cnsf.subtitle)}</p>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-white">${escapeHtml(deck.title)}</h2>
+                                <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-3xl">${escapeHtml(deck.subtitle)}</p>
                             </div>
                         </div>
-                        <div class="text-left sm:text-right font-terminal text-xs">
+                        <div class="text-left sm:text-right font-terminal text-xs shrink-0">
                             <div class="text-emerald-400 font-bold">Đã nắm: ${masteredCount} / ${total} câu (${pct}%)</div>
                             ${stats.lastTestedAt ? `<div class="text-slate-400 text-[11px] mt-0.5">Kiểm tra gần nhất: ${escapeHtml(stats.lastTestedAt)} · Cao nhất: ${stats.bestPct || 0}%</div>` : `<div class="text-slate-500 text-[11px] mt-0.5">Chưa kiểm tra lần nào</div>`}
                         </div>
                     </div>
 
                     <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-5">
-                        <div class="h-full bg-gradient-to-r from-emerald-500 to-sky-400 transition-all duration-500" style="width: ${pct}%"></div>
+                        <div class="h-full bg-gradient-to-r ${theme.barClass} transition-all duration-500" style="width: ${pct}%"></div>
                     </div>
 
                     <!-- Part Selector & Launch Actions -->
                     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pt-4 border-t border-slate-800/80">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="text-xs text-slate-400 font-semibold mr-1">Chọn phần:</span>
-                            <select id="cnsfSectionSelect" class="bg-slate-950/90 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
-                                <option value="all">Toàn bộ 80 câu (Phần 1 – 8)</option>
-                                ${sections.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)} (10 câu)</option>`).join("")}
+                            <select id="sectionSelect-${deck.id}" class="bg-slate-950/90 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 max-w-full sm:max-w-[340px]">
+                                <option value="all">Toàn bộ ${total} câu (${sections.length} phần)</option>
+                                ${sections.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)} (${secCounts[s]} câu)</option>`).join("")}
                             </select>
                         </div>
 
                         <div class="flex flex-wrap items-center gap-2.5">
-                            <button onclick="window.startQuizFromDeck('${cnsf.id}', { mode: 'random10' })" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition cursor-pointer">
+                            <button onclick="window.startQuizFromDeck('${deck.id}', { mode: 'random10' })" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition cursor-pointer">
                                 <i class="fas fa-bolt"></i> Kiểm Tra Nhanh (10 Câu Ngẫu Nhiên)
                             </button>
-                            <button onclick="window.startCnsfSelectedPart()" class="px-4 py-2.5 rounded-xl bg-sky-500/20 hover:bg-sky-500 text-sky-300 hover:text-white font-bold text-xs border border-sky-500/30 flex items-center gap-1.5 transition cursor-pointer">
+                            <button onclick="window.startDeckSelectedPart('${deck.id}')" class="px-4 py-2.5 rounded-xl bg-sky-500/20 hover:bg-sky-500 text-sky-300 hover:text-white font-bold text-xs border border-sky-500/30 flex items-center gap-1.5 transition cursor-pointer">
                                 <i class="fas fa-play"></i> Làm Theo Phần Đã Chọn
                             </button>
                             ${wrongCount > 0 ? `
-                            <button onclick="window.startQuizFromDeck('${cnsf.id}', { mode: 'wrongOnly' })" class="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-bold text-xs border border-rose-500/30 flex items-center gap-1.5 transition cursor-pointer">
+                            <button onclick="window.startQuizFromDeck('${deck.id}', { mode: 'wrongOnly' })" class="px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-bold text-xs border border-rose-500/30 flex items-center gap-1.5 transition cursor-pointer">
                                 <i class="fas fa-exclamation-circle"></i> Ôn Lại ${wrongCount} Câu Sai
                             </button>` : ''}
-                            <button onclick="window.openReaderView()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 flex items-center gap-1.5 transition cursor-pointer">
-                                <i class="fas fa-book-open"></i> Đọc Tài Liệu (80 câu)
+                            <button onclick="window.openReaderView('${deck.id}')" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 flex items-center gap-1.5 transition cursor-pointer">
+                                <i class="fas fa-book-open"></i> Đọc Tài Liệu (${total} câu)
                             </button>
                         </div>
                     </div>
                 </div>
                 `;
-            }
+            }).join("");
 
             // 2. Custom Decks Grid
             const grid = document.getElementById("customDecksGrid");
@@ -878,7 +917,14 @@
         }
 
         window.switchToAdd = () => switchView("add");
-        window.openReaderView = () => switchView("reader");
+        window.openReaderView = (deckId) => {
+            const deckSel = document.getElementById("readerDeckSelect");
+            if (deckId && deckSel && [...deckSel.options].some(o => o.value === deckId)) {
+                deckSel.value = deckId;
+                populateReaderSections();
+            }
+            switchView("reader");
+        };
 
         window.openSourceModal = function(deckId) {
             const deck = getAllDecks().find(d => d.id === deckId);
@@ -911,33 +957,63 @@
         };
 
         // =========================================================
-        // READER MODE (80 BUILT-IN QUESTIONS)
+        // READER MODE (ALL BUILT-IN DECKS: CNSF 80 + NET/SEC 200 + M365 SOP 61)
         // =========================================================
         let hideReaderAnswers = false;
-        const readerSelect = document.getElementById("readerSectionSelect");
-        if (builtInDecks[0]) {
-            const secs = [...new Set(builtInDecks[0].questions.map(q => q.section))];
+        const readerDeckSelect = document.getElementById("readerDeckSelect");
+        const readerSectionSelect = document.getElementById("readerSectionSelect");
+
+        builtInDecks.forEach(d => {
+            const opt = document.createElement("option");
+            opt.value = d.id;
+            opt.textContent = `${d.title} (${d.questions.length} câu)`;
+            readerDeckSelect.appendChild(opt);
+        });
+
+        function populateReaderSections() {
+            const deckId = readerDeckSelect.value;
+            const deck = builtInDecks.find(d => d.id === deckId) || builtInDecks[0];
+            readerSectionSelect.innerHTML = "";
+            if (!deck) return;
+            const secs = [...new Set(deck.questions.map(q => q.section))];
+            const secCounts = {};
+            deck.questions.forEach(q => {
+                secCounts[q.section] = (secCounts[q.section] || 0) + 1;
+            });
+            const allOpt = document.createElement("option");
+            allOpt.value = "all";
+            allOpt.textContent = `Tất cả ${secs.length} Phần (${deck.questions.length} câu)`;
+            readerSectionSelect.appendChild(allOpt);
             secs.forEach(s => {
                 const opt = document.createElement("option");
                 opt.value = s;
-                opt.textContent = s;
-                readerSelect.appendChild(opt);
+                opt.textContent = `${s} (${secCounts[s]} câu)`;
+                readerSectionSelect.appendChild(opt);
             });
         }
 
+        populateReaderSections();
+
         function renderReader() {
-            const deck = builtInDecks[0];
+            const deckId = readerDeckSelect ? readerDeckSelect.value : "";
+            const deck = builtInDecks.find(d => d.id === deckId) || builtInDecks[0];
             if (!deck) return;
             const query = (document.getElementById("readerSearchInput").value || "").toLowerCase().trim();
-            const sec = document.getElementById("readerSectionSelect").value;
+            const sec = readerSectionSelect.value;
             const container = document.getElementById("readerListContainer");
+            const countEl = document.getElementById("readerMatchCount");
 
             const filtered = deck.questions.filter(q => {
                 if (sec !== "all" && q.section !== sec) return false;
                 if (!query) return true;
-                const hay = `${q.num} ${q.questionEn} ${q.questionVi} ${q.correctAnswer} ${q.explainRight}`.toLowerCase();
+                const optsText = (q.options || []).map(o => o.text).join(" ");
+                const hay = `${q.num} ${q.section} ${q.questionEn} ${q.questionVi} ${optsText} ${q.correctAnswer} ${q.explainRight} ${q.explainWrong || ""}`.toLowerCase();
                 return hay.includes(query);
             });
+
+            if (countEl) {
+                countEl.textContent = `${filtered.length} / ${deck.questions.length} câu`;
+            }
 
             if (filtered.length === 0) {
                 container.innerHTML = `<div class="glass-card rounded-2xl p-8 text-center text-slate-400 text-sm">Không tìm thấy câu hỏi nào khớp từ khóa "${escapeHtml(query)}".</div>`;
@@ -970,7 +1046,11 @@
         }
 
         document.getElementById("readerSearchInput").addEventListener("input", renderReader);
-        document.getElementById("readerSectionSelect").addEventListener("change", renderReader);
+        readerDeckSelect.addEventListener("change", () => {
+            populateReaderSections();
+            renderReader();
+        });
+        readerSectionSelect.addEventListener("change", renderReader);
         document.getElementById("toggleReaderAnswersBtn").addEventListener("click", (e) => {
             hideReaderAnswers = !hideReaderAnswers;
             e.currentTarget.innerHTML = hideReaderAnswers
@@ -1374,10 +1454,15 @@ ${chunk}
             return copy;
         }
 
+        window.startDeckSelectedPart = function(deckId) {
+            const targetId = deckId || (builtInDecks[0] && builtInDecks[0].id);
+            const sel = document.getElementById("sectionSelect-" + targetId);
+            const sec = sel ? sel.value : "all";
+            window.startQuizFromDeck(targetId, { mode: "section", section: sec });
+        };
+
         window.startCnsfSelectedPart = function() {
-            const cnsf = builtInDecks[0];
-            const sec = document.getElementById("cnsfSectionSelect").value;
-            window.startQuizFromDeck(cnsf.id, { mode: "section", section: sec });
+            window.startDeckSelectedPart(builtInDecks[0] && builtInDecks[0].id);
         };
 
         window.startQuizFromDeck = function(deckId, opts = { mode: "all" }) {
