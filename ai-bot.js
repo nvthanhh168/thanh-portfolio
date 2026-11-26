@@ -48,7 +48,7 @@ THÔNG TIN VỀ NGUYỄN VIẾT THÀNH (PROFILE CONTEXT):
   10. Peplink Certified Sales Specialist (PCSS) - Tư vấn giải pháp kiến trúc mạng SD-WAN.
   11. Certified Network Security Fundamentals (CNSF) - Chứng chỉ An ninh mạng quốc tế cấp bởi Red Team Leaders (26/11/2026, xác thực: https://courses.redteamleaders.com/exam-completion/70aa51de71b7c5c3).
 - Thông tin liên hệ:
-  + Số điện thoại: 0364 892 201
+  + Số điện thoại: 0868269060
   + Email: thanhnv168@gmail.com
   + Địa chỉ: Thành Phố Hồ Chí Minh, Việt Nam
   + Facebook: https://www.facebook.com/nvthanhhhhh
@@ -1319,7 +1319,7 @@ Tất cả kỹ năng đều được chứng minh qua 11 chứng chỉ quốc t
             if (isEn) {
                 return `Here is how you can connect with **Nguyen Viet Thanh** 📞:
 
-- **Phone / Zalo:** 0364 892 201
+- **Phone / Zalo:** 0868269060
 - **Email:** thanhnv168@gmail.com
 - **Facebook:** [fb.com/nvthanhhhhh](https://www.facebook.com/nvthanhhhhh)
 - **GitHub:** [github.com/nvthanhh168](https://github.com/nvthanhh168)
@@ -1328,7 +1328,7 @@ Tất cả kỹ năng đều được chứng minh qua 11 chứng chỉ quốc t
             }
             return `Bạn có thể kết nối trực tiếp với anh **Nguyễn Viết Thành** qua các kênh sau nhé 📞:
 
-- 📱 **Số điện thoại / Zalo**: **0364 892 201**
+- 📱 **Số điện thoại / Zalo**: **0868269060**
 - ✉️ **Email**: **thanhnv168@gmail.com**
 - 🌐 **Facebook cá nhân**: [fb.com/nvthanhhhhh](https://www.facebook.com/nvthanhhhhh)
 - 🐙 **GitHub**: [github.com/nvthanhh168](https://github.com/nvthanhh168)
