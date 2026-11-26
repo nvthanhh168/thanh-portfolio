@@ -648,15 +648,15 @@
         <div class="max-w-6xl mx-auto relative z-10">
             <div class="text-center mb-12" data-aos="fade-up">
                 <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-terminal uppercase tracking-widest mb-3">
-                    <i class="fas fa-certificate"></i> Verified Credentials · 10 Chứng chỉ Quốc tế
+                    <i class="fas fa-certificate"></i> Verified Credentials · 11 Chứng chỉ Quốc tế
                 </div>
                 <h2 class="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Chứng chỉ & <span class="text-gradient">Bằng cấp Chuyên môn</span></h2>
-                <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">Tổng hợp chứng chỉ kỹ thuật quốc tế về An ninh mạng Sophos, Quản trị hạ tầng mạng TP-Link Omada và Giải pháp Peplink SD-WAN.</p>
+                <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">Tổng hợp chứng chỉ kỹ thuật quốc tế về An ninh mạng Sophos, Quản trị hạ tầng mạng TP-Link Omada, Giải pháp Peplink SD-WAN và Red Team Leaders.</p>
                 
                 <!-- Category Filter Pills -->
                 <div class="flex flex-wrap items-center justify-center gap-2.5 mt-8">
                     <button class="cert-filter active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition bg-emerald-500 text-white shadow-lg shadow-emerald-500/25" data-filter="all">
-                        Tất cả (10)
+                        Tất cả (11)
                     </button>
                     <button class="cert-filter px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white" data-filter="sophos">
                         🛡️ Sophos Security (5)
@@ -666,6 +666,9 @@
                     </button>
                     <button class="cert-filter px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white" data-filter="peplink">
                         ⚡ Peplink (3)
+                    </button>
+                    <button class="cert-filter px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition glass-card text-slate-300 hover:text-white" data-filter="redteam">
+                        🎯 Red Team Leaders (1)
                     </button>
                 </div>
             </div>
@@ -928,7 +931,10 @@
             <!-- Modal Footer Info & Actions -->
             <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-800 shrink-0 text-xs text-slate-400">
                 <span id="modalCertMeta" class="font-terminal text-center sm:text-left"></span>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <a id="verifyCertBtn" href="" target="_blank" rel="noopener noreferrer" class="hidden px-4 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/30 font-semibold items-center gap-1.5 transition shadow-md">
+                        <i class="fas fa-external-link-alt"></i> Xác thực chứng chỉ
+                    </a>
                     <a id="downloadCertBtn" href="" download class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 text-white font-semibold flex items-center gap-1.5 hover:opacity-90 transition shadow-md">
                         <i class="fas fa-download"></i> Tải chứng chỉ
                     </a>
@@ -1059,6 +1065,19 @@
                 date: "25/09/2026",
                 meta: "Cấp ngày: 25/09/2026 · Mã xác thực Peplink: e8CoCYAULH",
                 desc: "Tư vấn thiết kế giải pháp kiến trúc mạng SD-WAN, kết nối không gián đoạn cho doanh nghiệp và chi nhánh."
+            },
+            {
+                id: "redteam-cnsf",
+                title: "Certified Network Security Fundamentals (CNSF)",
+                issuer: "Red Team Leaders",
+                category: "redteam",
+                badge: "An ninh Mạng",
+                badgeColor: "bg-rose-500/20 text-rose-400 border-rose-500/30",
+                img: "certificates/redteam-leaders-cnsf.jpg",
+                date: "26/11/2026",
+                meta: "Cấp ngày: 26/11/2026 · Mã xác thực: 70aa51de71b7c5c3 · Red Team Leaders",
+                desc: "Nền tảng bảo mật giao thức mạng, phòng thủ hạ tầng mạng doanh nghiệp và an ninh truyền thông.",
+                verifyUrl: "https://courses.redteamleaders.com/exam-completion/70aa51de71b7c5c3"
             }
         ];
 
@@ -1077,6 +1096,12 @@
             currentCertFilter = filter;
             const grid = document.getElementById('certsGrid');
             if (!grid) return;
+
+            document.querySelectorAll('.cert-filter').forEach(btn => {
+                const f = btn.dataset.filter;
+                const count = f === 'all' ? certificatesData.length : certificatesData.filter(c => c.category === f).length;
+                btn.innerHTML = btn.innerHTML.replace(/\(\d+\)/, `(${count})`);
+            });
 
             const list = filter === 'all' ? certificatesData : certificatesData.filter(c => c.category === filter);
 
@@ -1122,6 +1147,7 @@
                             <button onclick="openCertModal('${cert.id}')" class="flex-1 py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-emerald-500 hover:text-white text-emerald-400 font-semibold text-xs transition flex items-center justify-center gap-1.5 border border-emerald-500/20">
                                 <i class="fas fa-eye"></i> Phóng to
                             </button>
+                            ${cert.verifyUrl ? `<a href="${cert.verifyUrl}" target="_blank" rel="noopener noreferrer" class="py-2 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500 text-rose-400 hover:text-white text-xs font-semibold transition flex items-center justify-center gap-1 border border-rose-500/30" title="Xác thực trực tuyến"><i class="fas fa-external-link-alt"></i> Xác thực</a>` : ''}
                             <a href="${cert.img}" download class="py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white text-xs transition flex items-center justify-center" title="Tải ảnh">
                                 <i class="fas fa-download"></i>
                             </a>
@@ -1151,6 +1177,7 @@
         const modalCertIssuer = document.getElementById('modalCertIssuer');
         const modalCertImg = document.getElementById('modalCertImg');
         const modalCertMeta = document.getElementById('modalCertMeta');
+        const verifyCertBtn = document.getElementById('verifyCertBtn');
         const downloadCertBtn = document.getElementById('downloadCertBtn');
         const closeCertModalBtn = document.getElementById('closeCertModalBtn');
 
@@ -1166,6 +1193,16 @@
             modalCertIssuer.textContent = (cert.issuer || '') + (badge ? ' · ' + badge : '');
             modalCertImg.src = cert.img;
             modalCertMeta.textContent = meta;
+            if (verifyCertBtn) {
+                if (cert.verifyUrl) {
+                    verifyCertBtn.href = cert.verifyUrl;
+                    verifyCertBtn.classList.remove('hidden');
+                    verifyCertBtn.classList.add('inline-flex');
+                } else {
+                    verifyCertBtn.classList.add('hidden');
+                    verifyCertBtn.classList.remove('inline-flex');
+                }
+            }
             downloadCertBtn.href = cert.img;
             downloadCertBtn.setAttribute('download', title.replace(/[^a-zA-Z0-9]/g, '_') + '.jpg');
 

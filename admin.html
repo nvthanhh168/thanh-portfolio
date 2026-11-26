@@ -551,6 +551,7 @@
                             <option value="sophos">Sophos</option>
                             <option value="omada">TP-Link Omada</option>
                             <option value="peplink">Peplink</option>
+                            <option value="redteam">Red Team Leaders</option>
                             <option value="other">Khác</option>
                         </select>
                     </div>
@@ -559,8 +560,8 @@
                         <button id="openAddCertModalBtn" class="px-4 py-2 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition shadow-md shadow-sky-500/25 flex items-center gap-1.5">
                             <i class="fas fa-plus-circle"></i> Thêm Chứng Chỉ Mới
                         </button>
-                        <button id="resetDefaultCertsBtn" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-medium border border-slate-700 transition flex items-center gap-1.5" title="Khôi phục lại 10 chứng chỉ mặc định">
-                            <i class="fas fa-undo-alt text-amber-400"></i> Khôi phục mẫu 10 chứng chỉ
+                        <button id="resetDefaultCertsBtn" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-medium border border-slate-700 transition flex items-center gap-1.5" title="Khôi phục lại 11 chứng chỉ mặc định">
+                            <i class="fas fa-undo-alt text-amber-400"></i> Khôi phục mẫu 11 chứng chỉ
                         </button>
                     </div>
                 </div>
@@ -689,7 +690,7 @@
                             <div class="glass-card p-4 rounded-xl border border-slate-800">
                                 <div class="text-violet-400 text-lg mb-2"><i class="fas fa-brain"></i></div>
                                 <h5 class="text-xs font-bold text-white mb-1">Hỏi đáp đa năng</h5>
-                                <p class="text-[11px] text-slate-400">Hiểu tường tận 10 chứng chỉ của anh Thành và trả lời được mọi kiến thức đời sống.</p>
+                                <p class="text-[11px] text-slate-400">Hiểu tường tận 11 chứng chỉ của anh Thành và trả lời được mọi kiến thức đời sống.</p>
                             </div>
                         </div>
 
@@ -756,6 +757,7 @@
                             <option value="sophos">Sophos</option>
                             <option value="omada">TP-Link Omada</option>
                             <option value="peplink">Peplink</option>
+                            <option value="redteam">Red Team Leaders</option>
                             <option value="other">Hãng khác</option>
                         </select>
                     </div>
@@ -784,11 +786,15 @@
                     </div>
                 </div>
 
-                <!-- Đường dẫn ảnh chứng chỉ -->
-                <div>
-                    <label class="block font-semibold text-slate-300 mb-1">Đường dẫn ảnh chứng chỉ (Image URL hoặc local path)</label>
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="editCertImg" required placeholder="certificates/sophos-ct80-firewall-admin.webp hoặc https://..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500 font-terminal text-[11px]">
+                <!-- Đường dẫn ảnh chứng chỉ & Link xác thực -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Đường dẫn ảnh chứng chỉ (Image URL hoặc local path)</label>
+                        <input type="text" id="editCertImg" required placeholder="certificates/sophos-ct80-firewall-admin.webp hoặc https://..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500 font-terminal text-[11px]">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1">Link xác thực trực tuyến (Verify URL - tùy chọn)</label>
+                        <input type="text" id="editCertVerifyUrl" placeholder="https://courses.redteamleaders.com/exam-completion/..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-sky-500 font-terminal text-[11px]">
                     </div>
                 </div>
 
@@ -866,7 +872,7 @@
         const REQUIRED_ADMIN_USER = "admin";
         const REQUIRED_ADMIN_PASS = "Vntt@#123";
 
-        // DỮ LIỆU CHỨNG CHỈ MẶC ĐỊNH (10 CHỨNG CHỈ CHUẨN)
+        // DỮ LIỆU CHỨNG CHỈ MẶC ĐỊNH (11 CHỨNG CHỈ CHUẨN)
         const DEFAULT_CERTIFICATES = [
             {
                 id: "sophos-ct80",
@@ -1037,6 +1043,24 @@
                 metaEN: "Issued: September 25, 2026 · Verification Code: e8CoCYAULH",
                 descVN: "Tư vấn thiết kế giải pháp kiến trúc mạng SD-WAN, kết nối không gián đoạn cho doanh nghiệp và chi nhánh.",
                 descEN: "Architecting SD-WAN network solutions and unbreakable connectivity infrastructure for corporate and branch offices."
+            },
+            {
+                id: "redteam-cnsf",
+                titleVN: "Certified Network Security Fundamentals (CNSF)",
+                titleEN: "Certified Network Security Fundamentals (CNSF)",
+                issuer: "Red Team Leaders",
+                category: "redteam",
+                badgeVN: "An ninh Mạng",
+                badgeEN: "Network Security",
+                badgeColor: "bg-rose-500/20 text-rose-400 border-rose-500/30",
+                img: "certificates/redteam-leaders-cnsf.jpg",
+                dateVN: "26/11/2026",
+                dateEN: "Nov 26, 2026",
+                metaVN: "Cấp ngày: 26/11/2026 · Mã xác thực: 70aa51de71b7c5c3 · Red Team Leaders",
+                metaEN: "Issued: November 26, 2026 · Verification ID: 70aa51de71b7c5c3 · Red Team Leaders",
+                descVN: "Nền tảng bảo mật giao thức mạng, phòng thủ hạ tầng mạng doanh nghiệp và an ninh truyền thông.",
+                descEN: "Verified mastery of network protocol fundamentals, enterprise network security defense, and traffic protection.",
+                verifyUrl: "https://courses.redteamleaders.com/exam-completion/70aa51de71b7c5c3"
             }
         ];
 
@@ -1559,6 +1583,7 @@
             document.getElementById('editCertBadgeEN').value = cert.badgeEN || cert.badge || "";
             document.getElementById('editCertBadgeColor').value = cert.badgeColor || "bg-blue-500/20 text-blue-400 border-blue-500/30";
             document.getElementById('editCertImg').value = cert.img || "";
+            document.getElementById('editCertVerifyUrl').value = cert.verifyUrl || "";
             document.getElementById('editCertDateVN').value = cert.dateVN || cert.date || "";
             document.getElementById('editCertDateEN').value = cert.dateEN || cert.date || "";
             document.getElementById('editCertMetaVN').value = cert.metaVN || cert.meta || "";
@@ -1589,6 +1614,7 @@
             const titleEN = document.getElementById('editCertTitleEN').value.trim();
             const issuer = document.getElementById('editCertIssuer').value.trim();
             const img = document.getElementById('editCertImg').value.trim();
+            const verifyUrl = document.getElementById('editCertVerifyUrl').value.trim();
 
             if (!titleVN || !issuer || !img) {
                 alert("Vui lòng điền đầy đủ Tên chứng chỉ, Đơn vị cấp và Đường dẫn ảnh!");
@@ -1610,6 +1636,7 @@
                 badge: document.getElementById('editCertBadgeVN').value.trim() || "Chứng chỉ",
                 badgeColor: document.getElementById('editCertBadgeColor').value,
                 img: img,
+                verifyUrl: verifyUrl,
                 dateVN: document.getElementById('editCertDateVN').value.trim(),
                 dateEN: document.getElementById('editCertDateEN').value.trim() || document.getElementById('editCertDateVN').value.trim(),
                 date: document.getElementById('editCertDateVN').value.trim(),
@@ -1634,13 +1661,13 @@
             showToast("Thành công", `Đã lưu chứng chỉ: ${newCert.titleVN}`);
         });
 
-        // Khôi phục 10 chứng chỉ mặc định
+        // Khôi phục 11 chứng chỉ mặc định
         document.getElementById('resetDefaultCertsBtn').addEventListener('click', async () => {
-            if (confirm("Khôi phục danh sách về 10 chứng chỉ mặc định ban đầu?")) {
+            if (confirm("Khôi phục danh sách về 11 chứng chỉ mặc định ban đầu?")) {
                 currentCertificates = [...DEFAULT_CERTIFICATES];
                 await persistCertificates();
                 renderCertsGrid();
-                showToast("Đã khôi phục", "Danh sách 10 chứng chỉ mặc định đã được nạp lại!");
+                showToast("Đã khôi phục", "Danh sách 11 chứng chỉ mặc định đã được nạp lại!");
             }
         });
 
