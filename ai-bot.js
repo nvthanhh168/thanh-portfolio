@@ -35,7 +35,7 @@ THÔNG TIN VỀ NGUYỄN VIẾT THÀNH (PROFILE CONTEXT):
   + Tường lửa & Bảo mật: Sophos XGS Firewall, IPS/IDS, Endpoint Security, Central Intercept X, XDR, Email Security chống Phishing, Zero-Trust Network Access (ZTNA).
   + Mạng không dây & SDN: TP-Link Omada SDN Controller, khảo sát sóng RF, Seamless Roaming (802.11k/v/r).
   + Cân bằng tải & SD-WAN: Peplink Balance multi-WAN, SpeedFusion Bandwidth Bonding, WAN Smoothing, Hot Failover, InControl2 Cloud.
-- Danh sách 12 Chứng chỉ Quốc tế đã đạt được:
+- Danh sách 13 Chứng chỉ Quốc tế đã đạt được:
   1. Sophos Firewall Administrator v22.0 (CT80) - Tường lửa XGS, VPN, NAT, Routing, IPS.
   2. Sophos Endpoint Administrator v6.0 (CT15) - Bảo mật điểm cuối, diệt mã độc, ransomware, XDR.
   3. Sophos Email v4.0 (CT45) - Bảo mật thư điện tử, chống phishing, mã hóa email gateway.
@@ -48,6 +48,7 @@ THÔNG TIN VỀ NGUYỄN VIẾT THÀNH (PROFILE CONTEXT):
   10. Peplink Certified Sales Specialist (PCSS) - Tư vấn giải pháp kiến trúc mạng SD-WAN.
   11. Certified Network Security Fundamentals (CNSF) - Chứng chỉ An ninh mạng quốc tế cấp bởi Red Team Leaders (26/11/2026, xác thực: https://courses.redteamleaders.com/exam-completion/70aa51de71b7c5c3).
   12. Certified Professional: Kaspersky Endpoint Security and Management (002.12.1) - Chứng chỉ Chuyên gia Bảo mật Điểm cuối Kaspersky (26/11/2026, mã: 002.12.1-238295, xác thực: https://certification.kaspersky.com/api/PageOfCertificate/48d9e8e7-9f28-4641-b053-f184a7227ffe).
+  13. Certified Cybersecurity Foundations (CORE) - Chứng chỉ nền tảng An ninh mạng quốc tế cấp bởi Hackviser (27/11/2026, mã: HV-CORE-H0P1POKR, xác thực: https://hackviser.com/verify?id=HV-CORE-H0P1POKR).
 - Thông tin liên hệ:
   + Số điện thoại: 0868269060
   + Email: thanhnv168@gmail.com
@@ -68,7 +69,7 @@ THÔNG TIN VỀ NGUYỄN VIẾT THÀNH (PROFILE CONTEXT):
   + Bản Demo Quản lý Tài sản CNTT (ITAM): itam-demo.html
 
 NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
-1. Trả lời chi tiết, chính xác các câu hỏi về Nguyễn Viết Thành (tiểu sử, kỹ năng, kinh nghiệm, 12 chứng chỉ, cách liên hệ hoặc xin CV).
+1. Trả lời chi tiết, chính xác các câu hỏi về Nguyễn Viết Thành (tiểu sử, kỹ năng, kinh nghiệm, 13 chứng chỉ, cách liên hệ hoặc xin CV).
 2. TRẢ LỜI MỌI CÂU HỎI NGOÀI PROFILE: Bạn là một AI đa năng, nên bạn CÓ THỂ và RẤT SẴN SÀNG trả lời bất kỳ câu hỏi nào ngoài đời sống, kiến thức công nghệ thông tin, lập trình, khoa học, mẹo vặt, thời tiết, giải trí... mà người dùng hỏi bạn. Hãy trả lời chuẩn xác, dễ hiểu và thú vị!
 3. Phong cách giao tiếp: Dễ thương, ấm áp, dùng các biểu tượng emoji phù hợp (🤖, ✨, 🚀, 💬, 👨‍💻, 🏆). Khi nói về anh Thành hãy xưng là "anh Thành" và xưng "mình" / "em" với người dùng.
 4. Ngôn ngữ: Tự động phát hiện và trả lời theo ngôn ngữ của người dùng (Tiếng Việt hoặc Tiếng Anh).
@@ -81,7 +82,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         "Chào bạn! Cần mình giúp gì không? Mình là AI của anh Thành nè! 🤖✨",
         "Bạn có muốn trải nghiệm thử bản Live Demo quản trị tài sản & bản quyền CNTT (VNTT ITAM) của anh Thành không? 📦",
         "Bạn có muốn trải nghiệm thử bản Live Demo hệ thống giám sát mạng NetUptime Sentinel 24/7 của anh Thành không? 🚀",
-        "Bạn có muốn xem nhanh danh sách 12 chứng chỉ quốc tế của anh Thành không? 🏆",
+        "Bạn có muốn xem nhanh danh sách 13 chứng chỉ quốc tế của anh Thành không? 🏆",
         "Cần lấy số điện thoại, email hay tải CV của anh Thành không bạn? 📄",
         "Bạn cần tư vấn giải pháp mạng, Firewall Sophos hay Peplink không? Hỏi mình nhé! 🌐",
         "Mình được tích hợp Google Gemini AI, hỏi mình bất cứ điều gì trong hay ngoài profile nhé! 🚀",
@@ -92,7 +93,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         "Hi there! Need any help? I'm Thanh's AI Assistant! 🤖✨",
         "Would you like to try the live demo of VNTT ITAM & License Management system? 📦",
         "Would you like to explore NetUptime Sentinel 24/7 network monitoring demo? 🚀",
-        "Would you like to see Thanh's 12 international certifications? 🏆",
+        "Would you like to see Thanh's 13 international certifications? 🏆",
         "Looking for Thanh's contact info or resume download? 📄",
         "Ask me anything about enterprise networking, Sophos firewalls, or general tech! 🚀",
         "I'm powered by Google Gemini AI. Ask me about Thanh's profile or any general topic! 💬"
@@ -747,7 +748,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                     <button class="ai-chip" data-question="VNTT ITAM là gì? Giới thiệu hệ thống Quản lý Tài sản và Bản quyền CNTT của anh Thành.">📦 Demo VNTT ITAM</button>
                     <button class="ai-chip" data-question="NetUptime Sentinel là gì? Giới thiệu hệ thống giám sát mạng 24/7 của anh Thành.">🖥️ Demo NetUptime Sentinel</button>
                     <button class="ai-chip" data-question="Nguyễn Viết Thành là ai? Hãy giới thiệu chi tiết.">👨‍💻 Anh Thành là ai?</button>
-                    <button class="ai-chip" data-question="Anh Thành có những chứng chỉ quốc tế nào? Hãy liệt kê chi tiết đầy đủ 12 chứng chỉ.">📜 Danh sách 12 chứng chỉ</button>
+                    <button class="ai-chip" data-question="Anh Thành có những chứng chỉ quốc tế nào? Hãy liệt kê chi tiết đầy đủ 13 chứng chỉ.">📜 Danh sách 13 chứng chỉ</button>
                     <button class="ai-chip" data-question="Kỹ năng chuyên môn nổi bật của anh Thành là gì?">🛠️ Kỹ năng & Kinh nghiệm</button>
                     <button class="ai-chip" data-question="Cho mình xin số điện thoại, email và cách liên hệ anh Thành?">📞 Liên hệ & CV</button>
                     <button class="ai-chip" data-question="Bạn có thể giải thích mô hình OSI trong mạng máy tính không?">🌐 Hỏi kiến thức IT</button>
@@ -759,7 +760,7 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                         <div class="ai-msg-avatar"><i class="fas fa-robot"></i></div>
                         <div class="ai-msg-bubble">
                             <p>Xin chào! Mình là <strong>Thành AI Assistant</strong> 🤖✨</p>
-                            <p>Mình có thể giải đáp chi tiết về kinh nghiệm, 12 chứng chỉ của anh Thành hoặc <strong>bất kỳ câu hỏi nào trong & ngoài profile</strong>. Bạn cần giúp gì không?</p>
+                            <p>Mình có thể giải đáp chi tiết về kinh nghiệm, 13 chứng chỉ của anh Thành hoặc <strong>bất kỳ câu hỏi nào trong & ngoài profile</strong>. Bạn cần giúp gì không?</p>
                         </div>
                     </div>
                 </div>
@@ -1076,8 +1077,8 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
                     chatHistory.push({ role: 'model', parts: [{ text: localAnswer }] });
                 } else {
                     const errorMsg = isEnglishPage
-                        ? "Google Gemini cloud quota is temporarily busy right now. Feel free to ask about Thanh's 12 certificates, core skills, projects or contact details! ✨"
-                        : "Hệ thống AI Gemini hiện đang tạm chạm giới hạn lượt truy vấn miễn phí trong ngày của Google. Bạn cứ thoải mái hỏi mình về 12 chứng chỉ quốc tế, kỹ năng chuyên môn, kinh nghiệm hay cách liên hệ anh Thành nhé! ✨";
+                        ? "Google Gemini cloud quota is temporarily busy right now. Feel free to ask about Thanh's 13 certificates, core skills, projects or contact details! ✨"
+                        : "Hệ thống AI Gemini hiện đang tạm chạm giới hạn lượt truy vấn miễn phí trong ngày của Google. Bạn cứ thoải mái hỏi mình về 13 chứng chỉ quốc tế, kỹ năng chuyên môn, kinh nghiệm hay cách liên hệ anh Thành nhé! ✨";
                     bubbleEl.innerHTML = `<p>${errorMsg}</p>`;
                 }
             }
@@ -1222,10 +1223,10 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
         if (!query) return null;
         const q = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-        // 1. Danh sách 12 chứng chỉ quốc tế
-        if (q.includes('chung chi') || q.includes('cert') || q.includes('bang cap') || q.includes('sophos') || q.includes('omada') || q.includes('peplink') || q.includes('redteam') || q.includes('red team') || q.includes('cnsf') || q.includes('kaspersky') || q.includes('kesm')) {
+        // 1. Danh sách 13 chứng chỉ quốc tế
+        if (q.includes('chung chi') || q.includes('cert') || q.includes('bang cap') || q.includes('sophos') || q.includes('omada') || q.includes('peplink') || q.includes('redteam') || q.includes('red team') || q.includes('cnsf') || q.includes('kaspersky') || q.includes('kesm') || q.includes('hackviser') || q.includes('hv-core')) {
             if (isEn) {
-                return `Hello! Nguyen Viet Thanh holds **12 prestigious international certifications** in enterprise network administration and cybersecurity:
+                return `Hello! Nguyen Viet Thanh holds **13 prestigious international certifications** in enterprise network administration and cybersecurity:
 
 1. **Sophos Firewall Administrator v22.0 (CT80)** – Deep expertise in XGS Firewall, VPN, NAT, Routing & IPS.
 2. **Sophos Endpoint Administrator v6.0 (CT15)** – Endpoint security, ransomware defense & Extended Detection and Response (XDR).
@@ -1239,10 +1240,11 @@ NHIỆM VỤ VÀ PHẠM VI TRẢ LỜI CỦA BẠN:
 10. **Peplink Certified Sales Specialist (PCSS)** – SD-WAN software-defined wide area network solutions consulting.
 11. **Certified Network Security Fundamentals (CNSF)** – Red Team Leaders network protocol security certification ([Verify](https://courses.redteamleaders.com/exam-completion/70aa51de71b7c5c3)).
 12. **Certified Professional: Kaspersky Endpoint Security and Management (002.12.1)** – Enterprise endpoint security & centralized Kaspersky administration ([Verify](https://certification.kaspersky.com/api/PageOfCertificate/48d9e8e7-9f28-4641-b053-f184a7227ffe)).
+13. **Certified Cybersecurity Foundations (CORE)** – Hackviser foundational cybersecurity training & practical exercises ([Verify](https://hackviser.com/verify?id=HV-CORE-H0P1POKR)).
 
-All 12 certifications are fully verified and showcased in the Certificates section of this portfolio! 🏆✨`;
+All 13 certifications are fully verified and showcased in the Certificates section of this portfolio! 🏆✨`;
             }
-            return `Chào bạn! Anh **Nguyễn Viết Thành** hiện sở hữu **12 chứng chỉ quốc tế** uy tín hàng đầu trong lĩnh vực Hạ tầng Mạng và Bảo mật doanh nghiệp:
+            return `Chào bạn! Anh **Nguyễn Viết Thành** hiện sở hữu **13 chứng chỉ quốc tế** uy tín hàng đầu trong lĩnh vực Hạ tầng Mạng và Bảo mật doanh nghiệp:
 
 1. 🏆 **Sophos Firewall Administrator v22.0 (CT80)**: Chuyên sâu về tường lửa XGS Firewall, VPN Site-to-Site, NAT, Routing và hệ thống ngăn chặn xâm nhập IPS.
 2. 🛡️ **Sophos Endpoint Administrator v6.0 (CT15)**: Bảo mật điểm cuối, phòng chống mã độc tống tiền (Ransomware) và công nghệ phản ứng mở rộng XDR.
@@ -1256,8 +1258,9 @@ All 12 certifications are fully verified and showcased in the Certificates secti
 10. 💼 **Peplink Certified Sales Specialist (PCSS)**: Tư vấn kiến trúc và thiết kế giải pháp mạng diện rộng định nghĩa bằng phần mềm (SD-WAN).
 11. 🎯 **Certified Network Security Fundamentals (CNSF)**: Chứng chỉ nền tảng An ninh Mạng & Bảo mật giao thức của Red Team Leaders ([Xác thực](https://courses.redteamleaders.com/exam-completion/70aa51de71b7c5c3)).
 12. 🔐 **Certified Professional: Kaspersky Endpoint Security and Management (002.12.1)**: Chứng chỉ Chuyên gia Bảo mật Điểm cuối & Quản trị tập trung Kaspersky ([Xác thực](https://certification.kaspersky.com/api/PageOfCertificate/48d9e8e7-9f28-4641-b053-f184a7227ffe)).
+13. 🔰 **Certified Cybersecurity Foundations (CORE)**: Chứng chỉ Nền tảng An ninh Mạng thực hành cấp bởi Hackviser ([Xác thực](https://hackviser.com/verify?id=HV-CORE-H0P1POKR)).
 
-Tất cả 12 chứng chỉ này đều có ảnh chứng nhận và chi tiết đầy đủ trên trang Portfolio của anh Thành nha! ✨`;
+Tất cả 13 chứng chỉ này đều có ảnh chứng nhận và chi tiết đầy đủ trên trang Portfolio của anh Thành nha! ✨`;
         }
 
         // 2. Anh Thành là ai / Giới thiệu / Profile
@@ -1269,9 +1272,9 @@ Tất cả 12 chứng chỉ này đều có ảnh chứng nhận và chi tiết 
 - **Career Goal:** Aiming towards IT Infrastructure Manager, IT Manager, and Chief Information Officer (CIO).
 - **Core Strengths:**
   - **Enterprise Network Architecture:** Peplink SD-WAN, Omada SDN, Routing & Switching, VLAN, Site-to-Site VPN.
-  - **Cybersecurity:** Sophos XGS Firewall, Kaspersky Endpoint Security, IPS/IDS, Central Intercept X, XDR, Zero-Trust (ZTNA).
+  - **Cybersecurity:** Sophos XGS Firewall, Kaspersky Endpoint Security, Hackviser CORE, IPS/IDS, Central Intercept X, XDR, Zero-Trust (ZTNA).
   - **Systems & Cloud:** Windows Server, Active Directory (AD DS), Group Policy (GPO), Microsoft 365.
-- **Certifications:** 12 verified international certificates from Sophos, Kaspersky, Peplink, TP-Link Omada, and Red Team Leaders.
+- **Certifications:** 13 verified international certificates from Sophos, Kaspersky, Hackviser, Peplink, TP-Link Omada, and Red Team Leaders.
 
 Feel free to explore his portfolio, download his CV, or connect directly! 🚀`;
             }
@@ -1281,9 +1284,9 @@ Feel free to explore his portfolio, download his CV, or connect directly! 🚀`;
 - **Định hướng sự nghiệp**: Hướng tới các vị trí Quản lý Hạ tầng CNTT (IT Infrastructure Manager), IT Manager và Giám đốc Công nghệ Thông tin (CIO).
 - **Thế mạnh cốt lõi**:
   - **Mạng doanh nghiệp**: Thiết kế và vận hành hệ thống mạng độ sẵn sàng cao, cân bằng tải đa WAN (Peplink SpeedFusion), hạ tầng SDN (TP-Link Omada), định tuyến, VLAN, VPN Site-to-Site.
-  - **Bảo mật & Tường lửa**: Triển khai giải pháp bảo mật toàn diện với Sophos XGS Firewall, Kaspersky Endpoint Security & Management, ngăn ngừa xâm nhập IPS, bảo vệ điểm cuối XDR, chống Phishing Email và kiến trúc Zero-Trust (ZTNA).
+  - **Bảo mật & Tường lửa**: Triển khai giải pháp bảo mật toàn diện với Sophos XGS Firewall, Kaspersky Endpoint Security & Management, Hackviser Cybersecurity Foundations, ngăn ngừa xâm nhập IPS, bảo vệ điểm cuối XDR, chống Phishing Email và kiến trúc Zero-Trust (ZTNA).
   - **Hệ thống**: Quản trị Windows Server, Active Directory (AD DS), Group Policy (GPO), DNS, DHCP và bộ giải pháp đám mây Microsoft 365.
-- **Chứng chỉ**: Đã đạt 12 chứng chỉ quốc tế chính thức từ Sophos, Kaspersky, Peplink, TP-Link và Red Team Leaders.
+- **Chứng chỉ**: Đã đạt 13 chứng chỉ quốc tế chính thức từ Sophos, Kaspersky, Hackviser, Peplink, TP-Link và Red Team Leaders.
 
 Anh Thành là người làm việc tỉ mỉ, trách nhiệm cao và luôn đón đầu các công nghệ hạ tầng hiện đại nhất! 🚀`;
         }
@@ -1314,7 +1317,7 @@ He focuses on building resilient, high-availability, and zero-downtime enterpris
    - Quản trị Microsoft 365, Windows Server, phân quyền người dùng qua Active Directory (AD DS) và Group Policy (GPO).
    - Tối ưu hóa các dịch vụ mạng hạ tầng cốt lõi: DNS, DHCP, File Server.
 
-Tất cả kỹ năng đều được chứng minh qua 12 chứng chỉ quốc tế và các dự án thực tế! 🚀`;
+Tất cả kỹ năng đều được chứng minh qua 13 chứng chỉ quốc tế và các dự án thực tế! 🚀`;
         }
 
         // 4. Liên hệ / SĐT / Email / Facebook / CV

@@ -220,7 +220,7 @@
                 </button>
                 <button class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-certificates">
                     <i class="fas fa-award"></i> <span>Quản lý Chứng chỉ</span>
-                    <span id="certCountBadge" class="px-2 py-0.5 rounded-full text-[10px] bg-sky-500/20 text-sky-400 border border-sky-500/30">12</span>
+                    <span id="certCountBadge" class="px-2 py-0.5 rounded-full text-[10px] bg-sky-500/20 text-sky-400 border border-sky-500/30">13</span>
                 </button>
                 <button class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2" data-tab="tab-system">
                     <i class="fas fa-database"></i> <span>Sao lưu & Đặt lại</span>
@@ -557,6 +557,7 @@
                             <option value="peplink">Peplink</option>
                             <option value="redteam">Red Team Leaders</option>
                             <option value="kaspersky">Kaspersky</option>
+                            <option value="hackviser">Hackviser</option>
                             <option value="other">Khác</option>
                         </select>
                     </div>
@@ -565,8 +566,8 @@
                         <button id="openAddCertModalBtn" class="px-4 py-2 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition shadow-md shadow-sky-500/25 flex items-center gap-1.5">
                             <i class="fas fa-plus-circle"></i> Thêm Chứng Chỉ Mới
                         </button>
-                        <button id="resetDefaultCertsBtn" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-medium border border-slate-700 transition flex items-center gap-1.5" title="Khôi phục lại 12 chứng chỉ mặc định">
-                            <i class="fas fa-undo-alt text-amber-400"></i> Khôi phục mẫu 12 chứng chỉ
+                        <button id="resetDefaultCertsBtn" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-medium border border-slate-700 transition flex items-center gap-1.5" title="Khôi phục lại 13 chứng chỉ mặc định">
+                            <i class="fas fa-undo-alt text-amber-400"></i> Khôi phục mẫu 13 chứng chỉ
                         </button>
                     </div>
                 </div>
@@ -695,7 +696,7 @@
                             <div class="glass-card p-4 rounded-xl border border-slate-800">
                                 <div class="text-violet-400 text-lg mb-2"><i class="fas fa-brain"></i></div>
                                 <h5 class="text-xs font-bold text-white mb-1">Hỏi đáp đa năng</h5>
-                                <p class="text-[11px] text-slate-400">Hiểu tường tận 12 chứng chỉ của anh Thành và trả lời được mọi kiến thức đời sống.</p>
+                                <p class="text-[11px] text-slate-400">Hiểu tường tận 13 chứng chỉ của anh Thành và trả lời được mọi kiến thức đời sống.</p>
                             </div>
                         </div>
 
@@ -764,6 +765,7 @@
                             <option value="peplink">Peplink</option>
                             <option value="redteam">Red Team Leaders</option>
                             <option value="kaspersky">Kaspersky</option>
+                            <option value="hackviser">Hackviser</option>
                             <option value="other">Hãng khác</option>
                         </select>
                     </div>
@@ -878,7 +880,7 @@
         const REQUIRED_ADMIN_USER = "admin";
         const REQUIRED_ADMIN_PASS = "Vntt@#123";
 
-        // DỮ LIỆU CHỨNG CHỈ MẶC ĐỊNH (12 CHỨNG CHỈ CHUẨN)
+        // DỮ LIỆU CHỨNG CHỈ MẶC ĐỊNH (13 CHỨNG CHỈ CHUẨN)
         const DEFAULT_CERTIFICATES = [
             {
                 id: "sophos-ct80",
@@ -1085,6 +1087,24 @@
                 descVN: "Triển khai, cấu hình chính sách và quản trị tập trung giải pháp bảo mật điểm cuối doanh nghiệp Kaspersky Endpoint Security & Management.",
                 descEN: "Enterprise deployment, policy configuration, and centralized administration of Kaspersky Endpoint Security and Management.",
                 verifyUrl: "https://certification.kaspersky.com/api/PageOfCertificate/48d9e8e7-9f28-4641-b053-f184a7227ffe"
+            },
+            {
+                id: "hackviser-core",
+                titleVN: "Certified Cybersecurity Foundations (CORE)",
+                titleEN: "Certified Cybersecurity Foundations (CORE)",
+                issuer: "Hackviser",
+                category: "hackviser",
+                badgeVN: "Nền tảng An ninh Mạng",
+                badgeEN: "Cybersecurity Foundations",
+                badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+                img: "certificates/hackviser-core.jpg",
+                dateVN: "27/11/2026",
+                dateEN: "Nov 27, 2026",
+                metaVN: "Cấp ngày: 27/11/2026 · Cert ID: HV-CORE-H0P1POKR · Hackviser",
+                metaEN: "Issued: November 27, 2026 · Cert ID: HV-CORE-H0P1POKR · Hackviser",
+                descVN: "Hoàn thành các học phần đào tạo và bài tập thực hành bảo mật chuyên sâu về nền tảng An ninh mạng của Hackviser.",
+                descEN: "Earned by completing training modules and practical security exercises, demonstrating foundational competence in cybersecurity.",
+                verifyUrl: "https://hackviser.com/verify?id=HV-CORE-H0P1POKR"
             }
         ];
 
@@ -1685,13 +1705,13 @@
             showToast("Thành công", `Đã lưu chứng chỉ: ${newCert.titleVN}`);
         });
 
-        // Khôi phục 12 chứng chỉ mặc định
+        // Khôi phục 13 chứng chỉ mặc định
         document.getElementById('resetDefaultCertsBtn').addEventListener('click', async () => {
-            if (confirm("Khôi phục danh sách về 12 chứng chỉ mặc định ban đầu?")) {
+            if (confirm("Khôi phục danh sách về 13 chứng chỉ mặc định ban đầu?")) {
                 currentCertificates = [...DEFAULT_CERTIFICATES];
                 await persistCertificates();
                 renderCertsGrid();
-                showToast("Đã khôi phục", "Danh sách 12 chứng chỉ mặc định đã được nạp lại!");
+                showToast("Đã khôi phục", "Danh sách 13 chứng chỉ mặc định đã được nạp lại!");
             }
         });
 
